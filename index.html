@@ -779,9 +779,9 @@ function pMsgs(p){p.seenF=true;save();
     <div class="row" style="gap:8px"><button class="btn sm" data-act="painpick">${picon('Huggande',20)}Beskriv din smärta</button><label class="btn sm">Bifoga bild eller video<input type="file" id="patt" accept="image/*,video/*" class="sr"></label></div>${ui.att?`<span class="small">Bifogat: ${esc(ui.att.name)}</span>`:''}${ui.patt?`<div>${painCard(ui.patt)}<button class="link small" data-act="painrm">Ta bort smärtbeskrivningen</button></div>`:''}
     <div class="row"><button class="btn pri" data-act="psend">Skicka</button><button class="btn" data-act="pcancel">Avbryt</button></div></div>`;
   else box=`<div class="quick" aria-label="Snabbval"><button class="chip" data-act="quick" data-v="ont">Det gör ont</button><button class="chip" data-act="quick" data-v="hur">Hur gör jag?</button><button class="chip" data-act="book">Boka tid</button></div><button class="btn pri full" data-act="compose">${IC.chat.replace('<svg','<svg width="20" height="20"')} Skriv till Erik</button>`;
-  return `<div class="card row" style="gap:12px;padding:12px 14px"><div class="av">E</div><div><strong>Erik Lund</strong><br><span class="mut small">Din fysioterapeut · svarar inom en arbetsdag</span></div></div>
+  return `<div class="card row" style="gap:12px;padding:12px 14px"><div class="av">E</div><div><strong>Erik Lund</strong><br><span class="mut small">Din fysioterapeut · svarar vanligtvis inom 2 arbetsdagar</span></div></div>
   ${p.booking?`<div class="note ok"><strong>Telefonmöte bokat</strong><p>${esc(p.booking)}. Erik ringer upp dig.</p></div>`:''}
-  <div class="thread">${thread}${wt?`<div class="sent small">${IC.check.replace('<svg','<svg width="14" height="14"')} Skickat. Erik svarar senast ${whenTxt(replyBy(wt.t))}.</div>`:''}</div>${box}
+  <div class="thread">${thread}${wt?`<div class="sent small">${IC.check.replace('<svg','<svg width="14" height="14"')} Skickat. Erik svarar vanligtvis inom 2 arbetsdagar.</div>`:''}</div>${box}
   <p class="small mut" style="text-align:center">Akut? Ring 1177 eller 112. Vänta inte på svar här.</p>`}
 
 /* ----- physio ----- */
@@ -984,7 +984,7 @@ function mediaFor(it,e,compact){const own=it&&it.gallery&&it.gallery.length;
   if(own)return `<div class="note tl small" style="padding:8px 12px"><strong>Video från Erik</strong>, gjord för dig</div>${gallery({gallery:it.gallery,name:e.name})}${compact?'':`<details class="more"><summary>Visa standardinstruktionen</summary>${demoPlayer(e.id)}</details>`}`;
   if(e.gallery&&e.gallery.length)return gallery(e);
   return compact?`<div class="bigfig">${fig(e.id,true)}</div>`:demoPlayer(e.id)}
-function replyBy(t){const x=new Date(t);do{x.setDate(x.getDate()+1)}while(x.getDay()===0||x.getDay()===6);x.setHours(16,0,0,0);return x}
+function replyBy(t){const x=new Date(t);for(let n=0;n<2;){x.setDate(x.getDate()+1);if(x.getDay()!==0&&x.getDay()!==6)n++}x.setHours(16,0,0,0);return x}
 function whenTxt(d){const k=key(d);return k===TK?'i dag kl 16':k===key(addD(TODAY,1))?'i morgon kl 16':fmtL(d)+' kl 16'}
 const waiting=p=>{const m=p.msgs[p.msgs.length-1];return m&&m.from==='p'?m:null};
 const REM0={on:true,time:'18:00',days:[0,1,2,3,4,5,6],smart:true};
@@ -1067,7 +1067,7 @@ function renderModal(){const m=ui.modal;if(!m){$modal.innerHTML='';return}
     <button class="btn pri full" data-act="nxsave" style="min-height:56px">${IC.check.replace('<svg','<svg width="20" height="20"')} ${n.id?'Spara ändringarna':ui.draft?'Spara och lägg till i programmet':'Spara i övningsbanken'}</button><p class="small mut" style="text-align:center">* måste fyllas i</p>`}
   if(m.type==='painpick'){const f=ui.pform;t='Beskriv din smärta';b=`<p class="mut">Skickas med ditt meddelande, så att Erik ser hur och var det gör ont utan att du behöver komma in.</p><div class="card"><h4>Hur ont har du just nu?</h4><p class="small mut">0 = ingen smärta, 10 = värsta tänkbara</p>${vasPicker(f)}${f.pain>0?painPicker(f):''}</div><button class="btn pri full" data-act="painok" style="min-height:56px" ${f.pain==null?'disabled':''}>Bifoga till meddelandet</button>`}
   if(m.type==='msginfo'){t='Innan du skriver';b=`<div class="note" style="font-size:1.08rem"><strong>Meddelanden är till för viktiga frågor</strong> om din träning, till exempel om en övning gör ont eller om du är osäker på hur den görs.</div>
-    <p><strong>Erik svarar inom en arbetsdag</strong>, vardagar 8–16. Skriver du i dag får du svar senast ${whenTxt(replyBy(Date.now()))}.</p><p>Har du många frågor? Ett telefonmöte går ofta snabbare.</p><div class="note co"><strong>Akut?</strong> Ring 1177 för sjukvårdsrådgivning eller 112 vid nödläge. Vänta inte på svar här.</div>
+    <p><strong>Erik svarar vanligtvis inom 2 arbetsdagar</strong> (vardagar). Ibland går det fortare.</p><p>Har du många frågor? Ett telefonmöte går ofta snabbare.</p><div class="note co"><strong>Akut?</strong> Ring 1177 för sjukvårdsrådgivning eller 112 vid nödläge. Vänta inte på svar här.</div>
     <button class="btn pri full" data-act="ack">Jag förstår, skriv meddelande</button><button class="btn full" data-act="book">Boka telefonmöte i stället</button>`}
   if(m.type==='book'){t='Boka telefonmöte';const slots=[];let d=addD(TODAY,1);while(slots.length<6){if(dow(d)<5){slots.push(cap(fmtL(d))+' kl 10:30');slots.push(cap(fmtL(d))+' kl 14:00')}d=addD(d,1)}
     b=`<p>Välj en tid. Erik ringer upp dig på numret du har i journalen.</p><div style="display:grid;gap:8px">${slots.map(s=>`<button class="chip" style="border-radius:12px;text-align:left;padding:12px 16px" data-act="slot" data-v="${esc(s)}" aria-pressed="${m.slot===s}">${esc(s)}</button>`).join('')}</div><button class="btn pri full" data-act="dobook" ${m.slot?'':'disabled'}>Boka tiden</button>`}
@@ -1173,7 +1173,7 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   case 'quick':if(d.v==='ont')openCompose(p,'',true);else openCompose(p,'Jag är osäker på hur jag ska göra ');break;
   case 'ack':ui.msgAck=true;ui.modal=null;ui.composer=true;render();if(ui.pendingPain){ui.pendingPain=false;ui.pform={pain:null,area:[],type:[],view:'fram'};ui.modal={type:'painpick'};renderModal()}else setTimeout(()=>{const t=document.getElementById('ptext');if(t){t.focus();t.setSelectionRange(t.value.length,t.value.length)}},30);break;
   case 'pcancel':ui.composer=false;ui.att=null;ui.patt=null;ui.prefill='';render();break;
-  case 'psend':{const t=document.getElementById('ptext').value.trim();if(!t&&!ui.att&&!ui.patt){toast('Skriv något först.');return}p.msgs.push({from:'p',text:t,t:Date.now(),att:ui.att,pain:ui.patt});ui.patt=null;p.unread++;ui.composer=false;ui.att=null;ui.prefill='';save();render();toast('Skickat. Erik svarar senast '+whenTxt(replyBy(Date.now()))+'.');break}
+  case 'psend':{const t=document.getElementById('ptext').value.trim();if(!t&&!ui.att&&!ui.patt){toast('Skriv något först.');return}p.msgs.push({from:'p',text:t,t:Date.now(),att:ui.att,pain:ui.patt});ui.patt=null;p.unread++;ui.composer=false;ui.att=null;ui.prefill='';save();render();toast('Skickat. Erik svarar vanligtvis inom 2 arbetsdagar.');break}
   case 'painpick':ui.pform={pain:null,area:[],type:[],view:'fram'};ui.modal={type:'painpick'};renderModal();break;
   case 'painok':ui.patt=clone(ui.pform);delete ui.patt.view;ui.modal=null;keepText(render);break;
   case 'painrm':ui.patt=null;keepText(render);break;
