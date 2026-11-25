@@ -15,7 +15,7 @@ Med GitHub Pages: **Settings → Pages → Deploy from a branch → `main` / roo
 | Vy | Innehåll |
 |---|---|
 | **Patientapp** | Veckans pass (t.ex. 2 av 4), övningar med animerade figurer, steg, "varför" och gör/undvik. Loggning av ett helt pass: set och repetitioner, smärta (VAS 0–10) med smärtgräns, kroppskarta med inzoomning och smärtsymboler, Lätt/Lagom/Tungt, flaggor per övning. Egna anteckningar per övning. Framsteg och chatt med meddelandekvot. |
-| **Fysioterapeut** | Översikt med det som kräver uppmärksamhet och en patienttabell. Patientprofil med följsamhet per vecka, smärtkurva, smärtkarta, flaggade övningar och export till journal. Programbyggare med smart övningsbibliotek (sökning som förstår synonymer, latin, diagnoser och stavfel, filter, favoriter, senast använda, lättare/svårare varianter), mallar, pass per vecka, programlängd, smärtgräns och egna övningar. Inkorg. |
+| **Fysioterapeut** | Översikt med det som kräver uppmärksamhet och en patienttabell. Patientprofil med följsamhet per vecka, smärtkurva, smärtkarta, flaggade övningar och export till journal. Egen flik för övningsbanken (alla övningar, favoriter, egna övningar, förhandsvisning och tillägg till valfri patients program). Programbyggare med smart övningsbibliotek (sökning som förstår synonymer, latin, diagnoser och stavfel, filter, favoriter, senast använda, lättare/svårare varianter), mallar, pass per vecka, programlängd, smärtgräns och egna övningar. Inkorg. |
 | **Ge feedback** | Testuppgifter för båda rollerna, betyg på hur lätt det var, fritext och export som tabell. |
 
 Textstorleken kan ökas i tre steg uppe till höger. Knappen **Återställ demodata** i sidfoten tar tillbaka exempeldatan mellan testpersoner.
