@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fysi MVP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE calm clinical-warm, readable for 25 and 85 year olds alike
+   IDEA the physio's home-exercise sheet made alive; one loop between clinic and kitchen floor
+   PICTURE animated line figures per exercise; deep-teal week card; pain map front/back
+   COLOUR Figma palette: warm paper ground, deep teal lead, amber for progress/limits, coral for pain, soft teal fields
+   TYPE Plus Jakarta Sans 800 titles, 500 text; large base, A/A+/A++
+   LAYOUT patient = phone column, bottom tabs; physio = sidebar + content, stacks under 900px */
+:root{color-scheme:light dark;
+--bg:light-dark(#f6f4ef,#0d1514);--card:light-dark(#ffffff,#15201f);--ink:light-dark(#1a2423,#e9efed);--mut:light-dark(#56625f,#a3b4b0);
+--t:light-dark(#0f4c4a,#62c7b8);--hero:light-dark(#0f4c4a,#10403d);--btn:light-dark(#0f4c4a,#62c7b8);--onbtn:light-dark(#ffffff,#06201d);
+--tl:light-dark(#eef7f5,#142b29);--tl2:light-dark(#d6ece8,#1d3b38);--line:light-dark(#e6e1d7,#263533);
+--ok:light-dark(#2e7d4f,#62d193);--oks:light-dark(#e2f2e7,#14301f);
+--am:light-dark(#e9a23b,#f0b354);--ami:light-dark(#8a5806,#f3c06a);--ams:light-dark(#fdf3e1,#33280f);
+--co:light-dark(#c8483a,#ff8a78);--cos:light-dark(#f8e1de,#3a1d18);
+--in:light-dark(#2f5597,#9fbaf0);--ins:light-dark(#e3ecf8,#1b2433)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{font-size:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 1.0625rem/1.55 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:clip}
+h1,h2,h3,h4{line-height:1.15;letter-spacing:-.02em;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.9rem,4vw,2.5rem);font-weight:800}
+h2{font-size:1.45rem;font-weight:800}
+h3{font-size:1.15rem;font-weight:700}
+h4{font-size:1.05rem;font-weight:700}
+p{margin:.3em 0}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--am);outline-offset:2px}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:8px max(3vw,16px);border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.4rem;color:var(--t);text-decoration:none;letter-spacing:-.03em}
+.logo{width:32px;height:32px;border-radius:9px;background:var(--hero);display:grid;place-items:center}
+.roles{display:flex;flex-wrap:wrap;gap:4px;background:var(--bg);padding:4px;border-radius:14px}
+.roles a{padding:8px 14px;border-radius:10px;text-decoration:none;color:var(--ink);font-weight:700;min-height:44px;display:flex;align-items:center}
+.roles a[aria-current=page]{background:var(--btn);color:var(--onbtn)}
+@media(max-width:560px){.fs span{display:none}.top{gap:6px}.roles a{padding:6px 10px;min-height:40px}}
+.fs{margin-left:auto;display:flex;align-items:center;gap:4px;font-size:.9rem;color:var(--mut)}
+.fs button{border:1px solid var(--line);background:var(--card);border-radius:10px;min-width:44px;min-height:44px;font-weight:800}
+.fs button[aria-pressed=true]{border-color:var(--t);background:var(--tl);color:var(--t)}
+main{min-height:70vh}
+.wrap{max-width:1280px;margin:0 auto;padding:24px max(3vw,16px) 40px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 18px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font-weight:700;text-decoration:none;color:var(--ink)}
+.btn.pri{background:var(--btn);border-color:var(--btn);color:var(--onbtn)}
+.btn.co{background:var(--co);border-color:var(--co);color:#fff}
+.btn.sm{min-height:42px;padding:6px 12px;font-size:.93rem}
+.btn.full{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn svg{flex:none;width:20px;height:20px}
+.notice>svg{width:22px;height:22px;color:var(--mut)}
+.link{background:none;border:0;color:var(--t);font-weight:700;text-decoration:underline;padding:8px 4px;min-height:44px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
+.mut{color:var(--mut)}
+.small{font-size:.9rem}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.between{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:8px 14px;min-height:44px;font-weight:700}
+.chip[aria-pressed=true]{background:var(--btn);border-color:var(--btn);color:var(--onbtn)}
+.tag{display:inline-flex;align-items:center;gap:5px;background:var(--tl);color:var(--t);border-radius:999px;padding:3px 10px;font-size:.82rem;font-weight:700;white-space:nowrap}
+.tag::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.tag.plain::before{display:none}
+.tag.co{background:var(--cos);color:var(--co)}
+.tag.am{background:var(--ams);color:var(--ami)}
+.tag.ok{background:var(--oks);color:var(--ok)}
+.tag.in{background:var(--ins);color:var(--in)}
+.av{width:44px;height:44px;border-radius:50%;background:var(--tl2);color:var(--t);display:grid;place-items:center;font-weight:800;flex:none}
+.note{border-radius:14px;padding:12px 14px;background:var(--ams)}
+.note.in{background:var(--ins)}.note.tl{background:var(--tl)}.note.ok{background:var(--oks)}.note.co{background:var(--cos)}
+/* start */
+.start{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px;margin-top:22px}
+.start a{display:grid;gap:10px;padding:24px;border-radius:22px;text-decoration:none;color:var(--ink);border:1.5px solid var(--line);background:var(--card)}
+.start a:hover{border-color:var(--t)}
+.start a.hero{background:var(--hero);color:#fff;border-color:var(--hero)}
+.start .art{height:150px;background:var(--tl);border-radius:14px;display:grid;place-items:center;color:var(--t)}
+.start a.hero .art{background:rgba(255,255,255,.1)}
+.start a.hero .exfig line,.start a.hero .exfig circle{stroke:#fff}.start a.hero .exfig circle{fill:var(--hero)}
+/* figures */
+.exfig{width:100%;height:100%;display:block}
+.exfig .ghost{opacity:.2}
+.exfig line{stroke:var(--t);stroke-width:7;stroke-linecap:round;fill:none}
+.exfig circle{fill:var(--tl);stroke:var(--t);stroke-width:6}
+.exfig .prop{stroke:var(--mut);stroke-width:3;opacity:.5;fill:none}
+.pic{background:var(--tl);border-radius:12px;aspect-ratio:4/3}
+/* patient phone */
+.phone{max-width:480px;margin:18px auto 30px;border:1px solid var(--line);border-radius:30px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;min-height:min(840px,calc(100svh - 110px))}
+@media(max-width:560px){.phone{margin:0;border:0;border-radius:0;min-height:calc(100svh - 64px)}}
+.phead{padding:18px 18px 6px;display:grid;gap:4px}
+.phead select{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 8px;min-height:40px}
+.pbody{flex:1;padding:12px 16px 18px;display:grid;gap:14px;align-content:start}
+.pnav{position:sticky;bottom:0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);background:var(--card)}
+.pnav button{border:0;background:none;padding:8px 4px 12px;display:grid;justify-items:center;gap:2px;font-weight:700;font-size:.9rem;color:var(--mut);min-height:66px;position:relative}
+.pnav button span.ic{display:grid;place-items:center;width:56px;height:32px;border-radius:999px}
+.pnav button[aria-current=true]{color:var(--t)}
+.pnav button[aria-current=true] span.ic{background:var(--tl2)}
+.pnav svg{width:24px;height:24px}
+.badge{position:absolute;top:4px;left:calc(50% + 12px);background:var(--co);color:#fff;border-radius:999px;font-size:.75rem;padding:0 6px;min-width:20px}
+.herocard{background:var(--hero);color:#fff;border-radius:22px;padding:18px 18px 16px;display:grid;gap:10px}
+.herocard .pill{background:var(--am);color:#2a1a00;border-radius:999px;padding:3px 10px;font-size:.82rem;font-weight:800;white-space:nowrap}
+.big{font-size:2.4rem;font-weight:800;letter-spacing:-.03em;line-height:1}
+.prog{height:8px;border-radius:8px;background:rgba(255,255,255,.18);overflow:hidden}
+.prog i{display:block;height:100%;background:var(--am);border-radius:8px}
+.dots{display:flex;flex-wrap:wrap;gap:8px}
+.dots i{width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.45);display:grid;place-items:center;font-style:normal;font-weight:800;font-size:.85rem}
+.dots i.on{background:#fff;border-color:#fff;color:var(--hero)}
+.dots svg{width:18px;height:18px}
+.exrow{display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 12px;text-align:left;width:100%}
+.exrow .go{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;color:var(--mut)}
+.exrow .go.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.exrow .go svg{width:18px;height:18px}
+.dose{font-size:.95rem;color:var(--mut);font-weight:600}
+.notice{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--ams);border:1px solid color-mix(in srgb,var(--am) 45%,transparent);border-radius:16px;padding:12px 14px;text-align:left;width:100%;color:var(--ink)}
+.sec{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:4px}
+/* modal */
+.back{position:fixed;inset:0;background:rgba(8,20,18,.5);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+@media(min-width:700px){.back{align-items:center;padding:20px}}
+.sheet{background:var(--bg);width:100%;max-width:560px;max-height:94svh;overflow:auto;border-radius:24px 24px 0 0;padding:18px 18px 22px;display:grid;gap:12px}
+@media(min-width:700px){.sheet{border-radius:24px}}
+.sheet>header{display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:-18px;background:var(--bg);padding:6px 0;z-index:2}
+.sheet .card{padding:16px}
+.x{border:1px solid var(--line);background:var(--card);border-radius:999px;width:48px;height:48px;font-size:1.5rem;line-height:1;flex:none}
+.bigfig{background:var(--tl);border-radius:18px;aspect-ratio:16/10}
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:10px}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:36px 1fr;gap:10px;align-items:start;font-size:1.08rem}
+ol.steps li::before{content:counter(s);width:32px;height:32px;border-radius:50%;background:var(--tl2);color:var(--t);display:grid;place-items:center;font-weight:800}
+.dodont{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:center;border-radius:12px;padding:10px 12px}
+.dodont b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:.9rem}
+.quote{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.stepper{display:inline-flex;align-items:center;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:3px}
+.stepper button{width:44px;height:44px;border-radius:10px;border:0;background:var(--card);font-size:1.35rem;font-weight:700}
+.stepper output{min-width:2.6em;text-align:center;font-size:1.2rem;font-weight:800;font-variant-numeric:tabular-nums}
+.lex{display:grid;gap:8px;padding:12px 0;border-top:1px solid var(--line)}
+.lex:first-of-type{border-top:0}
+.lex.flagged{background:var(--ams);border-radius:12px;padding:12px;border:0}
+.vas{display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:4px}
+@media(max-width:440px){.vas{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.vas button{min-height:50px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);font-weight:800;font-size:1.1rem;box-shadow:inset 0 -5px 0 var(--c)}
+.vas button[aria-pressed=true]{background:var(--c);border-color:var(--c);color:#13201a;box-shadow:none;transform:scale(1.06)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:4px}
+.seg button{border:0;background:none;border-radius:10px;min-height:46px;font-weight:700;color:var(--mut)}
+.seg button[aria-pressed=true]{background:var(--card);color:var(--t);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+textarea,input[type=text],input[type=search],input[type=date]{width:100%;font-size:1rem;border:1.5px solid var(--line);border-radius:12px;padding:12px;background:var(--card)}
+textarea{min-height:90px;resize:vertical}
+.dinp{max-width:240px;min-height:48px}
+label.lab{font-weight:700;display:block;margin-bottom:6px}
+details.more summary{cursor:pointer;font-weight:700;color:var(--t);min-height:44px;display:flex;align-items:center}
+/* pain module */
+.bodymap{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:start}
+.body{height:auto;max-width:100%;flex:none}
+.reg{fill:transparent;stroke:var(--co);stroke-width:2;stroke-dasharray:3 3;cursor:pointer}
+.reg:hover{fill:var(--cos)}
+.reg[aria-pressed=true]{fill:var(--co);stroke-dasharray:none}
+.reg:focus-visible{outline:none;stroke-width:4;stroke-dasharray:none}
+.body .lr{font-size:14px;font-weight:800;fill:var(--mut)}
+.picker{display:grid;gap:12px;margin-top:10px}
+.zoom{display:grid;gap:6px}
+.zwrap{display:grid;gap:12px}
+.zlist{grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr))}
+.zfig{height:min(360px,55vh);width:auto;max-width:100%;justify-self:center;background:var(--tl);border-radius:14px}
+.zwrap>.zfig{grid-column:1/-1}
+.zone{cursor:pointer}
+.zone ellipse{fill:var(--card);fill-opacity:.9;stroke:var(--co);stroke-width:2}
+.zone text{fill:var(--co);font-weight:800;pointer-events:none}
+.zone[aria-pressed=true] ellipse{fill:var(--co);fill-opacity:1}
+.zone[aria-pressed=true] text{fill:#fff}
+.zone:focus-visible{outline:none}.zone:focus-visible ellipse{stroke-width:4}
+.zlist{display:grid;gap:6px;align-content:start}
+.zchip{display:flex;gap:8px;align-items:center;text-align:left;border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:6px 10px;min-height:44px;font-weight:600}
+.zchip b{width:24px;height:24px;border-radius:50%;background:var(--cos);color:var(--co);display:grid;place-items:center;font-size:.8rem;flex:none}
+.zchip[aria-pressed=true]{border-color:var(--co);background:var(--cos)}
+.zchip[aria-pressed=true] b{background:var(--co);color:#fff}
+.ptiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,180px),1fr));gap:8px;margin-top:8px}
+.ptile{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:center;text-align:left;padding:10px 12px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);min-height:60px}
+.ptile small{display:block;color:var(--mut);font-size:.85rem;line-height:1.3}
+.ptile .picon,.ptag .picon{color:var(--co);flex:none}
+.ptile[aria-pressed=true]{border-color:var(--co);background:var(--cos)}
+.pcard{background:var(--card);color:var(--ink);border-radius:12px;padding:10px;margin-top:8px;display:grid;gap:8px;border:1px solid var(--line)}
+.vasb{font-weight:800;border-radius:8px;padding:3px 10px;color:#13201a;font-size:.9rem;white-space:nowrap}
+.ptag{display:inline-flex;align-items:center;gap:6px;font-weight:600}
+.ppic{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+/* messages */
+.thread{display:grid;gap:10px}
+.msg{max-width:86%;padding:10px 14px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
+.msg.me{justify-self:end;background:var(--hero);border-color:var(--hero);color:#fff;border-bottom-right-radius:4px}
+.msg.them{border-bottom-left-radius:4px}
+.msg time{display:block;font-size:.78rem;opacity:.75;margin-top:2px}
+.msg img{max-width:100%;border-radius:10px;margin-top:6px;display:block}
+.quick{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.quick .chip{flex:none}
+.quota{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.quota i{width:14px;height:14px;border-radius:50%;background:var(--t);display:inline-block}
+.quota i.used{background:var(--line)}
+/* charts and calendars */
+.fig{position:relative;min-height:200px}
+.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+.fig text{font-size:13px;fill:var(--mut);paint-order:stroke;stroke:var(--card);stroke-width:4px}
+.wk{display:flex;flex-wrap:wrap;gap:10px}
+.wk div{display:grid;justify-items:center;gap:4px;font-size:.82rem;color:var(--mut);font-weight:700}
+.wk i{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:800;border:1.5px solid var(--line);background:var(--bg);color:var(--mut)}
+.wk i.full{background:var(--ok);border-color:var(--ok);color:#fff}
+.wk i.part{background:var(--am);border-color:var(--am);color:#2a1a00}
+.wk i.now{border:2px solid var(--t);color:var(--t)}
+.wk svg{width:18px;height:18px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.85rem;color:var(--mut)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:5px;vertical-align:-1px}
+.wbars{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:10px;align-items:end;height:150px;margin-top:10px}
+.wbars div{display:grid;grid-template-rows:auto 1fr auto;height:100%;text-align:center;font-size:.8rem;color:var(--mut);font-weight:700;gap:4px}
+.wbars .col{position:relative;border:1.5px dashed var(--line);border-radius:8px;overflow:hidden}
+.wbars .col i{position:absolute;left:0;right:0;bottom:0;background:var(--t);border-radius:6px 6px 0 0}
+.wbars .col i.low{background:var(--am)}
+.meter{height:8px;border-radius:8px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--t);border-radius:8px}
+.meter i.low{background:var(--am)}.meter i.bad{background:var(--co)}
+/* physio */
+.fshell{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:calc(100svh - 64px)}
+.side{background:var(--card);border-right:1px solid var(--line);padding:18px 12px;display:grid;align-content:start;gap:4px}
+.side button{display:flex;align-items:center;gap:10px;border:0;background:none;border-radius:12px;padding:10px 12px;font-weight:700;text-align:left;min-height:46px;color:var(--ink)}
+.side button[aria-current=true]{background:var(--btn);color:var(--onbtn)}
+.side button .n{margin-left:auto;background:var(--tl2);color:var(--t);border-radius:999px;font-size:.78rem;padding:0 8px}
+.side svg{width:20px;height:20px;flex:none}
+.side .who{margin-top:18px;padding:12px;border-radius:12px;background:var(--tl);font-size:.88rem}
+@media(max-width:900px){.fshell{grid-template-columns:minmax(0,1fr)}.side{border-right:0;border-bottom:1px solid var(--line);display:flex;overflow-x:auto;padding:8px 12px}.side .who,.side .brandrow{display:none}.side button{flex:none}}
+.fmain{padding:24px max(2.5vw,16px) 40px;display:grid;gap:18px;align-content:start;max-width:1240px;width:100%}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:12px}
+.kpi{border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:var(--card);display:grid;gap:2px}
+.kpi .ki{width:34px;height:34px;border-radius:10px;background:var(--tl);color:var(--t);display:grid;place-items:center;margin-bottom:6px}
+.kpi .ki svg{width:18px;height:18px}
+.kpi strong{font-size:2rem;line-height:1.1;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+.g2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+@media(max-width:1100px){.g3{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.g3>:last-child{grid-column:1/-1}}
+@media(max-width:800px){.g2,.g3{grid-template-columns:minmax(0,1fr)}}
+.att{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.att .ai{width:40px;height:40px;border-radius:12px;display:grid;place-items:center}
+.att .ai svg{width:20px;height:20px}
+table.pt{width:100%;border-collapse:collapse;font-size:.95rem}
+table.pt th{text-align:left;color:var(--mut);font-weight:700;font-size:.82rem;padding:10px 8px;border-bottom:1px solid var(--line);background:var(--bg)}
+table.pt td{padding:12px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.pt tr.rowlink{cursor:pointer}
+table.pt tr.rowlink:hover td{background:var(--tl)}
+.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.phd{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:16px;align-items:center}
+@media(max-width:800px){.phd{grid-template-columns:auto minmax(0,1fr)}.phd>.row{grid-column:1/-1}}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;border-bottom:2px solid var(--line)}
+.tabs button{border:0;background:none;padding:12px 14px;font-weight:700;color:var(--mut);border-bottom:3px solid transparent;margin-bottom:-2px;min-height:48px}
+.tabs button[aria-current=true]{color:var(--t);border-color:var(--t)}
+.flagrow{border-radius:12px;padding:10px 12px;background:var(--cos);display:grid;gap:4px}
+.flagrow.am{background:var(--ams)}
+.flagrow.plain{background:var(--bg)}
+.exl{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.exl:last-child{border-bottom:0}
+.libgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;max-height:620px;overflow:auto;padding:2px}
+.libt{border:1.5px solid var(--line);border-radius:14px;background:var(--card);padding:8px;display:grid;gap:6px;text-align:left;position:relative}
+.libt.new{border-style:dashed;border-color:var(--t);justify-items:center;align-content:center;text-align:center;color:var(--t);min-height:150px}
+.libt.new .plus{width:44px;height:44px;border-radius:50%;background:var(--tl2);display:grid;place-items:center;font-size:1.6rem;font-weight:800}
+.posegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.posegrid .libt{padding:6px;text-align:center}
+.exphoto{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}
+.pic{overflow:hidden}
+.libt[aria-pressed=true]{border-color:var(--t);background:var(--tl)}
+.libt .ck{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;background:var(--t);color:#fff;display:grid;place-items:center}
+.libt .ck svg{width:15px;height:15px}
+.ditem{display:grid;grid-template-columns:70px minmax(0,1fr);gap:12px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
+.ditem .ctl{grid-column:1/-1;display:grid;gap:10px}
+.setgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:12px}
+.setgrid>div{background:var(--tl);border-radius:14px;padding:12px;display:grid;gap:6px}
+.savebar{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:12px 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center;z-index:5}
+.empty{border:2px dashed var(--line);border-radius:16px;padding:24px;text-align:center;color:var(--mut)}
+.inbox{display:grid;grid-template-columns:300px minmax(0,1fr);gap:0;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--card);min-height:520px}
+.inbox .il{border-right:1px solid var(--line);display:grid;align-content:start}
+.inbox .il button{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;padding:12px;align-items:center}
+.inbox .il button[aria-current=true]{background:var(--tl)}
+.inbox .ith{padding:16px;display:grid;gap:14px;align-content:start;background:var(--bg)}
+@media(max-width:800px){.inbox{grid-template-columns:minmax(0,1fr)}.inbox .il{border-right:0}}
+/* feedback */
+.task{display:grid;gap:10px;padding:16px 0;border-bottom:1px solid var(--line)}
+.fbgrid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:26px;align-items:start}
+@media(max-width:900px){.fbgrid{grid-template-columns:minmax(0,1fr)}}
+.bar{display:grid;grid-template-columns:minmax(0,1fr) 3.2em;gap:8px;align-items:center;font-size:.92rem}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:700;z-index:60;max-width:calc(100% - 32px);box-shadow:0 6px 20px rgba(0,0,0,.2)}
+footer{border-top:1px solid var(--line);padding:14px max(3vw,16px);display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:center;color:var(--mut);font-size:.88rem;background:var(--card)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media(max-width:600px){.stack thead{display:none}.stack tr{display:grid;padding-block:8px;border-bottom:1px solid var(--line)}.stack td{display:flex;justify-content:space-between;gap:12px;border:0;padding:4px 8px}.stack td::before{content:attr(data-l);color:var(--mut);font-size:.82rem;font-weight:700}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#"><span class="logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg></span>Fysi</a>
+  <nav class="roles" aria-label="Välj vy">
+    <a href="#patient" data-r="patient">Patientapp</a>
+    <a href="#fysio" data-r="fysio">Fysioterapeut</a>
+    <a href="#feedback" data-r="feedback">Ge feedback</a>
+  </nav>
+  <div class="fs" role="group" aria-label="Textstorlek"><span>Text</span>
+    <button data-act="fs" data-v="0" aria-label="Normal text">A</button>
+    <button data-act="fs" data-v="1" aria-label="Större text" style="font-size:1.1rem">A</button>
+    <button data-act="fs" data-v="2" aria-label="Största text" style="font-size:1.25rem">A</button>
+  </div>
+</header>
+<main id="app"></main>
+<footer><span>Fysi · MVP för användartester. Patienter, meddelanden och loggar är påhittade exempel.</span><button class="link" data-act="resetask">Återställ demodata</button></footer>
+<div id="modal"></div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script>
+{
+/* ---------- dates ---------- */
+const pad=n=>String(n).padStart(2,'0');
+const key=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const TODAY=new Date();TODAY.setHours(12,0,0,0);
+const TK=key(TODAY);
+const addD=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const fromKey=k=>{const a=k.split('-').map(Number);return new Date(a[0],a[1]-1,a[2],12)};
+const dow=d=>(d.getDay()+6)%7;
+const MON=['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
+const MONL=['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
+const DAY=['Mån','Tis','Ons','Tor','Fre','Lör','Sön'];
+const DAYL=['måndag','tisdag','onsdag','torsdag','fredag','lördag','söndag'];
+const fmt=d=>d.getDate()+' '+MON[d.getMonth()];
+const fmtL=d=>DAYL[dow(d)]+' '+d.getDate()+' '+MONL[d.getMonth()];
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clone=o=>JSON.parse(JSON.stringify(o));
+const hm=t=>{const d=new Date(t);return fmt(d)+' '+pad(d.getHours())+':'+pad(d.getMinutes())};
+
+/* ---------- exercise library ---------- */
+const EX=[
+{id:'knaboj',name:'Knäböj mot stol',area:'Knä & höft',unit:'rep',pose:'squat',tags:'knä lår säte ben squat böj sitta resa uppresning',steps:['Stå med fötterna axelbrett isär, med en stol bakom dig.','Böj på knän och höft som om du ska sätta dig. Håll ryggen rak.','Nudda stolen lätt med baken och res dig långsamt upp igen.'],tip:'Knäna ska peka åt samma håll som tårna.'},
+{id:'knastrack',name:'Sittande knästräckning',area:'Knä & höft',unit:'rep',pose:'kneeExt',tags:'knä lår quadriceps framsida sträck stol sitta',steps:['Sitt långt bak på en stol med båda fötterna i golvet.','Sträck ut ena benet tills det är rakt. Håll i 2 sekunder.','Sänk foten långsamt. Byt ben när du gjort alla repetitioner.'],tip:'Spänn framsidan av låret när benet är rakt.'},
+{id:'balans',name:'Balans på ett ben',area:'Knä & höft',unit:'sek',pose:'balance',tags:'balans stabilitet fot fotled knä stå ett ben fall fallprevention',steps:['Stå nära en vägg eller ett bord som du kan ta stöd mot.','Lyft ena foten från golvet och stå stilla på det andra benet.','Håll positionen så länge som angivet. Byt sedan ben.'],tip:'Titta på en fast punkt framför dig, det gör det lättare.'},
+{id:'tahavning',name:'Tåhävning',area:'Fot & fotled',unit:'rep',pose:'calf',tags:'vad fot fotled hälsena achilles tå tår',steps:['Stå med fötterna höftbrett isär. Håll lätt i en stolsrygg.','Res dig upp på tå så högt du kan.','Sänk hälarna långsamt ner mot golvet.'],tip:'Gör nedåtrörelsen lugnt, räkna till tre.'},
+{id:'bro',name:'Bäckenlyft (bryggan)',area:'Rygg & bål',unit:'rep',pose:'bridge',tags:'rygg ländrygg säte bål höft bro brygga lyft rumpa',steps:['Ligg på rygg med böjda knän och fötterna i golvet.','Spänn magen och lyft bäckenet tills kroppen är rak från knä till axel.','Håll en sekund och sänk långsamt.'],tip:'Pressa genom hälarna, inte tårna.'},
+{id:'planka',name:'Planka på knä',area:'Rygg & bål',unit:'sek',pose:'plank',tags:'bål mage core rygg stabilitet planka',steps:['Ligg på mage med armbågarna under axlarna.','Lyft bäckenet så att kroppen blir rak från knä till huvud.','Andas lugnt och håll positionen.'],tip:'Svanka inte. Dra naveln lätt inåt.'},
+{id:'benlyft',name:'Sidoliggande benlyft',area:'Knä & höft',unit:'rep',pose:'sideLeg',tags:'höft säte gluteus utsida ben ligga sida',steps:['Ligg på sidan med det undre benet lätt böjt.','Lyft det övre benet rakt upp, med tån pekande framåt.','Sänk långsamt utan att vila benet helt.'],tip:'Rulla inte bakåt med höften.'},
+{id:'armlyft',name:'Armlyft framåt',area:'Axel & nacke',unit:'rep',pose:'armRaise',tags:'axel arm skuldra lyft rörlighet flexion',steps:['Stå rak med armarna längs sidan.','Lyft armarna framåt till axelhöjd med tummarna uppåt.','Sänk långsamt tillbaka.'],tip:'Håll axlarna nere, långt från öronen.'},
+{id:'vaggarm',name:'Armhävning mot vägg',area:'Axel & nacke',unit:'rep',pose:'wallPush',tags:'axel bröst arm skuldra armhävning vägg tryck',steps:['Stå en armlängd från en vägg med händerna mot väggen i axelhöjd.','Böj armarna och för bröstet mot väggen.','Tryck dig tillbaka tills armarna är raka.'],tip:'Håll kroppen rak som en planka.'},
+{id:'nacke',name:'Haka in (nackretraktion)',area:'Axel & nacke',unit:'rep',pose:'chin',tags:'nacke hållning huvud haka dubbelhaka',steps:['Sitt eller stå rak och titta rakt fram.','Dra hakan rakt bakåt, som en dubbelhaka. Huvudet ska inte tippa.','Håll 3 sekunder och slappna av.'],tip:'Rörelsen är liten. Det ska kännas i nacken, inte göra ont.'},
+{id:'utfall',name:'Utfallssteg',area:'Knä & höft',unit:'rep',pose:'lunge',tags:'utfall lunge ben lår säte knä steg',steps:['Stå rak med fötterna ihop. Håll gärna i en stolsrygg.','Ta ett långt steg framåt och böj båda knäna.','Tryck ifrån med främre foten och gå tillbaka. Byt ben.'],tip:'Främre knät ska vara ovanför foten, inte framför tårna.'},
+{id:'trappsteg',name:'Uppkliv på trappsteg',area:'Knä & höft',unit:'rep',pose:'stepUp',tags:'trappa steg uppkliv knä lår vardag gå',steps:['Stå framför ett trappsteg och håll i ledstången.','Sätt ena foten på steget och kliv upp tills benet är rakt.','Gå ner lugnt med samma ben först. Byt ben efter alla repetitioner.'],tip:'Låt inte knät falla inåt när du kliver upp.'}
+];
+const TPL=[{name:'Knäartros',perWeek:3,items:[['knaboj',3,10],['knastrack',3,12],['trappsteg',3,10],['balans',3,30]]},{name:'Ländrygg',perWeek:3,items:[['bro',3,12],['planka',3,20],['benlyft',2,12]]},{name:'Axel',perWeek:3,items:[['armlyft',3,10],['vaggarm',2,12],['nacke',2,10]]},{name:'Balans och fallprevention',perWeek:4,items:[['balans',3,20],['tahavning',3,12],['knaboj',2,10],['utfall',2,8]]}];
+const EXM=Object.fromEntries(EX.map(e=>[e.id,e]));
+const AREAS=['Alla','Knä & höft','Rygg & bål','Axel & nacke','Fot & fotled'];
+
+/* ---------- figures ---------- */
+const ST={H:[100,22],S:[100,42],E:[101,64],W:[102,86],P:[100,84],K:[101,110],A:[100,136],T:[113,136]};
+const L2={K2:[99,110],A2:[99,136],T2:[112,136]};
+const up=(o,dy,keep)=>Object.fromEntries(Object.entries(o).map(([k,v])=>[k,keep.includes(k)?v:[v[0],v[1]+dy]]));
+const POSES={
+squat:{prop:'chair',a:{...ST,...L2},b:{H:[90,52],S:[94,68],E:[116,70],W:[138,68],P:[76,100],K:[108,108],A:[100,136],T:[113,136],K2:[107,108],A2:[99,136],T2:[112,136]}},
+kneeExt:{prop:'chair2',a:{H:[86,38],S:[86,56],E:[90,78],W:[100,96],P:[88,98],K:[120,99],A:[120,136],T:[132,136],K2:[119,100],A2:[119,136],T2:[131,136]},b:{A:[156,97],T:[160,86]}},
+balance:{prop:'',a:{...ST,E:[110,62],W:[122,74],...L2},b:{K:[116,100],A:[108,124],T:[120,126]}},
+calf:{prop:'',a:{...ST,...L2},b:Object.assign(up({...ST,...L2},-9,['T','T2']),{A:[101,128],A2:[100,128]})},
+bridge:{prop:'mat',a:{H:[34,124],S:[50,128],E:[70,131],W:[90,132],P:[96,128],K:[124,104],A:[142,134],T:[154,134]},b:{P:[98,104],K:[127,97]}},
+plank:{prop:'mat',a:{H:[154,108],S:[140,116],E:[140,134],W:[162,134],P:[96,128],K:[66,134],A:[38,124],T:[32,134]},b:{H:[156,98],S:[140,108],P:[98,114]}},
+sideLeg:{prop:'mat',a:{H:[30,116],S:[48,122],E:[34,108],W:[28,116],P:[100,126],K:[130,127],A:[160,128],T:[166,122],K2:[128,132],A2:[158,133],T2:[165,128]},b:{K:[128,113],A:[154,100],T:[160,94]}},
+armRaise:{prop:'',a:{...ST,...L2},b:{E:[123,44],W:[146,42]}},
+wallPush:{prop:'wall',a:{H:[146,40],S:[136,54],E:[151,56],W:[164,58],P:[112,92],K:[102,114],A:[92,136],T:[104,136]},b:{H:[154,46],S:[146,60],E:[150,77],P:[118,94],K:[105,115]}},
+chin:{prop:'',a:{...ST,H:[107,23],...L2},b:{H:[98,24]}},
+lunge:{prop:'',a:{...ST,...L2},b:{H:[96,40],S:[96,58],E:[97,80],W:[98,100],P:[94,102],K:[122,108],A:[122,136],T:[134,136],K2:[80,130],A2:[58,128],T2:[52,136]}},
+stepUp:{prop:'step',a:{H:[90,22],S:[90,42],E:[91,64],W:[92,86],P:[90,84],K:[112,96],A:[118,112],T:[130,112],K2:[90,110],A2:[90,136],T2:[103,136]},b:{H:[114,8],S:[114,28],E:[115,50],W:[116,72],P:[115,68],K:[117,90],A:[118,112],T:[130,112],K2:[102,92],A2:[98,114],T2:[108,118]}}
+};
+for(const p of Object.values(POSES))p.b={...p.a,...p.b};
+const PROPS={chair:'<path class="prop" d="M46 103h32M48 103V64M50 103v35M76 103v35"/>',chair2:'<path class="prop" d="M68 103h36M70 103V58M72 103v35M102 103v35"/>',mat:'<path class="prop" d="M14 138h172"/>',wall:'<path class="prop" d="M168 8v130"/>',step:'<path class="prop" d="M106 112h58v26M106 112v26"/>','':''};
+const seg=(j,a,b)=>j[a]&&j[b]?`<line x1="${j[a][0].toFixed(1)}" y1="${j[a][1].toFixed(1)}" x2="${j[b][0].toFixed(1)}" y2="${j[b][1].toFixed(1)}"/>`:'';
+const limbs=j=>seg(j,'P','K2')+seg(j,'K2','A2')+seg(j,'A2','T2')+seg(j,'S','P')+seg(j,'S','H')+seg(j,'P','K')+seg(j,'K','A')+seg(j,'A','T')+seg(j,'S','E')+seg(j,'E','W')+`<circle cx="${j.H[0].toFixed(1)}" cy="${j.H[1].toFixed(1)}" r="11"/>`;
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fig=(exId,anim)=>{const e=EXM[exId];if(e&&e.img)return `<img class="exphoto" src="${e.img}" alt="">`;const p=POSES[(e&&POSES[e.pose])?e.pose:'armRaise'];const floor=p.prop==='mat'?'':'<path class="prop" d="M14 138h172"/>';return `<svg class="exfig${anim?' anim':''}" data-pose="${EXM[exId].pose}" viewBox="0 -4 200 150" aria-hidden="true">${floor}${PROPS[p.prop]}<g class="ghost">${limbs(p.a)}</g><g class="live">${limbs(anim&&!RM?p.a:p.b)}</g></svg>`};
+const figPose=(pose,anim)=>fig.call(null,'__p_'+pose,anim);
+const lerp=(p,t)=>{const o={};for(const k in p.a){const a=p.a[k],b=p.b[k];o[k]=[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t]}return o};
+const ease=t=>.5-.5*Math.cos(Math.PI*t);
+const tick=ms=>{if(!RM){const ph=(ms%3600)/3600;const t=ph<.4?ease(ph/.4):ph<.5?1:ph<.9?1-ease((ph-.5)/.4):0;
+  for(const s of document.querySelectorAll('svg.exfig.anim')){const g=s.querySelector('.live');if(g)g.innerHTML=limbs(lerp(POSES[s.dataset.pose],t))}}
+  requestAnimationFrame(tick)};
+requestAnimationFrame(tick);
+
+/* ----- pain description: anatomical figure, VAS, symbols ----- */
+const PAINT=[
+['Molande','Dov, ihållande värk','<circle cx="20" cy="20" r="5" fill="currentColor" stroke="none"/><circle cx="20" cy="20" r="11"/><circle cx="20" cy="20" r="17" opacity=".45"/>'],
+['Huggande','Plötslig och skarp','<path d="M24 2L10 22h9l-4 16 15-22h-9z" fill="currentColor" stroke="none"/>'],
+['Brännande','Het eller svidande','<path d="M20 3c2 8 11 11 11 21a11 11 0 0 1-22 0c0-6 3-8 5-12 1 4 3 5 4 6 1-6-1-10 2-15z" fill="currentColor" stroke="none"/>'],
+['Stickande','Som nålar','<path d="M7 7l8 8M20 3v11M33 7l-8 8M7 33l8-8M20 37V26M33 33l-8-8"/>'],
+['Pirrande','Myrkrypningar eller domning','<g fill="currentColor" stroke="none"><circle cx="9" cy="10" r="2.6"/><circle cx="21" cy="7" r="2.6"/><circle cx="32" cy="12" r="2.6"/><circle cx="14" cy="21" r="2.6"/><circle cx="27" cy="22" r="2.6"/><circle cx="8" cy="31" r="2.6"/><circle cx="20" cy="33" r="2.6"/><circle cx="32" cy="31" r="2.6"/></g>'],
+['Strålande','Sprider sig ut','<circle cx="10" cy="20" r="5" fill="currentColor" stroke="none"/><path d="M18 20h17M30 15l5 5-5 5M17 13l13-7M17 27l13 7"/>'],
+['Stelt','Svårt att röra sig','<rect x="7" y="16" width="26" height="8" rx="2" fill="currentColor" stroke="none"/><path d="M7 8v24M33 8v24"/>'],
+['Krampande','Drar ihop sig','<path d="M20 20m-3 0a3 3 0 1 1 6 0a7 7 0 1 1-14 0a11 11 0 1 1 22 0a15 15 0 1 1-30 0"/>']];
+const PTM=Object.fromEntries(PAINT.map(x=>[x[0],x]));
+const picon=(n,sz=28)=>PTM[n]?`<svg class="picon" width="${sz}" height="${sz}" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true">${PTM[n][2]}</svg>`:'';
+const REG={fram:[['Höger axel',52,64,11,10],['Vänster axel',108,64,11,10],['Bröst',80,84,19,11],['Mage',80,120,17,13],['Höger handled',37,150,8,8],['Vänster handled',123,150,8,8],['Höger höft',64,146,10,9],['Vänster höft',96,146,10,9],['Höger lår',65,180,10,15],['Vänster lår',95,180,10,15],['Höger knä',64,214,10,10],['Vänster knä',96,214,10,10],['Höger fotled',62,276,8,8],['Vänster fotled',98,276,8,8]],
+bak:[['Nacke',80,47,9,7],['Vänster skulderblad',61,78,9,12],['Höger skulderblad',99,78,9,12],['Övre rygg',80,92,8,12],['Ländrygg',80,124,16,10],['Vänster säte',66,151,12,10],['Höger säte',94,151,12,10],['Vänster baksida lår',65,185,10,15],['Höger baksida lår',95,185,10,15],['Vänster vad',63,242,9,14],['Höger vad',97,242,9,14],['Vänster häl',62,284,8,6],['Höger häl',98,284,8,6]]};
+/* zoom groups: fine zones in canonical coords (limb at x≈64, outside = smaller x).
+   front: right side as written, left mirrored. back: left side as written, right mirrored. */
+const ZG={
+knee:{t:'knä och lår',box:[42,158,46,102],fram:[['lår, framsida',65,182,6,11],['lår, utsida',56,184,3.5,10],['lår, insida',74,184,3.5,10],['knäskål',64,212,5.5,5.5],['knä, utsida',55,213,3.5,6],['knä, insida',73,213,3.5,6],['knä, under knäskålen',64,225,5,4],['smalben',63,247,5,12]],
+  bak:[['lår, baksida',65,184,6,12],['lår, utsida',56,184,3.5,10],['lår, insida',74,184,3.5,10],['knäveck',64,214,6,5],['knä, utsida',55,213,3.5,6],['knä, insida',73,213,3.5,6],['vad',63,243,6,13]]},
+hip:{t:'höft och säte',box:[40,120,52,74],fram:[['höft, framsida',63,142,6,5],['ljumske',72,153,4,4],['höft, utsida',51,147,3.5,8],['lår, framsida',65,176,6,10],['lår, utsida',56,177,3.5,9]],
+  bak:[['säte',66,148,9,7],['sittben',71,160,4,3.5],['höft, utsida',51,147,3.5,8],['lår, baksida',65,180,6,10]]},
+arm:{t:'axel och arm',box:[20,40,66,124],fram:[['axel, ovansida',59,58,6,3.5],['axel, framsida',55,67,5,5],['axel, utsida',46,69,3.5,6],['överarm',44,92,5,11],['armbåge',41,111,4,4],['underarm',39,133,4,10],['handled',37,152,4,4]],
+  bak:[['skuldra',67,57,6,3.5],['skulderblad',62,82,7,10],['axel, baksida',51,67,5,5],['överarm, baksida',44,92,5,11],['armbåge',41,111,4,4]]},
+foot:{t:'fot och fotled',box:[40,252,44,46],fram:[['fotled, framsida',62,272,4,4],['fotled, utsida',54,277,3,4],['fotled, insida',70,277,3,4],['fotrygg',57,289,6,3.5]],
+  bak:[['hälsena',62,265,3.5,7],['fotled, utsida',54,278,3,4],['fotled, insida',70,278,3,4],['häl',60,290,6,4]]},
+back:{t:'Rygg och nacke',box:[42,32,76,124],mid:true,bak:[['Nacke',80,47,6,6],['Mellan skulderbladen',80,78,5,8],['Bröstrygg, vänster sida',69,96,5,8],['Bröstrygg, höger sida',91,96,5,8],['Ländrygg, mitten',80,124,5,7],['Ländrygg, vänster sida',68,124,5,7],['Ländrygg, höger sida',92,124,5,7],['Korsrygg',80,142,7,5]]}};
+const C2G={'axel':'arm','handled':'arm','skulderblad':'arm','höft':'hip','säte':'hip','lår':'knee','knä':'knee','baksida lår':'knee','vad':'knee','fotled':'foot','häl':'foot'};
+const sideOf=n=>n.startsWith('Höger')?'Höger':n.startsWith('Vänster')?'Vänster':null;
+function groupOf(n){if(['Nacke','Övre rygg','Ländrygg'].includes(n))return 'back';const s=sideOf(n);if(!s)return null;return C2G[n.slice(s.length+1)]||null}
+function zonesFor(g,side,view){const G=ZG[g];if(!G[view])return [];if(G.mid)return G[view].map(z=>({n:z[0],x:z[1],y:z[2],rx:z[3],ry:z[4]}));
+  const mir=view==='fram'?side==='Vänster':side==='Höger';return G[view].map(([n,x,y,rx,ry])=>({n:side+' '+n,x:mir?160-x:x,y,rx,ry}))}
+function zbox(g,side,view){const b=ZG[g].box;if(ZG[g].mid)return b;const mir=view==='fram'?side==='Vänster':side==='Höger';return mir?[160-b[0]-b[2],b[1],b[2],b[3]]:b}
+const ZIDX={};for(const g in ZG)for(const v of ['fram','bak'])for(const s of (ZG[g].mid?[null]:['Höger','Vänster']))for(const z of zonesFor(g,s,v)){if(!ZIDX[z.n])ZIDX[z.n]={...z,view:v,g,side:s}}
+const viewOf=n=>ZIDX[n]&&!REG.fram.some(r=>r[0]===n)&&!REG.bak.some(r=>r[0]===n)?ZIDX[n].view:REG.bak.some(r=>r[0]===n)?'bak':'fram';
+const SIL=view=>`<g fill="var(--tl2)"><ellipse cx="80" cy="22" rx="15" ry="18"/><rect x="72" y="36" width="16" height="18" rx="5"/><path d="M50 60Q80 50 110 60L114 100Q108 128 112 154L48 154Q52 128 46 100Z"/><ellipse cx="37" cy="164" rx="6" ry="9"/><ellipse cx="123" cy="164" rx="6" ry="9"/><ellipse cx="${view==='fram'?57:60}" cy="291" rx="11" ry="6"/><ellipse cx="${view==='fram'?103:100}" cy="291" rx="11" ry="6"/></g>
+  <g stroke="var(--tl2)" stroke-linecap="round" fill="none"><path d="M54 62L42 110L37 156M106 62L118 110L123 156" stroke-width="15"/><path d="M66 150L64 216L62 280M94 150L96 216L98 280" stroke-width="22"/></g>
+  ${view==='bak'?'<path d="M80 58V150" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 4"/>':''}`;
+function bodyFig(view,sel,counts,interactive,w){
+  const sil=SIL(view)+`<text x="10" y="16" class="lr">${view==='fram'?'H':'V'}</text><text x="150" y="16" class="lr" text-anchor="end">${view==='fram'?'V':'H'}</text>`;
+  const max=Math.max(1,...Object.values(counts||{}));let regs='';
+  if(interactive){const fineSel=sel.map(a=>ZIDX[a]).filter(Boolean);
+    regs=REG[view].map(([n,x,y,rx,ry])=>{const g=groupOf(n),s=sideOf(n);const on=sel.includes(n)||fineSel.some(z=>z.g===g&&(z.side===s||ZG[g].mid));
+      return `<ellipse class="reg" cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" role="button" tabindex="0" data-act="${g?'zoomin':'area'}" data-v="${n}" aria-pressed="${on}" aria-label="${g?'Zooma in på ':''}${n}"><title>${n}</title></ellipse>`}).join('');
+    regs+=fineSel.filter(z=>z.view===view).map(z=>`<ellipse cx="${z.x}" cy="${z.y}" rx="${Math.max(2.5,z.rx*.8)}" ry="${Math.max(2.5,z.ry*.8)}" fill="var(--co)" stroke="var(--card)" stroke-width="1" pointer-events="none"/>`).join('')}
+  else for(const [n,c] of Object.entries(counts||{})){const o=(.3+.7*c/max).toFixed(2);const r=REG[view].find(x=>x[0]===n);
+    if(r)regs+=`<ellipse cx="${r[1]}" cy="${r[2]}" rx="${r[3]+2}" ry="${r[4]+2}" fill="var(--co)" opacity="${o}"><title>${n}: ${c}</title></ellipse>`;
+    else if(ZIDX[n]&&ZIDX[n].view===view){const z=ZIDX[n];regs+=`<ellipse cx="${z.x}" cy="${z.y}" rx="${z.rx+1.5}" ry="${z.ry+1.5}" fill="var(--co)" opacity="${o}"><title>${n}: ${c}</title></ellipse>`}}
+  return `<svg class="body" viewBox="0 0 160 300" width="${w||150}" role="${interactive?'group':'img'}" aria-label="${view==='fram'?'Kroppen framifrån':'Kroppen bakifrån'}">${sil}${regs}</svg>`}
+function zoomFig(f){const z=f.zoom,G=ZG[z.g];const view=G[z.view]?z.view:(G.fram?'fram':'bak');const Z=zonesFor(z.g,z.side,view);const b=zbox(z.g,z.side,view);const fs=(b[2]/12).toFixed(2);
+  const title=G.mid?G.t:z.side+' '+G.t;
+  const zones=Z.map((q,i)=>{const on=f.area.includes(q.n);return `<g class="zone" role="button" tabindex="0" data-act="area" data-v="${q.n}" aria-pressed="${on}" aria-label="${q.n}"><ellipse cx="${q.x}" cy="${q.y}" rx="${q.rx}" ry="${q.ry}" vector-effect="non-scaling-stroke"/><text x="${q.x}" y="${q.y}" font-size="${fs}" text-anchor="middle" dominant-baseline="central">${i+1}</text></g>`}).join('');
+  const outside=view==='fram'?(z.side==='Höger'?'vänster':'höger'):(z.side==='Höger'?'höger':'vänster');
+  return `<div class="zoom"><div class="between"><button class="link" data-act="zoomout" style="padding-left:0">← Hela kroppen</button>${G.fram&&G.bak?`<div class="row" style="gap:4px"><button class="chip" style="min-height:40px;padding:4px 12px" data-act="zview" data-v="fram" aria-pressed="${view==='fram'}">Framsida</button><button class="chip" style="min-height:40px;padding:4px 12px" data-act="zview" data-v="bak" aria-pressed="${view==='bak'}">Baksida</button></div>`:''}</div>
+  <h4>${esc(cap(title))}, ${view==='fram'?'framifrån':'bakifrån'}</h4>${G.mid?'':`<p class="small mut">Utsidan är åt ${outside} på bilden.</p>`}
+  <div class="zwrap"><svg class="zfig" viewBox="${b.join(' ')}" role="group" aria-label="Förstorad bild">${SIL(view)}${zones}</svg>
+  <div class="zlist">${Z.map((q,i)=>`<button class="zchip" data-act="area" data-v="${q.n}" aria-pressed="${f.area.includes(q.n)}"><b>${i+1}</b>${esc(cap(G.mid?q.n:q.n.slice(z.side.length+1)))}</button>`).join('')}</div></div></div>`}
+function painPicker(f){const v=f.view||'fram';
+  return `<div class="picker"><div><h4>Var gör det ont?</h4><p class="small mut">${f.zoom?'Tryck på de ställen där det gör ont. Du kan välja flera.':'Tryck på en kroppsdel för att zooma in och visa exakt var det gör ont.'}</p></div>
+  ${f.zoom?zoomFig(f):`<div class="row" style="gap:6px"><button class="chip" data-act="bview" data-v="fram" aria-pressed="${v==='fram'}">Framsida</button><button class="chip" data-act="bview" data-v="bak" aria-pressed="${v==='bak'}">Baksida</button></div>
+  <div class="bodymap">${bodyFig(v,f.area,null,true,170)}<div style="display:grid;gap:6px;align-content:start"><span class="small mut">${v==='fram'?'Du ser kroppen framifrån, som en annan person ser dig.':'Du ser kroppen bakifrån. Byt hit för rygg, säte, vad och häl.'}</span></div></div>`}
+  <div class="row" style="gap:6px"><span class="small mut">Valt:</span>${f.area.length?f.area.map(a=>`<button class="tag co plain" data-act="area" data-v="${esc(a)}" style="border:0;min-height:34px" aria-label="Ta bort ${esc(a)}">${esc(a)} ×</button>`).join(''):'<span class="small">Inget valt än</span>'}</div>
+  <div><h4>Hur känns det?</h4><p class="small mut">Välj det eller de som stämmer bäst.</p><div class="ptiles">${PAINT.map(([n,dsc])=>`<button class="ptile" data-act="ptype" data-v="${n}" aria-pressed="${f.type.includes(n)}">${picon(n,34)}<span><strong>${n}</strong><small>${dsc}</small></span></button>`).join('')}</div></div></div>`}
+const vasCol=v=>`hsl(${140-13.5*v} 62% ${74-v*1.2}%)`;
+function vasPicker(f){return `<div class="vas" role="group" aria-label="Smärta 0 till 10" style="margin-top:8px">${Array.from({length:11},(_,v)=>`<button data-act="vas" data-v="${v}" aria-pressed="${f.pain===v}" style="--c:${vasCol(v)}">${v}</button>`).join('')}</div><div class="between small mut" style="margin-top:4px"><span>Ingen smärta</span><span>Värsta tänkbara</span></div>${f.pain!=null?`<p style="font-weight:700;margin-top:6px">${['Ingen smärta','Lite ont','Lite ont','Lite ont','Måttligt ont','Måttligt ont','Måttligt ont','Mycket ont','Mycket ont','Mycket ont','Värsta tänkbara'][f.pain]}</p>`:''}`}
+function painCard(pn){if(!pn)return '';const cnt={};(pn.area||[]).forEach(a=>cnt[a]=1);const views=['fram','bak'].filter(v=>(pn.area||[]).some(a=>viewOf(a)===v));
+  return `<div class="pcard"><div class="row" style="gap:6px"><span class="vasb" style="background:${vasCol(pn.pain)}">Smärta ${pn.pain}/10</span>${(pn.type||[]).map(t=>`<span class="ptag">${picon(t,20)}${esc(t)}</span>`).join('')}</div>
+  ${views.length?`<div class="row" style="gap:10px;align-items:flex-end">${views.map(v=>bodyFig(v,[],cnt,false,72)).join('')}<span class="small">${esc(pn.area.join(', '))}</span></div>`:''}</div>`}
+function painPicture(p,n=14){const from=key(addD(TODAY,-n));const L=p.logs.filter(l=>l.date>=from&&l.pain);const M=p.msgs.filter(m=>m.pain&&m.t>=fromKey(from).getTime());
+  const all=[...L.map(l=>({d:l.date,pain:l.pain,area:l.area||[],type:l.type||[]})),...M.map(m=>({d:key(new Date(m.t)),pain:m.pain.pain,area:m.pain.area||[],type:m.pain.type||[],msg:true}))].sort((a,b)=>a.d<b.d?1:-1);
+  if(!all.length)return `<p class="mut">Ingen smärta beskriven de senaste ${n} dagarna.</p>`;
+  const ca={},ct={};all.forEach(x=>{x.area.forEach(a=>ca[a]=(ca[a]||0)+1);x.type.forEach(t=>ct[t]=(ct[t]||0)+1)});
+  const last=all[0];
+  return `<div class="ppic"><div class="row" style="gap:4px;justify-content:center">${bodyFig('fram',[],ca,false,120)}${bodyFig('bak',[],ca,false,120)}</div>
+  <div style="display:grid;gap:10px;align-content:start"><div><span class="small mut">Vanligaste ställen</span><p>${Object.entries(ca).sort((a,b)=>b[1]-a[1]).map(([a,c])=>`<strong>${esc(a)}</strong> <span class="mut small">${c} ggr</span>`).join('<br>')||'–'}</p></div>
+  <div><span class="small mut">Så beskrivs smärtan</span><div style="display:grid;gap:4px;margin-top:4px">${Object.entries(ct).sort((a,b)=>b[1]-a[1]).map(([t,c])=>`<span class="ptag">${picon(t,22)}${esc(t)} <span class="mut small">${c} ggr</span></span>`).join('')||'–'}</div></div>
+  <p class="small">Senast ${fmt(fromKey(last.d))}${last.msg?' (i meddelande)':''}: VAS ${last.pain}${last.area.length?', '+esc(last.area.join(', ')):''}${last.type.length?', '+esc(last.type.join(', ').toLowerCase()):''}.</p></div></div>`}
+
+/* ----- feedback ----- */
+const TASKS=[['f1','Fysioterapeut','Skapa ett program med 3 övningar åt Lisa: välj övningar, set, repetitioner och hur många pass i veckan.'],['f2','Fysioterapeut','Ta reda på hur det går för Olof. Har han tränat, och hur har smärtan ändrats?'],['f3','Fysioterapeut','Lägg till en egen övning som inte finns i biblioteket.'],['p1','Patient','Hitta instruktionerna för en av övningarna i ditt pass.'],['p2','Patient','Logga ett pass: hur mycket du gjorde och hur ont du har. Flagga en övning som kändes konstig.'],['p3','Patient','Skriv ett meddelande till din fysioterapeut.'],['p4','Patient','Beskriv din smärta för fysioterapeuten: var det gör ont och hur det känns.']];
+const RES=['Klarade det','Med lite hjälp','Klarade inte'];
+function vFeedback(){const f=ui.fb;
+  const chips=(k,opts)=>opts.map(o=>`<button class="chip" data-act="fbset" data-k="${k}" data-v="${o}" aria-pressed="${f[k]===o}">${o}</button>`).join('');
+  const tasks=TASKS.filter(t=>!f.role||f.role==='Annat'||t[1]===f.role).map(([id,r,txt])=>{const t=f.tasks[id]||{};return `<div class="task"><div><span class="tag">${r}</span><p style="font-weight:600;margin-top:6px">${txt}</p></div>
+  <div class="row" style="gap:6px">${RES.map(o=>`<button class="chip" data-act="fbt" data-id="${id}" data-k="res" data-v="${o}" aria-pressed="${t.res===o}">${o}</button>`).join('')}</div>
+  <div><span class="small mut">Hur lätt var det? 1 = mycket svårt, 5 = mycket lätt</span><div class="row" style="gap:6px;margin-top:4px">${[1,2,3,4,5].map(n=>`<button class="chip" style="min-width:48px" data-act="fbt" data-id="${id}" data-k="ease" data-v="${n}" aria-pressed="${t.ease==n}">${n}</button>`).join('')}</div></div></div>`}).join('');
+  const list=(ui.fbList||S.fbLocal).slice().sort((a,b)=>b.t-a.t);
+  const sum=TASKS.map(([id,,txt])=>{const v=list.map(x=>x.tasks&&x.tasks[id]&&+x.tasks[id].ease).filter(Boolean);const avg=v.length?v.reduce((s,x)=>s+x,0)/v.length:0;return `<div><span class="small">${txt}</span><div class="bar"><div class="meter" style="margin:0;height:12px"><i style="width:${avg/5*100}%"></i></div><span class="num small">${v.length?avg.toFixed(1):'–'}</span></div></div>`}).join('');
+  return `<div class="wrap"><h1>Hur gick testet?</h1><p class="mut" style="max-width:62ch">Gör uppgifterna i appen först. Fyll sedan i hur det gick. Det finns inga fel svar, vi testar appen och inte dig.</p>
+  <div class="fbgrid" style="margin-top:18px"><form class="card" id="fbform" style="display:grid;gap:16px" onsubmit="return false">
+  <div><span class="lab">Jag testade som</span><div class="row" style="gap:6px">${chips('role',['Fysioterapeut','Patient','Annat'])}</div></div>
+  <div><span class="lab">Ålder</span><div class="row" style="gap:6px">${chips('age',['Under 30','30–49','50–64','65+'])}</div></div>
+  <div><h3>Uppgifter</h3>${tasks}</div>
+  <div><label class="lab" for="fb-good">Vad var bra?</label><textarea id="fb-good" data-in="fb" data-k="good">${esc(f.good||'')}</textarea></div>
+  <div><label class="lab" for="fb-miss">Vad saknas?</label><textarea id="fb-miss" data-in="fb" data-k="miss">${esc(f.miss||'')}</textarea></div>
+  <div><label class="lab" for="fb-hard">Var blev du osäker eller fastnade?</label><textarea id="fb-hard" data-in="fb" data-k="hard">${esc(f.hard||'')}</textarea></div>
+  <button class="btn pri" data-act="fbsend" style="min-height:56px">Skicka feedback</button></form>
+  <div style="display:grid;gap:14px"><div class="card"><h3>Inkommen feedback (${list.length})</h3><p class="small mut">${ui.db?'Delas mellan alla som testar via länken.':'Sparas i den här webbläsaren.'} Snittbetyg för hur lätt uppgiften var (1–5):</p><div style="display:grid;gap:10px;margin-top:10px">${sum}</div><button class="btn sm" data-act="fbcopy" style="margin-top:12px" ${list.length?'':'disabled'}>Kopiera allt som tabell</button></div>
+  ${list.slice(0,12).map(x=>`<div class="card"><div class="row"><span class="tag">${esc(x.role||'Okänd roll')}</span><span class="tag">${esc(x.age||'Ålder ej angiven')}</span><span class="small mut">${hm(x.t)}</span></div>${x.good?`<p><strong>Bra:</strong> ${esc(x.good)}</p>`:''}${x.miss?`<p><strong>Saknas:</strong> ${esc(x.miss)}</p>`:''}${x.hard?`<p><strong>Osäker:</strong> ${esc(x.hard)}</p>`:''}</div>`).join('')}</div></div></div>`}
+
+/* ---------- exercise guidance (Figma: why + do/don't) ---------- */
+const GUIDE={knaboj:['Stärker lår och säte, som avlastar knät när du går i trappor och reser dig.','Låt inte knäna falla inåt.'],
+knastrack:['Stärker framsidan av låret, som håller knät stabilt.','Lyft inte benet med fart. Gör det långsamt.'],
+balans:['Tränar balansen och minskar risken att ramla.','Släpp inte stödet förrän du känner dig säker.'],
+tahavning:['Stärker vaderna, vilket ger bättre balans och gång.','Studsa inte. Ta det lugnt upp och ner.'],
+bro:['Stärker säte och rygg, vilket avlastar ländryggen.','Svanka inte i ländryggen i toppläget.'],
+planka:['Tränar bålen så att ryggen får bättre stöd.','Håll inte andan.'],
+benlyft:['Stärker höftens utsida, som behövs för en stabil gång.','Rulla inte bakåt med höften.'],
+armlyft:['Ökar rörligheten och styrkan i axeln.','Dra inte upp axlarna mot öronen.'],
+vaggarm:['Stärker axlar och bröst med låg belastning.','Låt inte magen hänga. Håll kroppen rak.'],
+nacke:['Förbättrar hållningen och avlastar nacken.','Tippa inte huvudet uppåt eller nedåt.'],
+utfall:['Stärker benen och balansen inför vardagens rörelser.','Låt inte främre knät gå långt förbi tårna.'],
+trappsteg:['Tränar precis det du gör i trappor varje dag.','Låt inte knät falla inåt.']};
+
+/* ---------- seed data ---------- */
+function seed(){
+  let s=11;const r=()=>(s=s*16807%2147483647)/2147483647;
+  const mk=(o)=>Object.assign({unread:0,booking:null,logs:[],msgs:[],msgMax:3,painLimit:4,weeks:6},o);
+  const P={
+    olof:mk({id:'olof',name:'Olof Berg',first:'Olof',age:71,dx:'Knäartros, höger knä',nextVisit:key(addD(TODAY,8)),since:key(addD(TODAY,-24)),weeks:8,msgLeft:2,
+      program:{perWeek:4,items:[{ex:'knaboj',sets:3,reps:10,note:'Använd köksstolen. Gå bara så djupt som känns okej.'},{ex:'knastrack',sets:3,reps:12,note:''},{ex:'balans',sets:3,reps:30,note:'Stå vid diskbänken så du kan ta stöd.'}]},
+      msgs:[{from:'f',text:'Hej Olof! Ditt program ligger nu i appen. Hör av dig om något känns konstigt.',t:addD(TODAY,-24).getTime()},{from:'p',text:'Det knakar lite i knät när jag gör knäböjen. Är det farligt?',t:addD(TODAY,-10).getTime()+3.6e7},{from:'f',text:'Knakande utan smärta är vanligt och ofarligt. Fortsätt som vanligt, och minska djupet om det gör ont.',t:addD(TODAY,-9).getTime()+3.3e7}]}),
+    anna:mk({id:'anna',name:'Anna Sjöberg',first:'Anna',age:52,dx:'Subakromiell smärta, vänster axel',nextVisit:key(addD(TODAY,13)),since:key(addD(TODAY,-17)),msgLeft:1,unread:1,
+      program:{perWeek:3,items:[{ex:'armlyft',sets:3,reps:10,note:''},{ex:'vaggarm',sets:2,reps:12,note:''},{ex:'nacke',sets:2,reps:10,note:'Gärna vid datorn under arbetsdagen.'}]},
+      msgs:[{from:'f',text:'Hej Anna! Här är dina övningar för axeln.',t:addD(TODAY,-17).getTime()},{from:'p',text:'Det gör ondare i axeln efter armlyften senaste veckan. Ska jag fortsätta?',t:addD(TODAY,-1).getTime()+2.9e7,pain:{pain:5,area:['Vänster axel, utsida','Vänster skulderblad'],type:['Huggande','Strålande']}}]}),
+    karin:mk({id:'karin',name:'Karin Holm',first:'Karin',age:63,dx:'Hälsenetendinopati, höger',nextVisit:key(addD(TODAY,6)),since:key(addD(TODAY,-30)),weeks:10,msgLeft:3,
+      program:{perWeek:3,items:[{ex:'tahavning',sets:3,reps:15,note:'Gör nedåtfasen på ett ben.'},{ex:'balans',sets:2,reps:30,note:''},{ex:'trappsteg',sets:2,reps:10,note:''}]},
+      msgs:[{from:'f',text:'Hej Karin! Bra jobbat hittills. Vi ökar tåhävningarna till 15 repetitioner.',t:addD(TODAY,-12).getTime()}]}),
+    lisa:mk({id:'lisa',name:'Lisa Ek',first:'Lisa',age:34,dx:'Långvarig ländryggssmärta',nextVisit:key(addD(TODAY,21)),since:null,msgLeft:3,program:{perWeek:3,items:[]}})
+  };
+  const mkLogs=(p,days,rate,p0,p1,area,type)=>{for(let i=days;i>=1;i--){if(r()>rate)continue;const d=addD(TODAY,-i);const items={};
+    for(const it of p.program.items){const q=r();items[it.ex]={sets:q<.1?it.sets-1:it.sets,reps:q>.85?Math.max(1,it.reps-(EXM[it.ex].unit==='sek'?10:3)):it.reps,flag:null,comment:''}}
+    const pain=Math.max(0,Math.min(10,Math.round(p0+(p1-p0)*(days-i)/days+(r()-.5)*1.6)));const q=r();
+    p.logs.push({date:key(d),items,pain,area:pain?[area]:[],type:pain?[type]:[],note:'',effort:q<.25?'Lätt':q<.85?'Lagom':'Tungt'})}};
+  mkLogs(P.olof,24,.47,6.3,2.8,'Höger knä, insida','Molande');
+  mkLogs(P.anna,17,.36,3,5.6,'Vänster axel, framsida','Huggande');
+  mkLogs(P.karin,30,.42,5,2,'Höger hälsena','Stelt');
+  const ol=P.olof.logs,al=P.anna.logs;
+  ol[ol.length-6].items.knaboj={sets:2,reps:8,flag:'Kändes fel',comment:'Knät vek sig lite inåt på sista setet.'};
+  ol[ol.length-2].note='Lättare att gå i trappan nu.';
+  al[al.length-1].items.armlyft={sets:2,reps:6,flag:'Gjorde ont',comment:'Hugger till när armen kommer över axelhöjd.'};al[al.length-1].pain=6;al[al.length-1].effort='Tungt';
+  al[al.length-2].items.armlyft.flag='Gjorde ont';
+  return {v:5,patients:P,order:['olof','anna','karin','lisa'],fbLocal:[],custom:[]};
+}
+const LS='fysi-mvp-5';
+let S=null;try{S=JSON.parse(localStorage.getItem(LS))}catch(e){}
+if(!S||S.v!==5){S=seed();try{for(const k of ['fysi-mvp-4','fysi-mvp-3','fysi-mvp-2','fysi-mvp-1']){const o=JSON.parse(localStorage.getItem(k));if(o&&o.fbLocal&&o.fbLocal.length){S.fbLocal=o.fbLocal;break}}}catch(e){}}
+const save=()=>{try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}};
+const ui={view:'start',pid:'olof',ptab:'idag',fpage:'oversikt',fpid:null,ftab:'uppf',fmsg:'anna',draft:null,dirty:false,q:'',area:'Alla',modal:null,form:null,composer:false,prefill:'',att:null,patt:null,fb:{tasks:{}},fbList:null,db:null,fs:0,editI:null};
+try{ui.fs=+localStorage.getItem('fysi-fs')||0}catch(e){}
+const pat=id=>S.patients[id];
+if(!S.custom)S.custom=[];
+function loadCustom(){for(const c of S.custom)if(!EXM[c.id]){EX.push(c);EXM[c.id]=c}}
+loadCustom();
+for(const k in POSES)EXM['__p_'+k]={pose:k};
+
+/* ---------- derived ---------- */
+const prog=p=>p.program.items;
+const logOf=(p,k)=>p.logs.find(l=>l.date===k);
+const unitL=ex=>EXM[ex].unit==='sek'?'sek':'rep';
+const dose=it=>`${it.sets} set × ${it.reps} ${unitL(it.ex)}`;
+const perWk=n=>n===1?'1 pass i veckan':n+' pass i veckan';
+const share=(it,x)=>x?Math.min(1,(x.sets*x.reps)/(it.sets*it.reps)):0;
+function vol(p,l){const P=prog(p);if(!P.length)return 1;return P.reduce((s,it)=>s+share(it,l.items[it.ex]),0)/P.length}
+const wkStart=d=>addD(d,-dow(d));
+const inRange=(p,a,b)=>p.logs.filter(l=>l.date>=key(a)&&l.date<=key(b));
+const weekDone=(p,d=TODAY)=>inRange(p,wkStart(d),addD(wkStart(d),6)).length;
+const progWeek=p=>p.since?Math.min(p.weeks,Math.floor((TODAY-wkStart(fromKey(p.since)))/(7*864e5))+1):0;
+const wkPlan=(p,w)=>{const per=p.program.perWeek;if(w!==1||!p.since)return per;return Math.max(1,Math.round(per*(7-dow(fromKey(p.since)))/7))};
+const progEnd=p=>p.since?addD(wkStart(fromKey(p.since)),p.weeks*7-1):null;
+function adherence(p,n=14){const per=p.program.perWeek;let from=addD(TODAY,-(n-1));if(p.since&&fromKey(p.since)>from)from=fromKey(p.since);
+  const days=Math.round((TODAY-from)/864e5)+1;const plan=Math.max(1,Math.round(per*days/7));const L=inRange(p,from,TODAY);
+  const v=L.length?Math.round(L.reduce((s,l)=>s+vol(p,l),0)/L.length*100):null;
+  return {plan,done:L.length,pct:p.since&&prog(p).length?Math.min(100,Math.round(L.length/plan*100)):null,vol:v,from}}
+function painInfo(p){const L=p.logs.filter(l=>l.pain!=null).sort((a,b)=>a.date<b.date?-1:1);if(!L.length)return null;
+  const last=L[L.length-1];const first=L[0];const r3=L.slice(-3),p3=L.slice(-6,-3);const avg=a=>a.reduce((s,l)=>s+l.pain,0)/a.length;
+  const trend=p3.length?avg(r3)-avg(p3):0;return {last,first,trend,series:L}}
+function flags(p,n=21){const from=key(addD(TODAY,-n));const out=[];for(const l of p.logs){if(l.date<from)continue;
+  for(const ex in l.items){const x=l.items[ex];if(x.flag||x.comment)out.push({date:l.date,ex,flag:x.flag,comment:x.comment})}
+  if(l.note)out.push({date:l.date,ex:null,flag:null,comment:l.note})}return out.sort((a,b)=>a.date<b.date?1:-1)}
+function status(p){if(!prog(p).length)return ['Inget program','in'];const pi=painInfo(p);if(pi&&pi.last.pain>p.painLimit)return ['Över smärtgräns','co'];if(pi&&pi.trend>.5)return ['Smärta ökar','am'];const a=adherence(p);if(a.pct!=null&&a.pct<60)return ['Låg följsamhet','am'];return ['På spår','ok']}
+function lastDays(p){if(!p.logs.length)return null;return Math.round((TODAY-fromKey(p.logs[p.logs.length-1].date))/864e5)}
+const agoTxt=d=>d==null?'–':d===0?'I dag':d===1?'I går':d+' dagar sedan';
+
+/* ---------- icons ---------- */
+const sv=(d,w=2.2)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const IC={home:sv('<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>'),chart:sv('<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>'),chat:sv('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>'),
+check:sv('<path d="M4 12.5l5 5L20 6.5"/>',3),info:sv('<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>'),chev:sv('<path d="M9 6l6 6-6 6"/>'),users:sv('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/>'),
+grid:sv('<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>'),
+alert:sv('<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/>'),flag:sv('<path d="M5 21V4h11l-2 4 2 4H5"/>'),cal:sv('<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>'),
+pulse:sv('<path d="M3 12h4l3-7 4 14 3-7h4"/>'),edit:sv('<path d="M4 20h4L20 8l-4-4L4 16z"/>'),doc:sv('<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/>'),phone:sv('<path d="M5 3h4l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/>'),x:sv('<path d="M6 6l12 12M18 6L6 18"/>',3)};
+
+/* ---------- rendering ---------- */
+const $app=document.getElementById('app'),$modal=document.getElementById('modal');
+function render(){
+  document.documentElement.style.fontSize=['100%','112.5%','125%'][ui.fs];
+  for(const b of document.querySelectorAll('[data-act=fs]'))b.setAttribute('aria-pressed',+b.dataset.v===ui.fs);
+  for(const a of document.querySelectorAll('.roles a')){if(a.dataset.r===ui.view)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')}
+  $app.innerHTML=ui.view==='patient'?vPatient():ui.view==='fysio'?vFysio():ui.view==='feedback'?vFeedback():vStart();
+  after();renderModal();
+}
+function vStart(){return `<div class="wrap"><h1>Välkommen till Fysi</h1><p class="mut" style="max-width:60ch;font-size:1.12rem">Hemträning som hänger ihop: fysioterapeuten skapar programmet, patienten tränar och loggar, och båda ser hur det går. Välj vem du testar som.</p>
+<div class="start">
+<a class="hero" href="#patient"><div class="art">${fig('knaboj',true)}</div><h2>Jag är patient</h2><p>Se dina övningar, logga dina pass och skriv till din fysioterapeut.</p></a>
+<a href="#fysio"><div class="art">${fig('vaggarm',true)}</div><h2>Jag är fysioterapeut</h2><p>Skapa träningsprogram på några sekunder och följ dina patienters träning och smärta.</p></a>
+<a href="#feedback"><div class="art"><svg width="120" height="100" viewBox="0 0 120 100" aria-hidden="true"><rect x="10" y="12" width="100" height="62" rx="14" fill="none" stroke="currentColor" stroke-width="6" opacity=".7"/><path d="M34 74l-6 18 22-18" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round" opacity=".7"/><path d="M32 36h56M32 52h36" stroke="currentColor" stroke-width="6" stroke-linecap="round" opacity=".7"/></svg></div><h2>Ge feedback</h2><p>Berätta vad som var enkelt, svårt eller saknas efter testet.</p></a>
+</div></div>`}
+
+/* ----- patient app ----- */
+function vPatient(){const p=pat(ui.pid);
+  const title=ui.ptab==='idag'?'Hej '+esc(p.first)+'!':ui.ptab==='fram'?'Dina framsteg':'Chatt med Erik';
+  const head=`<div class="phead"><div class="between"><span class="small mut">${cap(fmtL(TODAY))}</span><label><span class="sr">Testa som patient</span><select data-in="psel">${S.order.map(id=>`<option value="${id}"${id===ui.pid?' selected':''}>${esc(pat(id).first)}</option>`).join('')}</select></label></div><h1>${title}</h1></div>`;
+  const body=ui.ptab==='idag'?pToday(p):ui.ptab==='fram'?pProgress(p):pMsgs(p);
+  const unreadP=p.msgs.length&&p.msgs[p.msgs.length-1].from==='f'&&!p.seenF?1:0;
+  const nav=[['idag','Idag',IC.home],['fram','Framsteg',IC.chart],['msg','Chatt',IC.chat]].map(([v,l,i])=>`<button data-act="ptab" data-v="${v}" aria-current="${ui.ptab===v}"><span class="ic">${i}</span>${l}${v==='msg'&&unreadP&&ui.ptab!=='msg'?'<span class="badge">1</span>':''}</button>`).join('');
+  return `<div class="phone">${head}<div class="pbody">${body}</div><nav class="pnav" aria-label="Patientmeny">${nav}</nav></div>`}
+function pToday(p){
+  if(!prog(p).length)return `<div class="empty"><h3>Inget program ännu</h3><p>Din fysioterapeut har inte skickat några övningar till dig än. De dyker upp här när de är klara.</p></div>`;
+  const per=p.program.perWeek,n=weekDone(p),left=Math.max(0,per-n),lt=logOf(p,TK),end=progEnd(p);
+  const lastF=[...p.msgs].reverse().find(m=>m.from==='f');
+  let h=`<div class="herocard"><div class="between"><span style="opacity:.85">Den här veckan</span><span class="pill">Vecka ${progWeek(p)} av ${p.weeks}</span></div>
+    <div><span class="big">${n} av ${per}</span> <span style="opacity:.85">pass klara</span></div>
+    <div class="prog"><i style="width:${Math.min(100,n/per*100)}%"></i></div>
+    <div class="dots" aria-hidden="true">${Array.from({length:Math.max(per,n)},(_,i)=>`<i class="${i<n?'on':''}">${i<n?IC.check:i+1}</i>`).join('')}</div>
+    <span class="small" style="opacity:.9">${left?`${left===1?'Ett pass':left+' pass'} kvar. Välj själv vilka dagar som passar dig.`:'Veckans mål är nått. Snyggt jobbat!'}${end?' Programmet slutar '+fmt(end)+'.':''}</span></div>`;
+  h+=`<button class="btn pri full" data-act="openlog" style="min-height:58px;font-size:1.15rem">${lt?IC.edit+' Ändra dagens pass':IC.check+' Jag har gjort ett pass'}</button>`;
+  if(lt)h+=`<p class="small mut" style="text-align:center;margin-top:-6px">Dagens pass är loggat. Smärta ${lt.pain} av 10.</p>`;
+  if(lastF&&!p.seenF)h+=`<button class="notice" data-act="ptab" data-v="msg"><span class="av" style="width:40px;height:40px">E</span><span><strong>Nytt från Erik</strong><br><span class="small">${esc(lastF.text.length>80?lastF.text.slice(0,78)+'…':lastF.text)}</span></span>${IC.chev}</button>`;
+  h+=`<div class="sec"><h2>Ditt pass</h2><span class="small mut">${prog(p).length} övningar</span></div>`;
+  h+=prog(p).map(it=>{const e=EXM[it.ex];const ok=lt&&share(it,lt.items[it.ex])>=.9;return `<button class="exrow" data-act="instr" data-ex="${it.ex}"><div class="pic">${fig(it.ex,true)}</div><div><h3>${esc(e.name)}</h3><div class="dose">${dose(it)}</div></div><span class="go${ok?' ok':''}" aria-label="${ok?'Gjord i dag':'Visa'}">${ok?IC.check:IC.chev}</span></button>`}).join('');
+  if(p.booking)h+=`<div class="card row" style="gap:12px">${'<span class="av">'+IC.phone.replace('<svg','<svg width="20" height="20"')+'</span>'}<div><strong>Telefonmöte med Erik</strong><br><span class="small mut">${esc(p.booking)}</span></div></div>`;
+  return h}
+function weekCircles(p){if(!p.since)return '';const s=wkStart(fromKey(p.since)),cur=progWeek(p);let h='';
+  for(let w=1;w<=p.weeks;w++){const a=addD(s,(w-1)*7);const c=inRange(p,a,addD(a,6)).length;const pl=wkPlan(p,w);const cls=w>cur?'':w===cur?(c>=pl?'full':'now'):c>=pl?'full':'part';
+    h+=`<div><i class="${cls}">${cls==='full'?IC.check:w}</i>v${w}</div>`}
+  return `<div class="wk">${h}<div><i>${IC.cal.replace('<svg','<svg width="18" height="18"')}</i>Besök</div></div>`}
+function dayCircles(p){const s=wkStart(TODAY);let h='';for(let i=0;i<7;i++){const d=addD(s,i);const k=key(d);const l=logOf(p,k);const cls=l?(vol(p,l)>=.9?'full':'part'):k===TK?'now':'';h+=`<div><i class="${cls}">${l?IC.check:''}</i>${DAY[i]}</div>`}return `<div class="wk">${h}</div>`}
+function perExList(p){const a=adherence(p);const L=inRange(p,a.from,TODAY);return prog(p).map(it=>{const v=L.length?Math.round(L.reduce((s,l)=>s+share(it,l.items[it.ex]),0)/L.length*100):null;const fl=L.filter(l=>l.items[it.ex]&&l.items[it.ex].flag).length;
+  const t=fl?['co',fl===1?'Flaggad 1 gång':'Flaggad '+fl+' ggr']:v==null?['in','Ingen data']:v>=90?['ok','Gör allt']:['am','Gör '+v+' %'];
+  return `<div class="exl"><div class="pic">${fig(it.ex,false)}</div><div><strong>${esc(EXM[it.ex].name)}</strong><br><span class="small mut">${dose(it)}</span></div><span class="tag ${t[0]}">${t[1]}</span></div>`}).join('')}
+function pProgress(p){if(!prog(p).length)return `<div class="empty">Här ser du din träning och smärta när du har kommit igång.</div>`;
+  const pi=painInfo(p),end=progEnd(p),wleft=p.weeks-progWeek(p);
+  const msg=pi?(pi.last.pain>p.painLimit?`Smärtan ligger över din gräns på ${p.painLimit}/10. Ta det lugnare och skriv till Erik om det håller i sig.`:pi.trend>.5?'Smärtan har ökat lite de senaste passen. Håll koll, och skriv till Erik om den fortsätter öka.':pi.trend<-.5?'Smärtan minskar. Det går åt rätt håll!':'Smärtan är ganska stabil.'):'';
+  return `<div class="card" style="display:grid;gap:12px"><div class="between"><h2>Vecka ${progWeek(p)} av ${p.weeks}</h2><span class="small" style="color:var(--t);font-weight:700">${wleft>0?wleft+(wleft===1?' vecka kvar':' veckor kvar'):'Sista veckan'}</span></div>${weekCircles(p)}<div class="between small mut"><span>Start ${fmt(fromKey(p.since))}</span><span>Mål ${end?fmt(end):''}</span></div></div>
+  <div class="card" style="display:grid;gap:10px"><div class="between"><h3>Den här veckan</h3><span class="small" style="color:var(--t);font-weight:700">${weekDone(p)} av ${p.program.perWeek} pass</span></div>${dayCircles(p)}</div>
+  <div class="kpis"><div class="kpi"><span class="ki">${IC.pulse}</span><strong>${adherence(p,28).pct??'–'} %</strong><span class="small mut">Följsamhet, 4 veckor</span></div><div class="kpi"><span class="ki">${IC.check}</span><strong>${p.logs.length}</strong><span class="small mut">Loggade pass</span></div></div>
+  <div class="card"><div class="between"><h3>Din smärta</h3><span class="small mut">28 dagar</span></div>${pi?`<div class="fig" data-chart="${p.id}"><svg></svg></div><p class="small mut"><span style="display:inline-block;width:16px;border-top:2px dashed var(--am);vertical-align:middle;margin-right:6px"></span>Din smärtgräns ${p.painLimit}/10</p><div class="note in small" style="margin-top:8px">${msg}</div>`:'<p class="mut">Ingen smärta loggad ännu.</p>'}</div>
+  <div class="card"><h3>Per övning</h3><p class="small mut">Senaste 14 dagarna</p>${perExList(p)}</div>`}
+function msgHtml(m,pName,mine){return `<div class="msg ${mine?'me':'them'}">${!mine?'<strong class="small">'+esc(pName)+'</strong><br>':''}${esc(m.text)}${m.att&&m.att.data&&/^data:image\//.test(m.att.data)?`<img src="${m.att.data}" alt="Bifogad bild">`:''}${m.att?`<span class="small" style="display:block">Bifogad fil: ${esc(m.att.name)}</span>`:''}${painCard(m.pain)}<time>${hm(m.t)}</time></div>`}
+function pMsgs(p){p.seenF=true;save();
+  const thread=p.msgs.map(m=>msgHtml(m,'Erik, fysioterapeut',m.from==='p')).join('')||'<p class="mut">Inga meddelanden ännu.</p>';
+  const dots=Array.from({length:p.msgMax},(_,i)=>`<i class="${i<p.msgMax-p.msgLeft?'used':''}"></i>`).join('');
+  let box;
+  if(ui.composer&&p.msgLeft>0)box=`<div class="card" style="display:grid;gap:10px"><label class="lab" for="ptext">Ditt meddelande till Erik</label><textarea id="ptext" placeholder="Beskriv kort vad du undrar över">${esc(ui.prefill)}</textarea>
+    <div class="row" style="gap:8px"><button class="btn sm" data-act="painpick">${picon('Huggande',20)}Beskriv din smärta</button><label class="btn sm">Bifoga bild eller video<input type="file" id="patt" accept="image/*,video/*" class="sr"></label></div>${ui.att?`<span class="small">Bifogat: ${esc(ui.att.name)}</span>`:''}${ui.patt?`<div>${painCard(ui.patt)}<button class="link small" data-act="painrm">Ta bort smärtbeskrivningen</button></div>`:''}
+    <div class="row"><button class="btn pri" data-act="psend">Skicka</button><button class="btn" data-act="pcancel">Avbryt</button></div></div>`;
+  else if(p.msgLeft>0)box=`<div class="quick" aria-label="Snabbval"><button class="chip" data-act="quick" data-v="ont">Det gör ont</button><button class="chip" data-act="quick" data-v="hur">Hur gör jag?</button><button class="chip" data-act="book">Boka tid</button></div><button class="btn pri full" data-act="compose">${IC.chat.replace('<svg','<svg width="20" height="20"')} Skriv till Erik</button>`;
+  else box=`<div class="note"><strong>Du har använt dina meddelanden.</strong><p>Boka ett telefonmöte så hjälper Erik dig vidare.</p></div><button class="btn pri full" data-act="book">Boka telefonmöte</button>`;
+  return `<div class="card row" style="gap:12px"><div class="av">E</div><div><strong>Erik Lund</strong><br><span class="mut small">Din fysioterapeut · svarar oftast inom en arbetsdag</span></div></div>
+  ${p.booking?`<div class="note ok"><strong>Telefonmöte bokat</strong><p>${esc(p.booking)}. Erik ringer upp dig.</p></div>`:''}
+  <div class="thread">${thread}</div>
+  <div class="quota small mut"><span>Meddelanden kvar före nästa besök ${fmt(fromKey(p.nextVisit))}:</span>${dots}<strong>${p.msgLeft}</strong></div>${box}`}
+
+/* ----- physio ----- */
+function vFysio(){const P=S.order.map(pat);const unread=P.reduce((s,p)=>s+p.unread,0);
+  const nav=[['oversikt','Översikt',IC.home,0],['patienter','Patienter',IC.users,0],['meddelanden','Meddelanden',IC.chat,unread]].map(([v,l,i,n])=>`<button data-act="fpage" data-v="${v}" aria-current="${ui.fpage===v&&!ui.fpid||(v==='patienter'&&!!ui.fpid)}">${i}${l}${n?`<span class="n">${n}</span>`:''}</button>`).join('');
+  const main=ui.fpid?fProfile(pat(ui.fpid)):ui.fpage==='patienter'?fPatients():ui.fpage==='meddelanden'?fInbox():fOverview();
+  return `<div class="fshell"><nav class="side" aria-label="Fysioterapeutmeny">${nav}<div class="who"><strong>Erik Lund</strong><br>Leg. fysioterapeut<br><span class="mut">Vårdcentralen Exempel</span></div></nav><section class="fmain">${main}</section></div>`}
+function attention(){const out=[];for(const p of S.order.map(pat)){const pi=painInfo(p);
+  if(p.unread)out.push(['co',IC.chat,`Nytt meddelande från ${p.first}`,(p.msgs[p.msgs.length-1].pain?'Med smärtbeskrivning. ':'')+esc(p.msgs[p.msgs.length-1].text.slice(0,70)),'Svara',p.id,'msg']);
+  if(pi&&pi.last.pain>p.painLimit)out.push(['co',IC.alert,`${p.first} är över smärtgränsen`,`Senast ${pi.last.pain}/10, gräns ${p.painLimit}/10`,'Justera',p.id,'prog']);
+  const f=flags(p,7).filter(x=>x.flag);if(f.length)out.push(['am',IC.flag,`${p.first} har flaggat ${f.length===1?'en övning':f.length+' övningar'}`,[...new Set(f.map(x=>EXM[x.ex].name+': '+x.flag))].slice(0,2).join(', '),'Visa',p.id,'uppf']);
+  if(!prog(p).length)out.push(['in',IC.edit,`Skapa program åt ${p.first}`,esc(p.dx),'Skapa',p.id,'prog']);
+  const a=adherence(p);if(a.pct!=null&&a.pct<60)out.push(['am',IC.pulse,`${p.first} har gjort ${a.done} av ${a.plan} pass`,'Senaste 14 dagarna','Skriv',p.id,'msg'])}
+  return out}
+function attHtml(list){return list.map(([c,i,t,s,b,id,tab])=>`<div class="att"><span class="ai" style="background:var(--${c}s);color:var(--${c==='am'?'ami':c})">${i}</span><div><strong>${esc(t)}</strong><br><span class="small mut">${s}</span></div><button class="btn sm" data-act="fsel" data-id="${id}" data-tab="${tab}">${b}</button></div>`).join('')}
+function fOverview(){const P=S.order.map(pat);const A=attention();const act=P.filter(p=>prog(p).length);const avg=act.length?Math.round(act.reduce((s,p)=>s+(adherence(p).pct||0),0)/act.length):0;
+  const up=P.map(p=>[p,new Date(fromKey(p.nextVisit))]).concat(P.filter(p=>p.booking).map(p=>[p,null])).slice(0,6);
+  return `<div class="between"><div><h1>God morgon, Erik</h1><p class="mut">${cap(fmtL(TODAY))}</p></div><button class="btn pri" data-act="fpage" data-v="patienter">${IC.users.replace('<svg','<svg width="18" height="18"')} Mina patienter</button></div>
+  <div class="kpis"><div class="kpi"><span class="ki">${IC.users}</span><strong>${P.length}</strong><span class="small mut">Aktiva patienter</span></div><div class="kpi"><span class="ki">${IC.pulse}</span><strong>${avg} %</strong><span class="small mut">Snittföljsamhet, 14 dagar</span></div><div class="kpi"><span class="ki" style="background:var(--ams);color:var(--ami)">${IC.alert}</span><strong>${A.length}</strong><span class="small mut">Kräver uppmärksamhet</span></div><div class="kpi"><span class="ki">${IC.chat}</span><strong>${P.reduce((s,p)=>s+p.unread,0)}</strong><span class="small mut">Olästa meddelanden</span></div></div>
+  <div class="g2"><div class="card" style="display:grid;gap:10px"><div><h3>Kräver uppmärksamhet</h3><p class="small mut">Sorterat efter vad som brådskar mest</p></div>${attHtml(A)||'<p class="mut">Inget just nu.</p>'}</div>
+  <div class="card" style="display:grid;gap:8px;align-content:start"><h3>Kommande</h3>${P.filter(p=>p.booking).map(p=>`<div class="att" style="grid-template-columns:auto 1fr auto"><span class="tag co plain">Telefon</span><div><strong>${esc(p.name)}</strong><br><span class="small mut">${esc(p.booking)}</span></div><span></span></div>`).join('')}${[...P].sort((a,b)=>a.nextVisit<b.nextVisit?-1:1).map(p=>`<div class="att" style="grid-template-columns:auto 1fr auto"><span class="tag plain" style="min-width:4.5em;justify-content:center">${fmt(fromKey(p.nextVisit))}</span><div><strong>${esc(p.name)}</strong><br><span class="small mut">Återbesök</span></div><span class="tag in plain">På plats</span></div>`).join('')}</div></div>
+  ${fTable()}`}
+function fTable(){return `<div class="card" style="padding:0;overflow:hidden"><div class="between" style="padding:16px 18px"><h3>Mina patienter</h3><span class="small mut">Klicka på en patient för att öppna</span></div><div style="overflow-x:auto"><table class="pt stack"><thead><tr><th>Patient</th><th>Program</th><th>Pass, 14 dagar</th><th>Smärta</th><th>Senaste pass</th><th>Status</th></tr></thead><tbody>${S.order.map(id=>{const p=pat(id),a=adherence(p),pi=painInfo(p),st=status(p);
+  return `<tr class="rowlink" data-act="fsel" data-id="${id}" tabindex="0" role="button"><td data-l="Patient"><span class="row" style="gap:10px;flex-wrap:nowrap"><span class="av">${esc(p.first[0]+p.name.split(' ')[1][0])}</span><span><strong>${esc(p.name)}</strong><br><span class="small mut">${esc(p.dx)}</span></span></span></td><td data-l="Program">${prog(p).length?`Vecka ${progWeek(p)} av ${p.weeks}<br><span class="small mut">${perWk(p.program.perWeek)}</span>`:'<span class="mut">–</span>'}</td>
+  <td data-l="Pass, 14 dagar">${a.pct==null?'<span class="mut">–</span>':`<div class="row" style="gap:8px;flex-wrap:nowrap"><div class="meter" style="width:90px"><i class="${a.pct<60?'bad':a.pct<85?'low':''}" style="width:${a.pct}%"></i></div><span class="num small">${a.done}/${a.plan}</span></div>`}</td>
+  <td data-l="Smärta">${pi?`VAS ${pi.first.pain} → <strong>${pi.last.pain}</strong> ${pi.trend>.5?'<span style="color:var(--co)">↑</span>':pi.trend<-.5?'<span style="color:var(--ok)">↓</span>':''}`:'<span class="mut">–</span>'}</td><td data-l="Senaste pass">${agoTxt(lastDays(p))}</td><td data-l="Status"><span class="tag ${st[1]}">${st[0]}</span></td></tr>`}).join('')}</tbody></table></div></div>`}
+function fPatients(){return `<h1>Patienter</h1>${fTable()}`}
+function fInbox(){const P=S.order.map(pat);const sel=pat(ui.fmsg)||P[0];
+  const list=P.map(p=>{const m=p.msgs[p.msgs.length-1];return `<button data-act="fmsg" data-id="${p.id}" aria-current="${p.id===sel.id}"><span class="av">${esc(p.first[0])}</span><span><strong>${esc(p.name)}</strong><br><span class="small mut">${m?esc(m.text.slice(0,42)):'Inga meddelanden'}</span></span>${p.unread?`<span class="tag co plain">${p.unread}</span>`:''}</button>`}).join('');
+  return `<h1>Meddelanden</h1><div class="inbox"><div class="il">${list}</div><div class="ith">${fThread(sel)}</div></div>`}
+function fThread(p){if(p.unread){p.unread=0;save()}const a=adherence(p),pi=painInfo(p);
+  return `<div class="between"><div><strong>${esc(p.name)}</strong><br><span class="small mut">${p.msgLeft} av ${p.msgMax} meddelanden kvar före besöket</span></div><button class="btn sm" data-act="fsel" data-id="${p.id}">Öppna profil</button></div>
+  ${prog(p).length?`<div class="note tl small">Senaste 14 dagarna: <strong>${a.done} av ${a.plan} pass</strong>${pi?`, smärta senast <strong>${pi.last.pain}/10</strong> (gräns ${p.painLimit})`:''}.${p.booking?' Telefonmöte bokat: '+esc(p.booking)+'.':''}</div>`:''}
+  <div class="thread">${p.msgs.map(m=>msgHtml(m,p.first,m.from==='f')).join('')||'<p class="mut">Inga meddelanden ännu.</p>'}</div>
+  <div class="quick"><button class="chip" data-act="fquick" data-v="Bra jobbat! Fortsätt som vanligt.">Bra jobbat</button><button class="chip" data-act="fquick" data-v="Minska antalet repetitioner tills det inte gör ont, och hör av dig om det inte blir bättre.">Minska belastningen</button><button class="chip" data-act="fquick" data-v="Jag ringer upp dig så pratar vi om det.">Jag ringer dig</button></div>
+  <label class="sr" for="ftext">Svara ${esc(p.first)}</label><textarea id="ftext" placeholder="Skriv ett svar till ${esc(p.first)}"></textarea><div class="row"><button class="btn pri" data-act="fsend" data-id="${p.id}">Skicka svar</button><button class="btn" data-act="fgive" data-id="${p.id}">Ge ett extra meddelande</button></div>`}
+function fProfile(p){const st=status(p);
+  const tabs=[['uppf','Översikt'],['prog','Träningsprogram'],['msg','Meddelanden'+(p.unread?' ('+p.unread+')':'')]].map(([v,l])=>`<button data-act="ftab" data-v="${v}" aria-current="${ui.ftab===v}">${l}</button>`).join('');
+  return `<button class="link" data-act="fback" style="justify-self:start;padding-left:0">← Patienter</button>
+  <div class="card phd"><span class="av" style="width:56px;height:56px;font-size:1.1rem">${esc(p.first[0]+p.name.split(' ')[1][0])}</span><div><div class="row" style="gap:8px"><h2>${esc(p.name)}</h2><span class="tag ${st[1]}">${st[0]}</span></div><p class="small mut">${p.age} år · ${esc(p.dx)}${prog(p).length?' · Vecka '+progWeek(p)+' av '+p.weeks:''} · Nästa besök ${fmt(fromKey(p.nextVisit))}</p></div>
+  <div class="row" style="gap:8px"><button class="btn sm" data-act="ftab" data-v="msg">${IC.chat.replace('<svg','<svg width="18" height="18"')}Meddelande</button><button class="btn sm" data-act="journal">${IC.doc.replace('<svg','<svg width="18" height="18"')}Till journal</button><button class="btn sm pri" data-act="ftab" data-v="prog">${IC.edit.replace('<svg','<svg width="18" height="18"')}Justera program</button></div></div>
+  <nav class="tabs">${tabs}</nav>${ui.ftab==='uppf'?fFollow(p):ui.ftab==='prog'?fProg(p):`<div style="max-width:760px;display:grid;gap:14px">${fThread(p)}</div>`}`}
+function weekBars(p){if(!p.since)return '';const s=wkStart(fromKey(p.since)),cur=progWeek(p),per=p.program.perWeek;const n=Math.min(p.weeks,8);let h='';
+  for(let w=1;w<=n;w++){const a=addD(s,(w-1)*7);const c=inRange(p,a,addD(a,6)).length;const pl=wkPlan(p,w);const pct=Math.min(100,c/pl*100);h+=`<div><span>${w<=cur?c+'/'+pl:''}</span><div class="col">${w<=cur?`<i class="${c<pl&&w<cur?'low':''}" style="height:${pct}%"></i>`:''}</div><span>v${w}</span></div>`}
+  return `<div class="wbars" style="--n:${n}">${h}</div><div class="legend" style="margin-top:8px"><span><i style="background:var(--t)"></i>Mål nått / pågår</span><span><i style="background:var(--am)"></i>Färre pass än planerat</span></div>`}
+function fFollow(p){if(!prog(p).length)return `<div class="empty"><h3>${esc(p.first)} har inget program ännu</h3><p>Skapa ett program så kan du följa träning och smärta här.</p><button class="btn pri" data-act="ftab" data-v="prog" style="margin-top:10px">Skapa program</button></div>`;
+  const a=adherence(p),pi=painInfo(p);const F=flags(p);
+  const flagHtml=F.length?F.map(f=>`<div class="flagrow ${f.flag==='Gjorde ont'?'':f.flag?'am':'plain'}"><div class="row" style="gap:8px"><strong>${fmt(fromKey(f.date))}</strong><span>${f.ex?esc(EXM[f.ex].name):'Om passet'}</span>${f.flag?`<span class="tag ${f.flag==='Gjorde ont'?'co':'am'}">${esc(f.flag)}</span>`:''}</div>${f.comment?`<span>”${esc(f.comment)}”</span>`:''}</div>`).join(''):`<p class="mut">Inget flaggat. ${esc(p.first)} har inte markerat att något känts konstigt.</p>`;
+  const over=pi&&pi.last.pain>p.painLimit;
+  const logs=p.logs.slice(-6).reverse().map(l=>`<tr><td data-l="Datum">${fmt(fromKey(l.date))}</td><td data-l="Mängd" class="num">${Math.round(vol(p,l)*100)} %</td><td data-l="Smärta" class="num"><span class="vasb" style="background:${vasCol(l.pain||0)}">${l.pain==null?'–':l.pain}</span></td><td data-l="Upplevt">${l.effort?esc(l.effort):'–'}</td><td data-l="Var och hur">${esc((l.area||[]).join(', '))||'–'} ${(l.type||[]).map(t=>'<span class="ptag small">'+picon(t,18)+esc(t)+'</span>').join(' ')}</td></tr>`).join('');
+  return `${over?`<div class="note co between"><span><strong>Smärtan ligger över gränsen ${p.painLimit}/10</strong> (senast ${pi.last.pain}/10). Överväg att sänka belastningen eller byta övning.</span><button class="btn sm pri" data-act="ftab" data-v="prog">Justera program</button></div>`:''}
+  <div class="g3"><div class="card"><div class="between"><h3>Följsamhet</h3><span class="tag ${a.pct<60?'co':a.pct<85?'am':'ok'}">${a.pct<60?'Låg':a.pct<85?'Sjunkande':'Bra'}</span></div><p class="small mut">Pass per vecka mot målet ${p.program.perWeek}</p><div class="row" style="gap:8px;margin-top:6px"><strong style="font-size:2rem">${a.pct} %</strong><span class="small mut">${a.done} av ${a.plan} pass, 14 dagar<br>Snitt ${a.vol??'–'} % av ordinerad mängd</span></div>${weekBars(p)}</div>
+  <div class="card"><div class="between"><h3>Smärta (VAS 0–10)</h3>${pi&&pi.trend>.5?'<span class="tag co">Ökar</span>':pi&&pi.trend<-.5?'<span class="tag ok">Minskar</span>':''}</div><p class="small mut">Efter varje pass, 28 dagar</p><div class="fig" data-chart="${p.id}" style="min-height:210px"><svg></svg></div><p class="small mut"><span style="display:inline-block;width:16px;border-top:2px dashed var(--am);vertical-align:middle;margin-right:6px"></span>Smärtgräns ${p.painLimit}/10</p></div>
+  <div class="card"><h3>Smärtkarta</h3><p class="small mut" style="margin-bottom:8px">14 dagar, från pass och meddelanden</p>${painPicture(p)}</div></div>
+  <div class="g2"><div class="card" style="display:grid;gap:8px;align-content:start"><div><h3>Att titta på</h3><p class="small mut">Bara det ${esc(p.first)} har flaggat eller kommenterat, senaste 3 veckorna</p></div>${flagHtml}</div>
+  <div class="card"><h3>Per övning</h3><p class="small mut">Andel av ordinerad mängd, 14 dagar</p>${perExList(p)}</div></div>
+  <div class="card" style="padding:0;overflow:hidden"><div class="between" style="padding:16px 18px"><h3>Senaste pass</h3><button class="btn sm" data-act="journal">${IC.doc.replace('<svg','<svg width="18" height="18"')}Exportera till journal</button></div><div style="overflow-x:auto"><table class="pt stack"><thead><tr><th>Datum</th><th class="num">Mängd</th><th class="num">Smärta</th><th>Upplevt</th><th>Var och hur</th></tr></thead><tbody>${logs||'<tr><td colspan="5" class="mut">Inga pass loggade ännu.</td></tr>'}</tbody></table></div></div>`}
+function fProg(p){if(!ui.draft){ui.draft=clone(p.program);ui.draft.weeks=p.weeks;ui.draft.painLimit=p.painLimit;ui.dirty=false}const D=ui.draft;
+  const st=(act,v,lab,unit)=>`<div><span class="small" style="font-weight:700">${lab}</span><div class="stepper"><button data-act="${act}" data-d="-1" aria-label="Minska ${lab.toLowerCase()}">−</button><output>${v}</output><button data-act="${act}" data-d="1" aria-label="Öka ${lab.toLowerCase()}">+</button></div><span class="small mut">${unit}</span></div>`;
+  const items=D.items.map((it,i)=>{const e=EXM[it.ex];return `<div class="ditem"><div class="pic">${fig(it.ex,false)}</div><div><div class="between"><h3>${esc(e.name)}</h3><span class="tag plain">${esc(e.area)}</span></div><div class="row" style="gap:0"><button class="link small" data-act="dmove" data-i="${i}" data-d="-1" ${i===0?'disabled':''}>↑ Upp</button><button class="link small" data-act="dmove" data-i="${i}" data-d="1" ${i===D.items.length-1?'disabled':''}>↓ Ned</button><button class="link small" data-act="drm" data-i="${i}" style="color:var(--co)">Ta bort</button></div></div>
+  <div class="ctl"><div class="row" style="gap:16px"><div><span class="small mut">Set</span><br><div class="stepper"><button data-act="dstep" data-i="${i}" data-f="sets" data-d="-1" aria-label="Färre set">−</button><output>${it.sets}</output><button data-act="dstep" data-i="${i}" data-f="sets" data-d="1" aria-label="Fler set">+</button></div></div><div><span class="small mut">${e.unit==='sek'?'Sekunder':'Repetitioner'}</span><br><div class="stepper"><button data-act="dstep" data-i="${i}" data-f="reps" data-d="-1" aria-label="Färre">−</button><output>${it.reps}</output><button data-act="dstep" data-i="${i}" data-f="reps" data-d="1" aria-label="Fler">+</button></div></div></div>
+  <div><label class="small mut" for="dn${i}">Egen instruktion till ${esc(p.first)} (valfritt)</label><input type="text" id="dn${i}" data-in="dnote" data-i="${i}" value="${esc(it.note)}" placeholder="T.ex. Använd en stol med armstöd"></div>
+  ${ui.editI===i?`<div class="note tl" style="display:grid;gap:8px"><label class="small" for="ds${i}"><strong>Instruktionssteg</strong>, ett steg per rad</label><textarea id="ds${i}" data-in="dsteps" data-i="${i}">${esc((it.steps||e.steps).join('\n'))}</textarea><label class="small" for="dt${i}"><strong>Tänk på</strong></label><input type="text" id="dt${i}" data-in="dtip" data-i="${i}" value="${esc(it.tip||e.tip)}"><div class="row"><button class="btn sm pri" data-act="dedit" data-i="${i}">Klar</button>${it.steps||it.tip?`<button class="link small" data-act="dorig" data-i="${i}">Återställ bibliotekets text</button>`:''}</div></div>`:`<button class="link small" data-act="dedit" data-i="${i}" style="justify-self:start;padding-left:0">Ändra instruktionstext${it.steps||it.tip?' (ändrad för '+esc(p.first)+')':''}</button>`}</div></div>`}).join('');
+  return `<div class="g2" style="grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)"><div class="card" style="align-self:start;display:grid;gap:10px"><div class="between"><h3>Övningsbibliotek</h3><span class="small mut">${EX.length} övningar</span></div><label class="sr" for="q">Sök övning</label><input type="search" id="q" data-in="q" value="${esc(ui.q)}" placeholder="Sök: knä, rygg, balans, axel…"><div class="row" style="gap:6px">${AREAS.map(a=>`<button class="chip" style="padding:6px 12px;min-height:40px" data-act="farea" data-v="${a}" aria-pressed="${ui.area===a}">${a}</button>`).join('')}</div>
+  <div><span class="small mut">Snabbstart med en mall</span><div class="row" style="gap:6px;margin-top:4px">${TPL.map((t,i)=>`<button class="chip" style="min-height:40px;padding:6px 12px" data-act="tpl" data-i="${i}">+ ${t.name}</button>`).join('')}</div></div><div class="libgrid" id="lib">${libList()}</div></div>
+  <div style="display:grid;gap:12px;align-content:start"><div class="between"><h2>Program för ${esc(p.first)}</h2>${ui.dirty?'<span class="tag am">Osparade ändringar</span>':'<span class="tag ok">Sparat</span>'}</div>
+  <div class="setgrid">${st('dper',D.perWeek,'Pass per vecka',D.perWeek===1?'Patienten väljer dag':'Patienten väljer dagar')}${st('dweeks',D.weeks,'Programlängd','veckor')}${st('dlimit',D.painLimit,'Smärtgräns','av 10 på VAS')}</div>
+  <p class="small mut">Ett pass = alla övningar nedan · ${D.items.length} övningar</p>${items||'<div class="empty">Passet är tomt. Välj övningar i biblioteket eller börja från en mall.</div>'}
+  <div class="savebar"><button class="btn pri" data-act="dsave" ${ui.dirty&&D.items.length?'':'disabled'}>Spara och skicka till ${esc(p.first)}</button>${ui.dirty?'<button class="btn" data-act="dundo">Ångra ändringar</button>':''}</div></div></div>`}
+function libList(){const q=ui.q.trim().toLowerCase();const r=EX.filter(e=>(ui.area==='Alla'||e.area===ui.area)&&(!q||q.split(/\s+/).every(w=>(e.name+' '+e.tags+' '+e.area).toLowerCase().includes(w))));
+  const nw=`<button class="libt new" data-act="newex" data-v="${esc(ui.q.trim())}"><span class="plus">+</span><strong class="small">${q?'Skapa ”'+esc(ui.q.trim())+'”':'Skapa egen övning'}</strong><span class="small mut" style="font-size:.8rem">${q?'som egen övning':'Om den inte finns här'}</span></button>`;
+  if(!r.length)return nw+'<p class="mut small" style="grid-column:1/-1">Ingen övning i biblioteket matchar. Skapa den som egen övning, eller prova ett annat ord.</p>';
+  return nw+r.map(e=>{const inP=ui.draft&&ui.draft.items.some(it=>it.ex===e.id);return `<button class="libt" data-act="${inP?'dremove':'dadd'}" data-ex="${e.id}" aria-pressed="${inP}"><div class="pic">${fig(e.id,false)}</div><strong class="small">${esc(e.name)}</strong><span class="small mut" style="font-size:.8rem">${esc(e.area)}${e.custom?' · <b style="color:var(--ami)">Egen</b>':''}</span>${inP?`<span class="ck">${IC.check}</span>`:''}</button>`}).join('')}
+
+/* ----- modals ----- */
+const FLAGS=['Gjorde ont','Kändes fel','För tungt','För lätt'];
+const stepper=(act,ex,f,v,label)=>`<div><span class="small mut">${label}</span><br><div class="stepper"><button data-act="${act}" data-ex="${ex}" data-f="${f}" data-d="-1" aria-label="Minska ${label.toLowerCase()}">−</button><output>${v}</output><button data-act="${act}" data-ex="${ex}" data-f="${f}" data-d="1" aria-label="Öka ${label.toLowerCase()}">+</button></div></div>`;
+function limitNote(f,p){if(f.pain==null)return '';return f.pain<=p.painLimit?`<div class="note ok small" style="margin-top:8px">${IC.check.replace('<svg','<svg width="16" height="16" style="vertical-align:-3px"')} Inom din gräns på ${p.painLimit}/10. Fortsätt som vanligt.</div>`:`<div class="note co small" style="margin-top:8px"><strong>Över din gräns på ${p.painLimit}/10.</strong> Ta det lugnare nästa pass. Håller det i sig, skriv till Erik.</div>`}
+function renderModal(){const m=ui.modal;if(!m){$modal.innerHTML='';return}
+  let t='',b='';const p=pat(ui.view==='fysio'?ui.fpid:ui.pid);
+  if(m.type==='instr'){const it=prog(p).find(x=>x.ex===m.ex)||{ex:m.ex,sets:3,reps:10,note:''};const e=EXM[m.ex];const g=GUIDE[m.ex]||[e.why||'',e.dont||''];const idx=prog(p).findIndex(x=>x.ex===m.ex);t=idx>=0?`Övning ${idx+1} av ${prog(p).length}`:e.name;
+    b=`<div class="bigfig">${fig(m.ex,true)}</div><p class="small mut" style="text-align:center;margin-top:-4px">Den ljusa figuren visar startläget.</p><h2>${esc(e.name)}</h2>
+    <div class="row" style="gap:6px"><span class="tag plain">${dose(it)}</span><span class="tag plain in">${perWk(p.program.perWeek)}</span><span class="tag plain am">Smärtgräns ${p.painLimit}/10</span></div>
+    ${g[0]?`<div class="note tl"><strong>Varför den här övningen?</strong><br>${esc(g[0])}</div>`:''}
+    <h3>Så gör du</h3><ol class="steps">${(it.steps||e.steps).map(s=>`<li>${esc(s)}</li>`).join('')}</ol>
+    <h3>Tänk på</h3><div class="dodont note ok"><b style="background:var(--ok)">${IC.check.replace('<svg','<svg width="14" height="14"')}</b><span>${esc(it.tip||e.tip)}</span></div>${g[1]?`<div class="dodont note co"><b style="background:var(--co)">${IC.x.replace('<svg','<svg width="12" height="12"')}</b><span>${esc(g[1])}</span></div>`:''}
+    ${it.note?`<div class="quote"><span class="av" style="width:36px;height:36px">E</span><div><span class="small mut">Erik skriver</span><br>”${esc(it.note)}”</div></div>`:''}
+    <div class="row" style="display:grid;grid-template-columns:1fr 1.4fr;gap:8px"><button class="btn" data-act="askex" data-ex="${m.ex}">${IC.chat.replace('<svg','<svg width="18" height="18"')}Fråga</button><button class="btn pri" data-act="close">Jag förstår</button></div>`}
+  if(m.type==='log'){const f=ui.form;t='Logga ditt pass';
+    b=`<div class="card"><h4>När gjorde du passet?</h4><div class="row" style="gap:6px;margin-top:8px"><button class="chip" data-act="fdate" data-v="${TK}" aria-pressed="${!f.other}">I dag</button><button class="chip" data-act="fother" aria-pressed="${!!f.other}">Välj datum</button></div>${f.other?`<label class="small mut" for="logdate" style="display:block;margin-top:8px">Datum för passet</label><input type="date" id="logdate" class="dinp" value="${f.date}" max="${TK}" min="${key(addD(TODAY,-60))}"><p class="small" style="margin-top:4px;font-weight:700">${cap(fmtL(fromKey(f.date)))}${logOf(p,f.date)?' · ett pass finns redan, du ändrar det':''}</p>`:''}</div>
+    <div class="card"><h4>1. Hur mycket gjorde du?</h4><p class="small mut">Det planerade är redan ifyllt. Ändra om du gjorde mer eller mindre.</p>
+    ${prog(p).map(it=>{const x=f.items[it.ex];const e=EXM[it.ex];const sk=x.sets===0;return `<div class="lex${x.open?' flagged':''}"><div class="between"><strong style="font-size:1.05rem">${esc(e.name)}</strong><span class="small mut">Plan: ${dose(it)}</span></div>
+      <div class="row" style="gap:14px">${stepper('fstep',it.ex,'sets',x.sets,'Set')}${sk?'<span class="tag am">Hoppade över</span>':stepper('fstep',it.ex,'reps',x.reps,e.unit==='sek'?'Sekunder':'Repetitioner')}</div>
+      ${x.open?`<div style="display:grid;gap:8px"><span class="small" style="font-weight:700">Vad var det som kändes konstigt?</span><div class="row" style="gap:6px">${FLAGS.map(v=>`<button class="chip" data-act="fflag" data-ex="${it.ex}" data-v="${v}" aria-pressed="${x.flag===v}">${v}</button>`).join('')}</div><label class="sr" for="c-${it.ex}">Kort kommentar</label><input type="text" id="c-${it.ex}" data-in="excom" data-ex="${it.ex}" value="${esc(x.comment)}" placeholder="Kort kommentar (valfritt)"><button class="link small" data-act="fopen" data-ex="${it.ex}" style="justify-self:start;padding-left:0">Ta bort</button></div>`
+        :`<button class="link small" data-act="fopen" data-ex="${it.ex}" style="justify-self:start;padding-left:0">Kändes något konstigt?</button>`}</div>`}).join('')}</div>
+    <div class="card"><h4>2. Hur ont har du efter passet?</h4><p class="small mut">0 = ingen smärta, 10 = värsta tänkbara</p>${vasPicker(f)}${limitNote(f,p)}
+    ${f.pain>0?`<details class="more"${f.mapOpen||f.zoom||f.area.length||f.type.length?' open':''}><summary>Visa var och hur det gör ont</summary>${painPicker(f)}</details>`:''}</div>
+    <div class="card"><h4>3. Hur kändes passet?</h4><div class="seg" role="group" aria-label="Ansträngning" style="margin-top:8px">${['Lätt','Lagom','Tungt'].map(v=>`<button data-act="feff" data-v="${v}" aria-pressed="${f.effort===v}">${v}</button>`).join('')}</div></div>
+    <div class="card"><h4>4. Något speciellt? <span class="small mut" style="font-weight:500">Valfritt</span></h4>${f.noteOpen?`<label class="sr" for="lognote">Kommentar</label><textarea id="lognote" data-in="lognote" placeholder="T.ex. Jag var extra trött i dag" style="margin-top:8px">${esc(f.note)}</textarea>`:`<p class="small mut">Bara om något var annorlunda än vanligt. Allt annat syns redan för Erik.</p><button class="link" data-act="fnote" style="padding-left:0">+ Skriv en kommentar</button>`}</div>
+    <button class="btn pri full" data-act="savelog" style="min-height:58px;position:sticky;bottom:0" ${f.pain==null?'disabled':''}>${IC.check.replace('<svg','<svg width="20" height="20"')} Spara och skicka till Erik</button>${f.pain==null?'<p class="small mut" style="text-align:center">Välj hur ont du har för att kunna spara.</p>':'<p class="small mut" style="text-align:center">Erik ser din logg direkt i sin översikt.</p>'}`}
+  if(m.type==='newex'){const n=ui.nx;t='Ny egen övning';const poses=[['squat','Knäböj'],['lunge','Utfall'],['stepUp','Trappsteg'],['kneeExt','Sittande'],['balance','Balans'],['calf','Tåhävning'],['bridge','Liggande rygg'],['plank','Planka'],['sideLeg','Sidoliggande'],['armRaise','Armlyft'],['wallPush','Mot vägg'],['chin','Nacke']];
+    b=`<p class="small mut">Övningen hamnar i ditt bibliotek och läggs till i ${esc(p.first)}s program. Du kan använda den för alla patienter.</p>
+    <div class="card" style="display:grid;gap:12px"><div><label class="lab" for="nx-name">Namn på övningen *</label><input type="text" id="nx-name" data-in="nx" data-k="name" value="${esc(n.name)}" placeholder="T.ex. Gång baklänges"></div>
+    <div><span class="lab">Kroppsdel</span><div class="row" style="gap:6px">${AREAS.slice(1).map(a=>`<button class="chip" style="min-height:40px;padding:6px 12px" data-act="nxset" data-k="area" data-v="${a}" aria-pressed="${n.area===a}">${a}</button>`).join('')}</div></div>
+    <div><span class="lab">Mäts i</span><div class="seg" style="max-width:320px;grid-template-columns:1fr 1fr"><button data-act="nxset" data-k="unit" data-v="rep" aria-pressed="${n.unit==='rep'}">Repetitioner</button><button data-act="nxset" data-k="unit" data-v="sek" aria-pressed="${n.unit==='sek'}">Sekunder</button></div></div></div>
+    <div class="card" style="display:grid;gap:10px"><span class="lab" style="margin:0">Bild</span>${n.img?`<div class="row"><img src="${n.img}" alt="Uppladdad bild" style="width:140px;border-radius:12px"><button class="link" data-act="nxset" data-k="img" data-v="">Ta bort bilden</button></div>`:`<p class="small mut" style="margin:0">Ladda upp ett eget foto, eller välj den figur som liknar övningen mest.</p><label class="btn sm" style="justify-self:start">Ladda upp foto<input type="file" id="nximg" accept="image/*" class="sr"></label>
+    <div class="posegrid">${poses.map(([k,l])=>`<button class="libt" data-act="nxset" data-k="pose" data-v="${k}" aria-pressed="${n.pose===k}"><div class="pic">${figPose(k,n.pose===k)}</div><span class="small">${l}</span></button>`).join('')}</div>`}</div>
+    <div class="card" style="display:grid;gap:10px"><div><label class="lab" for="nx-steps">Så gör du *</label><p class="small mut" style="margin:0 0 6px">Ett steg per rad. Skriv som du skulle säga det till patienten.</p><textarea id="nx-steps" data-in="nx" data-k="steps" placeholder="Stå med fötterna höftbrett isär.&#10;Gå långsamt bakåt tio steg.&#10;Vänd och gå tillbaka.">${esc(n.steps)}</textarea></div>
+    <details class="more"${n.tip||n.dont||n.why?' open':''}><summary>Fler fält (valfritt)</summary><div style="display:grid;gap:10px;margin-top:6px"><div><label class="lab" for="nx-tip">Tänk på</label><input type="text" id="nx-tip" data-in="nx" data-k="tip" value="${esc(n.tip)}" placeholder="T.ex. Titta framåt, inte ner i golvet"></div><div><label class="lab" for="nx-dont">Undvik</label><input type="text" id="nx-dont" data-in="nx" data-k="dont" value="${esc(n.dont)}" placeholder="T.ex. Släpa inte fötterna"></div><div><label class="lab" for="nx-why">Varför den här övningen?</label><input type="text" id="nx-why" data-in="nx" data-k="why" value="${esc(n.why)}" placeholder="T.ex. Tränar balans och koordination"></div></div></details></div>
+    <button class="btn pri full" data-act="nxsave" style="min-height:56px">${IC.check.replace('<svg','<svg width="20" height="20"')} Spara och lägg till i programmet</button><p class="small mut" style="text-align:center">* måste fyllas i</p>`}
+  if(m.type==='painpick'){const f=ui.pform;t='Beskriv din smärta';b=`<p class="mut">Skickas med ditt meddelande, så att Erik ser hur och var det gör ont utan att du behöver komma in.</p><div class="card"><h4>Hur ont har du just nu?</h4><p class="small mut">0 = ingen smärta, 10 = värsta tänkbara</p>${vasPicker(f)}${f.pain>0?painPicker(f):''}</div><button class="btn pri full" data-act="painok" style="min-height:56px" ${f.pain==null?'disabled':''}>Bifoga till meddelandet</button>`}
+  if(m.type==='msginfo'){t='Innan du skriver';b=`<div class="note" style="font-size:1.08rem"><strong>Meddelanden är till för viktiga frågor</strong> om din träning, till exempel om en övning gör ont eller om du är osäker på hur den görs.</div>
+    <p>Du har <strong>${p.msgLeft} av ${p.msgMax}</strong> meddelanden kvar före ditt nästa besök ${fmt(fromKey(p.nextVisit))}. Erik svarar oftast inom en arbetsdag.</p><p>Har du fler frågor? Boka hellre ett telefonmöte.</p><div class="note co"><strong>Akut?</strong> Ring 1177 för sjukvårdsrådgivning eller 112 vid nödläge. Vänta inte på svar här.</div>
+    <button class="btn pri full" data-act="ack">Jag förstår, skriv meddelande</button><button class="btn full" data-act="book">Boka telefonmöte i stället</button>`}
+  if(m.type==='book'){t='Boka telefonmöte';const slots=[];let d=addD(TODAY,1);while(slots.length<6){if(dow(d)<5){slots.push(cap(fmtL(d))+' kl 10:30');slots.push(cap(fmtL(d))+' kl 14:00')}d=addD(d,1)}
+    b=`<p>Välj en tid. Erik ringer upp dig på numret du har i journalen.</p><div style="display:grid;gap:8px">${slots.map(s=>`<button class="chip" style="border-radius:12px;text-align:left;padding:12px 16px" data-act="slot" data-v="${esc(s)}" aria-pressed="${m.slot===s}">${esc(s)}</button>`).join('')}</div><button class="btn pri full" data-act="dobook" ${m.slot?'':'disabled'}>Boka tiden</button>`}
+  if(m.type==='journal'){t='Sammanfattning till journal';b=`<p class="small mut">Kopiera och klistra in i journalsystemet.</p><textarea id="jtext" readonly style="min-height:260px">${esc(journalText(p))}</textarea><button class="btn pri" data-act="copy" data-src="jtext">Kopiera text</button>`}
+  if(m.type==='copyfb'){t='Feedback som tabell';b=`<p class="small mut">Tabbseparerad text, klistra in i Excel eller Google Kalkylark.</p><textarea id="fbtext" readonly style="min-height:220px">${esc(fbTable())}</textarea><button class="btn pri" data-act="copy" data-src="fbtext">Kopiera</button>`}
+  if(m.type==='reset'){t='Återställa demodata?';b=`<p>Alla pass, program och meddelanden du har ändrat i testet tas bort och exempeldatan kommer tillbaka. Inskickad feedback påverkas inte.</p><div class="row"><button class="btn co" data-act="doreset">Återställ</button><button class="btn" data-act="close">Avbryt</button></div>`}
+  $modal.innerHTML=`<div class="back"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mt"><header><h3 id="mt">${esc(t)}</h3><button class="x" data-act="close" aria-label="Stäng">×</button></header>${b}</div></div>`;
+}
+function journalText(p){const a=adherence(p),pi=painInfo(p);const L=inRange(p,a.from,TODAY);const ar={},ty={},ef={};L.forEach(l=>{(l.area||[]).forEach(x=>ar[x]=(ar[x]||0)+1);(l.type||[]).forEach(x=>ty[x]=(ty[x]||0)+1);if(l.effort)ef[l.effort]=(ef[l.effort]||0)+1});
+  const F=flags(p,14);
+  return `Hemträning, sammanfattning ${TK}\nPatient: ${p.name}, ${p.age} år. ${p.dx}.\nProgram vecka ${progWeek(p)} av ${p.weeks} (${perWk(p.program.perWeek)}, smärtgräns ${p.painLimit}/10): ${prog(p).map(it=>EXM[it.ex].name+' '+dose(it)).join('; ')}.\nGenomförda pass senaste 14 dagar: ${a.done} av ${a.plan} planerade${a.vol!=null?', i snitt '+a.vol+' % av ordinerad mängd per pass':''}.\nUpplevd ansträngning: ${Object.entries(ef).map(([k,v])=>k.toLowerCase()+' '+v).join(', ')||'–'}.\nSmärta (VAS): ${pi?'start '+pi.first.pain+'/10, senast '+pi.last.pain+'/10, trend '+(pi.trend>.5?'ökande':pi.trend<-.5?'minskande':'stabil'):'ej loggad'}.\nSmärtlokalisation: ${Object.keys(ar).join(', ')||'–'}. Karaktär: ${Object.keys(ty).join(', ')||'–'}.\nFlaggat av patienten: ${F.map(f=>f.date+' '+(f.ex?EXM[f.ex].name:'passet')+(f.flag?' ('+f.flag+')':'')+(f.comment?': '+f.comment:'')).join(' | ')||'–'}`}
+function fbTable(){const list=(ui.fbList||S.fbLocal).slice().sort((a,b)=>a.t-b.t);const head=['Tid','Roll','Ålder',...TASKS.flatMap(([id])=>[id+' resultat',id+' lätthet']),'Bra','Saknas','Osäker'];
+  const cl=s=>String(s==null?'':s).replace(/[\t\n]+/g,' ');
+  return [head.join('\t'),...list.map(x=>[hm(x.t),x.role,x.age,...TASKS.flatMap(([id])=>[x.tasks&&x.tasks[id]?x.tasks[id].res:'',x.tasks&&x.tasks[id]?x.tasks[id].ease:'']),x.good,x.miss,x.hard].map(cl).join('\t'))].join('\n')}
+
+/* ----- charts ----- */
+let ro=null;
+function drawPain(box){const p=pat(box.dataset.chart);const pi=painInfo(p);const s=box.querySelector('svg');if(!pi||!s)return;
+  const W=s.clientWidth,H=s.clientHeight;if(!W||!H)return;const m={l:28,r:18,t:16,b:26};const n=28;const start=addD(TODAY,-n);
+  const x=k=>m.l+(fromKey(k)-start)/864e5/n*(W-m.l-m.r),y=v=>m.t+(10-v)/10*(H-m.t-m.b);
+  const pts=pi.series.filter(l=>fromKey(l.date)>=start);let g='';
+  for(const v of [0,5,10])g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v}</text>`;
+  const step=W<420?14:7;for(let i=0;i<=n;i+=step){const d=addD(start,i);g+=`<text x="${x(key(d))}" y="${H-6}" text-anchor="middle">${fmt(d)}</text>`}
+  if(pts.length){const path=pts.map((l,i)=>(i?'L':'M')+x(l.date).toFixed(1)+' '+y(l.pain).toFixed(1)).join(' ');
+    g+=`<path d="${path} L${x(pts[pts.length-1].date).toFixed(1)} ${y(0)} L${x(pts[0].date).toFixed(1)} ${y(0)}Z" fill="var(--t)" opacity=".12"/><path d="${path}" fill="none" stroke="var(--t)" stroke-width="2.5" stroke-linejoin="round"/>`}
+  g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(p.painLimit)}" y2="${y(p.painLimit)}" stroke="var(--am)" stroke-width="2" stroke-dasharray="6 5"/>`;
+  if(pts.length){g+=pts.map(l=>`<circle cx="${x(l.date).toFixed(1)}" cy="${y(l.pain).toFixed(1)}" r="${l.pain>p.painLimit?5:3.5}" fill="${l.pain>p.painLimit?'var(--co)':'var(--card)'}" stroke="${l.pain>p.painLimit?'var(--co)':'var(--t)'}" stroke-width="2"><title>${fmt(fromKey(l.date))}: ${l.pain}/10</title></circle>`).join('');
+    const L=pts[pts.length-1];g+=`<text x="${Math.min(x(L.date),W-m.r)-8}" y="${y(L.pain)-10}" text-anchor="end" style="fill:${L.pain>p.painLimit?'var(--co)':'var(--t)'};font-weight:800;font-size:14px">${L.pain}/10</text>`}
+  s.innerHTML=g}
+function after(){if(ro)ro.disconnect();ro=new ResizeObserver(es=>es.forEach(e=>drawPain(e.target)));document.querySelectorAll('.fig[data-chart]').forEach(f=>ro.observe(f))}
+
+/* ---------- actions ---------- */
+const $toast=document.getElementById('toast');let tT;
+const toast=msg=>{$toast.textContent=msg;$toast.hidden=false;clearTimeout(tT);tT=setTimeout(()=>$toast.hidden=true,3400)};
+function formFor(p,k){const l=logOf(p,k);const items={};for(const it of prog(p)){const o=l&&l.items[it.ex];items[it.ex]=o?{...o,open:!!(o.flag||o.comment)}:{sets:it.sets,reps:it.reps,flag:null,comment:'',open:false}}
+  return {date:k,view:'fram',items,pain:l?l.pain:null,area:l?[...(l.area||[])]:[],type:l?[...(l.type||[])]:[],note:l?l.note||'':'',noteOpen:!!(l&&l.note),effort:l?l.effort||null:null}}
+function keepScroll(fn){const y=window.scrollY;const sh=document.querySelector('.sheet');const sy=sh?sh.scrollTop:0;fn();window.scrollTo(0,y);const s2=document.querySelector('.sheet');if(s2)s2.scrollTop=sy}
+function keepText(fn){const ta=document.getElementById('ptext');const v=ta?ta.value:null;fn();const t2=document.getElementById('ptext');if(t2&&v!=null)t2.value=v}
+const PF=()=>ui.modal&&ui.modal.type==='painpick'?ui.pform:ui.form;
+const mod=fn=>keepScroll(()=>{fn();renderModal()});
+const dr=()=>{ui.dirty=true;keepScroll(render)};
+function openCompose(p,prefill,pain){ui.prefill=prefill||'';ui.pendingPain=!!pain;if(p.msgLeft<=0){ui.modal={type:'book'};renderModal();return}ui.modal={type:'msginfo'};renderModal()}
+function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
+  switch(a){
+  case 'fs':ui.fs=+d.v;try{localStorage.setItem('fysi-fs',ui.fs)}catch(e){}render();break;
+  case 'ptab':ui.ptab=d.v;ui.composer=false;ui.modal=null;render();window.scrollTo(0,0);break;
+  case 'instr':ui.modal={type:'instr',ex:d.ex};renderModal();break;
+  case 'askex':ui.modal=null;ui.ptab='msg';render();openCompose(p,'Fråga om '+EXM[d.ex].name.toLowerCase()+': ');break;
+  case 'openlog':ui.form=formFor(p,TK);ui.modal={type:'log'};renderModal();break;
+  case 'fdate':mod(()=>{ui.form=formFor(p,d.v)});break;
+  case 'fother':mod(()=>{const k=ui.form.date===TK?key(addD(TODAY,-1)):ui.form.date;ui.form=formFor(p,k);ui.form.other=true});break;
+  case 'fstep':mod(()=>{const x=ui.form.items[d.ex];const sek=d.f==='reps'&&EXM[d.ex].unit==='sek';x[d.f]=Math.max(d.f==='sets'?0:1,Math.min(d.f==='sets'?10:300,x[d.f]+(+d.d)*(sek?5:1)))});break;
+  case 'fopen':mod(()=>{const x=ui.form.items[d.ex];x.open=!x.open;if(!x.open){x.flag=null;x.comment=''}});break;
+  case 'fflag':mod(()=>{const x=ui.form.items[d.ex];x.flag=x.flag===d.v?null:d.v});break;
+  case 'feff':mod(()=>{ui.form.effort=ui.form.effort===d.v?null:d.v});break;
+  case 'fnote':mod(()=>{ui.form.noteOpen=true});setTimeout(()=>{const t=document.getElementById('lognote');t&&t.focus()},20);break;
+  case 'vas':mod(()=>{const f=PF();f.pain=+d.v;if(!f.pain){f.area=[];f.type=[]}});break;
+  case 'bview':mod(()=>{PF().view=d.v});break;
+  case 'zoomin':mod(()=>{const f=PF();const g=groupOf(d.v);const v=f.view||'fram';f.zoom={g,side:sideOf(d.v),view:ZG[g][v]?v:(ZG[g].fram?'fram':'bak')}});break;
+  case 'zoomout':mod(()=>{PF().zoom=null});break;
+  case 'zview':mod(()=>{const f=PF();f.zoom.view=d.v;f.view=d.v});break;
+  case 'area':mod(()=>{const f=PF();f.area=f.area.includes(d.v)?f.area.filter(x=>x!==d.v):[...f.area,d.v]});break;
+  case 'ptype':mod(()=>{const f=PF();f.type=f.type.includes(d.v)?f.type.filter(x=>x!==d.v):[...f.type,d.v]});break;
+  case 'savelog':{const f=ui.form;const items={};for(const ex in f.items){const x=f.items[ex];items[ex]={sets:x.sets,reps:x.reps,flag:x.flag||null,comment:(x.comment||'').trim()}}
+    let l=logOf(p,f.date);if(!l){l={date:f.date};p.logs.push(l);p.logs.sort((a,b)=>a.date<b.date?-1:1)}
+    Object.assign(l,{items,pain:f.pain,area:f.area,type:f.type,note:(f.note||'').trim(),effort:f.effort||null});save();ui.modal=null;render();
+    const n=weekDone(p),per=p.program.perWeek;toast(n>=per?`Pass sparat! Veckans mål på ${per} pass är nått.`:`Pass sparat! ${n} av ${per} pass den här veckan.`);break}
+  case 'close':ui.modal=null;renderModal();break;
+  case 'compose':openCompose(p,'');break;
+  case 'quick':if(d.v==='ont')openCompose(p,'',true);else openCompose(p,'Jag är osäker på hur jag ska göra ');break;
+  case 'ack':ui.modal=null;ui.composer=true;render();if(ui.pendingPain){ui.pendingPain=false;ui.pform={pain:null,area:[],type:[],view:'fram'};ui.modal={type:'painpick'};renderModal()}else setTimeout(()=>{const t=document.getElementById('ptext');if(t){t.focus();t.setSelectionRange(t.value.length,t.value.length)}},30);break;
+  case 'pcancel':ui.composer=false;ui.att=null;ui.patt=null;ui.prefill='';render();break;
+  case 'psend':{const t=document.getElementById('ptext').value.trim();if(!t&&!ui.att&&!ui.patt){toast('Skriv något först.');return}p.msgs.push({from:'p',text:t,t:Date.now(),att:ui.att,pain:ui.patt});ui.patt=null;p.msgLeft--;p.unread++;ui.composer=false;ui.att=null;ui.prefill='';save();render();toast('Skickat till Erik.');break}
+  case 'painpick':ui.pform={pain:null,area:[],type:[],view:'fram'};ui.modal={type:'painpick'};renderModal();break;
+  case 'painok':ui.patt=clone(ui.pform);delete ui.patt.view;ui.modal=null;keepText(render);break;
+  case 'painrm':ui.patt=null;keepText(render);break;
+  case 'book':ui.modal={type:'book'};renderModal();break;
+  case 'slot':mod(()=>{ui.modal.slot=d.v});break;
+  case 'dobook':p.booking=ui.modal.slot;ui.modal=null;save();render();toast('Telefonmötet är bokat.');break;
+  case 'fpage':ui.fpage=d.v;ui.fpid=null;ui.draft=null;ui.dirty=false;render();window.scrollTo(0,0);break;
+  case 'fsel':ui.editI=null;ui.fpid=d.id;ui.ftab=d.tab||'uppf';ui.draft=null;ui.dirty=false;ui.q='';ui.area='Alla';render();window.scrollTo(0,0);break;
+  case 'fback':ui.fpid=null;ui.draft=null;ui.dirty=false;if(ui.fpage==='oversikt')ui.fpage='patienter';render();break;
+  case 'ftab':ui.editI=null;ui.ftab=d.v;if(d.v!=='prog'){ui.draft=null;ui.dirty=false}render();break;
+  case 'fmsg':ui.fmsg=d.id;render();break;
+  case 'fquick':{const t=document.getElementById('ftext');t.value=d.v;t.focus();break}
+  case 'dper':ui.draft.perWeek=Math.max(1,Math.min(7,ui.draft.perWeek+(+d.d)));dr();break;
+  case 'dweeks':ui.draft.weeks=Math.max(1,Math.min(26,ui.draft.weeks+(+d.d)));dr();break;
+  case 'dlimit':ui.draft.painLimit=Math.max(1,Math.min(10,ui.draft.painLimit+(+d.d)));dr();break;
+  case 'dadd':{const e=EXM[d.ex];ui.draft.items.push({ex:d.ex,sets:3,reps:e.unit==='sek'?30:10,note:''});dr();toast(e.name+' tillagd');break}
+  case 'newex':ui.nx={name:d.v||'',area:ui.area!=='Alla'?ui.area:'Knä & höft',unit:'rep',pose:'squat',img:null,steps:'',tip:'',dont:'',why:''};ui.modal={type:'newex'};renderModal();setTimeout(()=>{const t=document.getElementById(d.v?'nx-steps':'nx-name');t&&t.focus()},40);break;
+  case 'nxset':mod(()=>{ui.nx[d.k]=d.k==='img'?null:d.v});break;
+  case 'nxsave':{const n=ui.nx;const steps=n.steps.split('\n').map(x=>x.trim()).filter(Boolean);
+    if(!n.name.trim()){toast('Skriv ett namn på övningen.');document.getElementById('nx-name').focus();return}
+    if(!steps.length){toast('Skriv minst ett steg under Så gör du.');document.getElementById('nx-steps').focus();return}
+    const id='c'+Date.now().toString(36);const e={id,name:cap(n.name.trim()),area:n.area,unit:n.unit,pose:n.pose,img:n.img||null,steps,tip:n.tip.trim()||'Rör dig lugnt och kontrollerat.',dont:n.dont.trim(),why:n.why.trim(),tags:(n.name+' '+n.area).toLowerCase(),custom:true};
+    S.custom.push(e);EX.push(e);EXM[id]=e;save();ui.modal=null;
+    if(ui.draft){ui.draft.items.push({ex:id,sets:3,reps:n.unit==='sek'?30:10,note:''});ui.dirty=true}
+    ui.q='';render();toast(e.name+' är skapad och tillagd i programmet.');break}
+  case 'dremove':ui.draft.items=ui.draft.items.filter(x=>x.ex!==d.ex);dr();break;
+  case 'drm':ui.draft.items.splice(+d.i,1);ui.editI=null;dr();break;
+  case 'dmove':{const I=ui.draft.items,i=+d.i,j=i+(+d.d);if(j<0||j>=I.length)return;[I[i],I[j]]=[I[j],I[i]];dr();break}
+  case 'dstep':{const it=ui.draft.items[+d.i];const sek=EXM[it.ex].unit==='sek';it[d.f]=Math.max(1,Math.min(d.f==='sets'?10:300,it[d.f]+(+d.d)*(d.f==='reps'&&sek?5:1)));dr();break}
+  case 'dedit':ui.editI=ui.editI===+d.i?null:+d.i;keepScroll(render);break;
+  case 'dorig':{const it=ui.draft.items[+d.i];delete it.steps;delete it.tip;dr();break}
+  case 'tpl':{const T=TPL[+d.i],D=ui.draft;if(!D.items.length)D.perWeek=T.perWeek;let n=0;for(const [ex,se,re] of T.items)if(!D.items.some(x=>x.ex===ex)){D.items.push({ex,sets:se,reps:re,note:''});n++}dr();toast(n?'Mallen '+T.name.toLowerCase()+' är tillagd. Justera vid behov.':'Övningarna finns redan i programmet.');break}
+  case 'dundo':ui.draft=null;ui.editI=null;render();break;
+  case 'dsave':{const D=ui.draft;p.program={perWeek:D.perWeek,items:D.items};p.weeks=D.weeks;p.painLimit=D.painLimit;if(!p.since)p.since=TK;p.msgs.push({from:'f',text:'Hej '+p.first+'! Jag har uppdaterat ditt träningsprogram: '+perWk(D.perWeek)+' i '+D.weeks+' veckor. Du hittar övningarna under Idag.',t:Date.now()});p.seenF=false;ui.draft=null;ui.dirty=false;ui.editI=null;save();render();toast('Programmet är skickat till '+p.first+'.');break}
+  case 'farea':ui.area=d.v;document.querySelectorAll('[data-act=farea]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===ui.area));document.getElementById('lib').innerHTML=libList();break;
+  case 'fsend':{const t=document.getElementById('ftext').value.trim();if(!t)return;p.msgs.push({from:'f',text:t,t:Date.now()});p.seenF=false;save();render();toast('Svar skickat.');break}
+  case 'fgive':p.msgLeft=Math.min(p.msgMax,p.msgLeft+1);save();render();toast(p.first+' har fått ett extra meddelande.');break;
+  case 'journal':ui.modal={type:'journal'};renderModal();break;
+  case 'copy':{const t=document.getElementById(d.src);t.select();(navigator.clipboard?navigator.clipboard.writeText(t.value):Promise.reject()).then(()=>toast('Kopierat.')).catch(()=>{try{document.execCommand('copy');toast('Kopierat.')}catch(e){toast('Markera texten och kopiera manuellt.')}});break}
+  case 'fbset':ui.fb[d.k]=ui.fb[d.k]===d.v?null:d.v;keepScroll(render);break;
+  case 'fbt':{const t=ui.fb.tasks[d.id]=ui.fb.tasks[d.id]||{};t[d.k]=d.k==='ease'?+d.v:d.v;keepScroll(render);break}
+  case 'fbsend':sendFb();break;
+  case 'fbcopy':ui.modal={type:'copyfb'};renderModal();break;
+  case 'resetask':ui.modal={type:'reset'};renderModal();break;
+  case 'doreset':{const fb=S.fbLocal,cu=S.custom;S=seed();S.fbLocal=fb;S.custom=cu;save();ui.modal=null;ui.draft=null;ui.dirty=false;ui.composer=false;ui.fpid=null;render();toast('Demodatan är återställd.');break}
+  }}
+async function sendFb(){const f=ui.fb;const has=f.role||Object.keys(f.tasks).length||f.good||f.miss||f.hard;if(!has){toast('Fyll i något först.');return}
+  const id='fb'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);const o={id,t:Date.now(),role:f.role||'',age:f.age||'',tasks:f.tasks,good:f.good||'',miss:f.miss||'',hard:f.hard||''};
+  let shared=false;if(ui.db){try{await ui.db.collection('feedback').doc(id).set(o);shared=true}catch(e){}}
+  if(!shared){S.fbLocal.push(o);save()}
+  ui.fb={tasks:{}};render();window.scrollTo(0,0);toast(shared?'Tack! Din feedback är skickad.':'Tack! Feedbacken är sparad i den här webbläsaren.')}
+
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled)return;act(b.dataset.act,b.dataset,b)});
+$modal.addEventListener('click',e=>{if(e.target.classList&&e.target.classList.contains('back')){ui.modal=null;renderModal()}},true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ui.modal){ui.modal=null;renderModal()}
+  const r=e.target.closest&&e.target.closest('[role=button][data-act]');if(r&&(e.key==='Enter'||e.key===' ')){e.preventDefault();r.dispatchEvent(new MouseEvent('click',{bubbles:true}))}});
+document.addEventListener('input',e=>{const t=e.target;const k=t.dataset&&t.dataset.in;if(!k)return;
+  if(k==='q'){ui.q=t.value;document.getElementById('lib').innerHTML=libList()}
+  if(k==='dnote'||k==='dsteps'||k==='dtip'){const it=ui.draft.items[+t.dataset.i];if(k==='dnote')it.note=t.value;else if(k==='dtip')it.tip=t.value;else it.steps=t.value.split('\n').map(x=>x.trim()).filter(Boolean);
+    if(!ui.dirty){ui.dirty=true;const sb=document.querySelector('[data-act=dsave]');if(sb)sb.disabled=false}}
+  if(k==='lognote')ui.form.note=t.value;
+  if(k==='excom')ui.form.items[t.dataset.ex].comment=t.value;
+  if(k==='fb')ui.fb[t.dataset.k]=t.value;
+  if(k==='nx')ui.nx[t.dataset.k]=t.value});
+document.addEventListener('toggle',e=>{const t=e.target;if(t.classList&&t.classList.contains('more')&&ui.form)ui.form.mapOpen=t.open},true);
+document.addEventListener('change',e=>{const t=e.target;
+  if(t.id==='logdate'&&t.value&&ui.form){const k=t.value>TK?TK:t.value;keepScroll(()=>{ui.form=formFor(pat(ui.pid),k);ui.form.other=true;renderModal()})}
+  if(t.dataset&&t.dataset.in==='psel'){ui.pid=t.value;ui.composer=false;render()}
+  if(t.id==='nximg'&&t.files&&t.files[0]){const f=t.files[0];if(f.size>1500000){toast('Bilden är för stor. Välj en bild under 1,5 MB.');return}const r=new FileReader();r.onload=()=>{ui.nx.img=r.result;keepScroll(renderModal)};r.readAsDataURL(f)}
+  if(t.id==='patt'&&t.files&&t.files[0]){const f=t.files[0];ui.att={name:f.name};
+    if(/^image\//.test(f.type)&&f.size<400000){const r=new FileReader();r.onload=()=>{ui.att.data=r.result;keepText(render)};r.readAsDataURL(f)}else keepText(render)}});
+function route(){const h=location.hash.slice(1);ui.view=['patient','fysio','feedback'].includes(h)?h:'start';ui.modal=null;render();window.scrollTo(0,0)}
+window.addEventListener('hashchange',route);
+route();
+(async()=>{try{if(!window.claude||!window.claude.use)return;const db=await window.claude.use('db');if(!db)return;ui.db=db;
+  db.collection('feedback').onSnapshot(snap=>{const docs=snap&&snap.docs?snap.docs:Array.isArray(snap)?snap:[];
+    ui.fbList=docs.map(x=>typeof x.data==='function'?x.data():(x.data||x)).filter(x=>x&&typeof x==='object');if(ui.view==='feedback'&&!document.activeElement.matches('textarea'))keepScroll(render)},()=>{})}catch(e){}})();
+}
+</script>
+</body>
+</html>
