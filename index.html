@@ -361,9 +361,32 @@ const EX=[
 {id:'vaggarm',name:'Armhävning mot vägg',area:'Axel & nacke',unit:'rep',pose:'wallPush',tags:'axel bröst arm skuldra armhävning vägg tryck',steps:['Stå en armlängd från en vägg med händerna mot väggen i axelhöjd.','Böj armarna och för bröstet mot väggen.','Tryck dig tillbaka tills armarna är raka.'],tip:'Håll kroppen rak som en planka.'},
 {id:'nacke',name:'Haka in (nackretraktion)',area:'Axel & nacke',unit:'rep',pose:'chin',tags:'nacke hållning huvud haka dubbelhaka',steps:['Sitt eller stå rak och titta rakt fram.','Dra hakan rakt bakåt, som en dubbelhaka. Huvudet ska inte tippa.','Håll 3 sekunder och slappna av.'],tip:'Rörelsen är liten. Det ska kännas i nacken, inte göra ont.'},
 {id:'utfall',name:'Utfallssteg',area:'Knä & höft',unit:'rep',pose:'lunge',tags:'utfall lunge ben lår säte knä steg',steps:['Stå rak med fötterna ihop. Håll gärna i en stolsrygg.','Ta ett långt steg framåt och böj båda knäna.','Tryck ifrån med främre foten och gå tillbaka. Byt ben.'],tip:'Främre knät ska vara ovanför foten, inte framför tårna.'},
-{id:'trappsteg',name:'Uppkliv på trappsteg',area:'Knä & höft',unit:'rep',pose:'stepUp',tags:'trappa steg uppkliv knä lår vardag gå',steps:['Stå framför ett trappsteg och håll i ledstången.','Sätt ena foten på steget och kliv upp tills benet är rakt.','Gå ner lugnt med samma ben först. Byt ben efter alla repetitioner.'],tip:'Låt inte knät falla inåt när du kliver upp.'}
+{id:'trappsteg',name:'Uppkliv på trappsteg',area:'Knä & höft',unit:'rep',pose:'stepUp',tags:'trappa steg uppkliv knä lår vardag gå',steps:['Stå framför ett trappsteg och håll i ledstången.','Sätt ena foten på steget och kliv upp tills benet är rakt.','Gå ner lugnt med samma ben först. Byt ben efter alla repetitioner.'],tip:'Låt inte knät falla inåt när du kliver upp.'},
+{id:'raktben',name:'Raka benlyft',area:'Knä & höft',unit:'rep',pose:'slr',tags:'knä lår benlyft liggande',steps:['Ligg på rygg. Böj ena benet med foten i golvet.','Spänn låret på det raka benet så att knät är helt rakt.','Lyft benet till samma höjd som det böjda knät och sänk långsamt.'],tip:'Håll knät rakt under hela lyftet.'},
+{id:'halglid',name:'Hälglidning',area:'Knä & höft',unit:'rep',pose:'heelSlide',tags:'knä böjning rörlighet liggande',steps:['Ligg på rygg med raka ben.','Dra hälen längs underlaget mot rumpan så att knät böjs.','Glid tillbaka tills benet är rakt igen.'],tip:'Gå så långt det går utan skarp smärta.'},
+{id:'vaggsitt',name:'Väggsittning',area:'Knä & höft',unit:'sek',pose:'wallSit',tags:'knä lår vägg statisk sitta',steps:['Stå med ryggen mot en vägg och fötterna en fotlängd ut.','Glid ner längs väggen tills knäna är böjda, som på en osynlig stol.','Håll positionen och andas lugnt.'],tip:'Gå bara så djupt som känns okej i knäna.'},
+{id:'mussla',name:'Musslan',area:'Knä & höft',unit:'rep',pose:'clam',tags:'höft säte sida ligga',steps:['Ligg på sidan med böjda knän och fötterna ihop.','Lyft det övre knät uppåt utan att fötterna släpper från varandra.','Sänk långsamt tillbaka.'],tip:'Håll höften stilla och rulla inte bakåt.'},
+{id:'hamstretch',name:'Stretch baksida lår',area:'Knä & höft',unit:'sek',pose:'hamStretch',tags:'stretch baksida lår sitta stol töja',steps:['Sitt längst fram på en stol. Sträck ut ena benet med hälen i golvet.','Luta överkroppen framåt med rak rygg tills det drar i baksidan av låret.','Håll stretchen och andas lugnt.'],tip:'Det ska dra, inte göra ont.'},
+{id:'hoftbojare',name:'Stretch höftböjare',area:'Knä & höft',unit:'sek',pose:'hipFlex',tags:'stretch höft framsida knästående ljumske töja',steps:['Ställ dig på ett knä med andra foten framför dig. Lägg en kudde under knät.','Spänn magen och för höften försiktigt framåt.','Håll när det drar på framsidan av höften.'],tip:'Håll överkroppen upprätt.'},
+{id:'enbro',name:'Enbensbrygga',area:'Rygg & bål',unit:'rep',pose:'bridge1',tags:'säte höft brygga bäckenlyft ett ben',steps:['Ligg på rygg med böjda knän. Sträck ut ena benet.','Pressa genom hälen och lyft bäckenet tills kroppen är rak.','Sänk långsamt utan att bäckenet tippar.'],tip:'Håll bäckenet i våg hela tiden.'},
+{id:'hoftfall',name:'Höftfällning',area:'Rygg & bål',unit:'rep',pose:'hinge',tags:'höft rygg lyftteknik böja framåt',steps:['Stå med fötterna höftbrett isär och lätt böjda knän.','För rumpan bakåt och luta överkroppen framåt med rak rygg.','Spänn sätet och res dig upp igen.'],tip:'Tänk att du stänger en låda med rumpan.'},
+{id:'fagelhund',name:'Fyrfota diagonallyft',area:'Rygg & bål',unit:'rep',pose:'birdDog',tags:'fyrfota bål rygg balans arm ben',steps:['Stå på alla fyra med händerna under axlarna och knäna under höfterna.','Sträck ut ena armen framåt och motsatt ben bakåt.','Håll en sekund och byt sida.'],tip:'Ryggen ska vara rak som ett bord.'},
+{id:'katt',name:'Katt och kamel',area:'Rygg & bål',unit:'rep',pose:'catCamel',tags:'fyrfota rygg rörlighet',steps:['Stå på alla fyra med händerna under axlarna.','Skjut upp ryggen som en arg katt och sänk huvudet.','Sänk sedan ryggen mjukt och lyft blicken. Växla lugnt.'],tip:'Andas ut när du skjuter upp ryggen.'},
+{id:'deadbug',name:'Död insekt',area:'Rygg & bål',unit:'rep',pose:'deadBug',tags:'bål mage ligga rygg arm ben',steps:['Ligg på rygg med armarna mot taket och knäna böjda rakt över höfterna.','Sänk ena armen bakåt och motsatt ben framåt mot golvet.','För tillbaka och byt sida.'],tip:'Pressa ländryggen lätt mot golvet hela tiden.'},
+{id:'backtipp',name:'Bäckentippning',area:'Rygg & bål',unit:'rep',pose:'pelvicTilt',tags:'bäcken ländrygg ligga mage',steps:['Ligg på rygg med böjda knän och fötterna i golvet.','Spänn magen och pressa ländryggen lätt mot golvet.','Slappna av och låt svanken komma tillbaka.'],tip:'Rörelsen är liten. Andas lugnt.'},
+{id:'pressup',name:'Armpress i magliggande',area:'Rygg & bål',unit:'rep',pose:'pressUp',tags:'mage ligga ländrygg armar',steps:['Ligg på mage med händerna under axlarna.','Tryck upp överkroppen med armarna och låt höften ligga kvar mot golvet.','Sänk långsamt tillbaka.'],tip:'Låt ländryggen vara avslappnad.'},
+{id:'vadstretch',name:'Vadstretch mot vägg',area:'Fot & fotled',unit:'sek',pose:'calfStretch',tags:'stretch vad hälsena vägg töja',steps:['Stå vänd mot en vägg med händerna mot väggen.','Ta ett steg bakåt med ena benet och håll hälen i golvet.','Böj det främre knät tills det drar i vaden på det bakre benet.'],tip:'Tårna på det bakre benet pekar rakt fram.'},
+{id:'ankelpump',name:'Fotledspump',area:'Fot & fotled',unit:'rep',pose:'anklePump',tags:'fotled cirkulation svullnad ligga ankel',steps:['Ligg eller sitt med benen raka.','Dra tårna mot dig så långt det går.','Peka sedan tårna bort från dig. Växla i lugnt tempo.'],tip:'Gör gärna övningen flera gånger om dagen.'},
+{id:'excentrisk',name:'Excentrisk tåhävning',area:'Fot & fotled',unit:'rep',pose:'calfStep',tags:'hälsena hälsenan achilles trappsteg tå vad excentrisk',steps:['Stå med framfoten på kanten av ett trappsteg och håll i ledstången.','Gå upp på tå med båda benen.','Lyft ena foten och sänk långsamt hälen på det andra benet under stegets kant.'],tip:'Ta tre sekunder på väg ner.'},
+{id:'pendel',name:'Pendelövning',area:'Axel & nacke',unit:'sek',pose:'pendulum',tags:'axel pendel bord häng',steps:['Stöd ena handen mot ett bord och luta dig framåt.','Låt den andra armen hänga avslappnad.','Gör små cirklar eller pendla armen med hjälp av kroppen.'],tip:'Armen ska vara helt avslappnad.'},
+{id:'utrot',name:'Utåtrotation med gummiband',area:'Axel & nacke',unit:'rep',pose:'extRot',tags:'axel gummiband rotation armbåge',steps:['Håll ett gummiband med armbågen mot sidan, böjd i 90 grader.','Vrid underarmen utåt utan att armbågen lämnar kroppen.','För tillbaka långsamt.'],tip:'Lägg en hoprullad handduk mellan armbåge och kropp.'},
+{id:'rodd',name:'Roddrag med gummiband',area:'Axel & nacke',unit:'rep',pose:'row',tags:'axel rygg skulderblad gummiband drag',steps:['Fäst ett gummiband i ett dörrhandtag och ta tag med båda händerna.','Dra händerna mot kroppen och för ihop skulderbladen.','Släpp tillbaka långsamt.'],tip:'Håll axlarna nere, långt från öronen.'},
+{id:'vaggklatt',name:'Fingrarna klättrar på väggen',area:'Axel & nacke',unit:'rep',pose:'wallWalk',tags:'axel vägg rörlighet fingrar klättra',steps:['Stå vänd mot en vägg, en armlängd bort.','Låt fingrarna gå uppför väggen så högt det går.','Gå sakta ner igen.'],tip:'Ta ett litet steg närmare väggen när det blir lättare.'},
+{id:'axelpress',name:'Axelpress',area:'Axel & nacke',unit:'rep',pose:'press',tags:'axel arm press uppåt hantel vikt',steps:['Stå eller sitt med händerna i axelhöjd.','Pressa armarna rakt upp tills de är nästan raka.','Sänk långsamt tillbaka.'],tip:'Börja utan vikt eller med en vattenflaska.'},
+{id:'curl',name:'Armbågsböj',area:'Axel & nacke',unit:'rep',pose:'curl',tags:'arm armbåge vikt hantel',steps:['Stå med armarna längs sidan, gärna med en lätt vikt.','Böj armbågen och för handen mot axeln.','Sänk långsamt.'],tip:'Håll armbågen stilla mot sidan.'}
 ];
-const TPL=[{name:'Knäartros',perWeek:3,items:[['knaboj',3,10],['knastrack',3,12],['trappsteg',3,10],['balans',3,30]]},{name:'Ländrygg',perWeek:3,items:[['bro',3,12],['planka',3,20],['benlyft',2,12]]},{name:'Axel',perWeek:3,items:[['armlyft',3,10],['vaggarm',2,12],['nacke',2,10]]},{name:'Balans och fallprevention',perWeek:4,items:[['balans',3,20],['tahavning',3,12],['knaboj',2,10],['utfall',2,8]]}];
+const TPL0=[{name:'Knäartros',perWeek:3,items:[['knaboj',3,10],['knastrack',3,12],['trappsteg',3,10],['balans',3,30]]},{name:'Ländrygg',perWeek:3,items:[['bro',3,12],['planka',3,20],['benlyft',2,12]]},{name:'Axel',perWeek:3,items:[['armlyft',3,10],['vaggarm',2,12],['nacke',2,10]]},{name:'Balans och fallprevention',perWeek:4,items:[['balans',3,20],['tahavning',3,12],['knaboj',2,10],['utfall',2,8]]}];
+const TPL=TPL0.concat([{name:'Hälsena',perWeek:4,items:[['excentrisk',3,15],['vadstretch',3,30],['balans',2,30]]},{name:'Höftartros',perWeek:3,items:[['mussla',3,12],['bro',3,12],['hoftfall',3,10],['balans',2,30]]},{name:'Nacke och hållning',perWeek:3,items:[['nacke',2,10],['rodd',3,12],['katt',2,10]]},{name:'Efter knäoperation',perWeek:7,items:[['ankelpump',3,20],['halglid',3,10],['raktben',3,10]]}]);
 const EXM=Object.fromEntries(EX.map(e=>[e.id,e]));
 const AREAS=['Alla','Knä & höft','Rygg & bål','Axel & nacke','Fot & fotled'];
 
@@ -383,12 +406,34 @@ armRaise:{prop:'',a:{...ST,...L2},b:{E:[123,44],W:[146,42]}},
 wallPush:{prop:'wall',a:{H:[146,40],S:[136,54],E:[151,56],W:[164,58],P:[112,92],K:[102,114],A:[92,136],T:[104,136]},b:{H:[154,46],S:[146,60],E:[150,77],P:[118,94],K:[105,115]}},
 chin:{prop:'',a:{...ST,H:[107,23],...L2},b:{H:[98,24]}},
 lunge:{prop:'',a:{...ST,...L2},b:{H:[96,40],S:[96,58],E:[97,80],W:[98,100],P:[94,102],K:[122,108],A:[122,136],T:[134,136],K2:[80,130],A2:[58,128],T2:[52,136]}},
+slr:{prop:'mat',a:{H:[30,124],S:[46,128],E:[66,131],W:[86,132],P:[96,129],K:[128,130],A:[160,131],T:[166,124],K2:[120,106],A2:[138,134],T2:[150,134]},b:{K:[124,113],A:[151,97],T:[156,90]}},
+heelSlide:{prop:'mat',a:{H:[30,124],S:[46,128],E:[66,131],W:[86,132],P:[96,129],K:[128,130],A:[160,131],T:[166,124],K2:[128,131],A2:[160,132],T2:[166,125]},b:{K:[118,106],A:[134,133],T:[146,134]}},
+wallSit:{prop:'wallL',a:{H:[72,22],S:[70,42],E:[71,64],W:[72,86],P:[70,84],K:[71,110],A:[70,136],T:[83,136],K2:[70,110],A2:[70,136],T2:[83,136]},b:{H:[72,46],S:[70,66],E:[71,88],W:[78,106],P:[70,104],K:[102,104],A:[102,136],T:[115,136],K2:[101,104],A2:[101,136],T2:[114,136]}},
+clam:{prop:'mat',a:{H:[30,116],S:[48,122],E:[34,108],W:[28,116],P:[100,126],K:[126,126],A:[108,133],T:[100,131],K2:[126,130],A2:[108,134],T2:[100,134]},b:{K:[122,106],A:[108,132]}},
+bridge1:{prop:'mat',a:{H:[34,124],S:[50,128],E:[70,131],W:[90,132],P:[96,128],K:[124,104],A:[142,134],T:[154,134],K2:[126,118],A2:[156,108],T2:[160,100]},b:{P:[98,104],K:[127,97],K2:[128,92],A2:[158,82],T2:[162,74]}},
+hamStretch:{prop:'chair2',a:{H:[98,38],S:[96,56],E:[104,76],W:[116,92],P:[100,98],K:[130,112],A:[160,128],T:[164,118],K2:[126,100],A2:[126,136],T2:[138,136]},b:{H:[130,52],S:[116,64],E:[132,84],W:[146,104]}},
+hipFlex:{prop:'mat',a:{H:[97,36],S:[96,56],E:[98,76],W:[100,94],P:[96,96],K:[86,132],A:[58,132],T:[52,136],K2:[124,100],A2:[124,136],T2:[136,136]},b:{H:[102,38],S:[102,58],E:[104,78],W:[106,96],P:[104,98],K:[88,132]}},
+hinge:{prop:'',a:{...ST,...L2},b:{H:[132,42],S:[118,56],E:[118,78],W:[118,100],P:[88,84],K:[96,110],A:[100,136],T:[113,136],K2:[95,110],A2:[99,136],T2:[112,136]}},
+calfStretch:{prop:'wall',a:{H:[146,38],S:[136,54],E:[152,56],W:[166,56],P:[118,88],K:[140,108],A:[134,136],T:[146,136],K2:[104,112],A2:[90,136],T2:[102,136]},b:{H:[152,40],S:[142,56],E:[156,60],P:[124,90],K:[144,110]}},
+anklePump:{prop:'mat',a:{H:[30,124],S:[46,128],E:[66,131],W:[86,132],P:[96,129],K:[128,130],A:[160,131],T:[164,119],K2:[128,131],A2:[160,132],T2:[164,120]},b:{T:[172,135]}},
+birdDog:{prop:'mat',a:{H:[150,86],E2:[136,113],W2:[136,134],S:[136,92],E:[136,113],W:[136,134],P:[90,94],K:[90,128],A:[60,132],T:[54,128],K2:[90,128],A2:[60,132],T2:[54,128]},b:{E:[158,88],W:[180,86],K:[62,92],A:[34,90],T:[28,84]}},
+catCamel:{prop:'mat',a:{H:[148,104],S:[136,92],E:[136,113],W:[136,134],P:[90,94],K:[90,128],A:[60,132],T:[54,128],M:[113,78]},b:{H:[150,82],M:[113,104]}},
+deadBug:{prop:'mat',a:{H:[30,124],S:[46,128],E:[48,106],W:[50,84],P:[96,129],K:[98,100],A:[124,100],T:[128,94],K2:[97,101],A2:[123,101],T2:[127,95]},b:{E:[26,118],W:[8,116],K:[122,116],A:[150,122],T:[156,116]}},
+pelvicTilt:{prop:'mat',a:{H:[34,124],S:[50,128],E:[70,131],W:[90,132],M:[73,122],P:[96,128],K:[124,104],A:[142,134],T:[154,134]},b:{M:[73,130],P:[96,126]}},
+pressUp:{prop:'mat',a:{H:[150,124],S:[134,128],E:[124,122],W:[136,134],P:[86,130],K:[58,131],A:[30,132],T:[24,126]},b:{H:[152,88],S:[138,98],E:[138,116],W:[138,134]}},
+pendulum:{prop:'table',a:{H:[132,52],E2:[129,72],W2:[140,72],S:[118,64],E:[116,88],W:[114,112],P:[84,84],K:[86,110],A:[84,136],T:[97,136],K2:[85,110],A2:[83,136],T2:[96,136]},b:{E:[110,88],W:[98,108]}},
+extRot:{prop:'',a:{H:[100,20],S:[100,40],E:[86,64],W:[94,74],P:[100,84],K:[94,110],A:[94,136],T:[100,136],K2:[106,110],A2:[106,136],T2:[112,136]},b:{W:[64,66]}},
+row:{prop:'wall',a:{...ST,...L2,E:[122,50],W:[144,50]},b:{E:[80,58],W:[100,52]}},
+wallWalk:{prop:'wall',a:{H:[140,22],S:[140,42],E:[154,58],W:[166,72],P:[140,84],K:[141,110],A:[140,136],T:[153,136],K2:[139,110],A2:[139,136],T2:[152,136]},b:{E:[150,22],W:[164,4]}},
+press:{prop:'',a:{H:[100,22],S:[100,42],P:[100,84],K:[94,110],A:[94,136],T:[88,136],K2:[106,110],A2:[106,136],T2:[112,136],E:[80,46],W:[80,26],E2:[120,46],W2:[120,26]},b:{E:[88,22],W:[92,0],E2:[112,22],W2:[108,0]}},
+calfStep:{prop:'stepR',a:Object.assign(up({...ST,...L2},-21,['T','T2']),{T:[113,124],T2:[112,124],A:[101,115],A2:[100,115]}),b:Object.assign(up({...ST,...L2},-8,['T','T2']),{T:[113,124],T2:[112,124],A:[98,131],A2:[97,131]})},
+curl:{prop:'',a:{...ST,...L2},b:{W:[112,44]}},
 stepUp:{prop:'step',a:{H:[90,22],S:[90,42],E:[91,64],W:[92,86],P:[90,84],K:[112,96],A:[118,112],T:[130,112],K2:[90,110],A2:[90,136],T2:[103,136]},b:{H:[114,8],S:[114,28],E:[115,50],W:[116,72],P:[115,68],K:[117,90],A:[118,112],T:[130,112],K2:[102,92],A2:[98,114],T2:[108,118]}}
 };
 for(const p of Object.values(POSES))p.b={...p.a,...p.b};
-const PROPS={chair:'<path class="prop" d="M46 103h32M48 103V64M50 103v35M76 103v35"/>',chair2:'<path class="prop" d="M68 103h36M70 103V58M72 103v35M102 103v35"/>',mat:'<path class="prop" d="M14 138h172"/>',wall:'<path class="prop" d="M168 8v130"/>',step:'<path class="prop" d="M106 112h58v26M106 112v26"/>','':''};
+const PROPS={stepR:'<path class="prop" d="M106 124h64M106 124v14"/>',wallL:'<path class="prop" d="M60 8v130"/>',table:'<path class="prop" d="M128 72h52M134 72v66M174 72v66"/>',chair:'<path class="prop" d="M46 103h32M48 103V64M50 103v35M76 103v35"/>',chair2:'<path class="prop" d="M68 103h36M70 103V58M72 103v35M102 103v35"/>',mat:'<path class="prop" d="M14 138h172"/>',wall:'<path class="prop" d="M168 8v130"/>',step:'<path class="prop" d="M106 112h58v26M106 112v26"/>','':''};
 const seg=(j,a,b)=>j[a]&&j[b]?`<line x1="${j[a][0].toFixed(1)}" y1="${j[a][1].toFixed(1)}" x2="${j[b][0].toFixed(1)}" y2="${j[b][1].toFixed(1)}"/>`:'';
-const limbs=j=>seg(j,'P','K2')+seg(j,'K2','A2')+seg(j,'A2','T2')+seg(j,'S','P')+seg(j,'S','H')+seg(j,'P','K')+seg(j,'K','A')+seg(j,'A','T')+seg(j,'S','E')+seg(j,'E','W')+`<circle cx="${j.H[0].toFixed(1)}" cy="${j.H[1].toFixed(1)}" r="11"/>`;
+const limbs=j=>seg(j,'P','K2')+seg(j,'K2','A2')+seg(j,'A2','T2')+(j.M?seg(j,'S','M')+seg(j,'M','P'):seg(j,'S','P'))+seg(j,'S','H')+seg(j,'P','K')+seg(j,'K','A')+seg(j,'A','T')+seg(j,'S','E2')+seg(j,'E2','W2')+seg(j,'S','E')+seg(j,'E','W')+`<circle cx="${j.H[0].toFixed(1)}" cy="${j.H[1].toFixed(1)}" r="11"/>`;
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const fig=(exId,anim)=>{const e=EXM[exId];if(e&&e.img)return `<img class="exphoto" src="${e.img}" alt="">`;const p=POSES[(e&&POSES[e.pose])?e.pose:'armRaise'];const floor=p.prop==='mat'?'':'<path class="prop" d="M14 138h172"/>';return `<svg class="exfig${anim?' anim':''}" data-pose="${EXM[exId].pose}" viewBox="0 -4 200 150" aria-hidden="true">${floor}${PROPS[p.prop]}<g class="ghost">${limbs(p.a)}</g><g class="live">${limbs(anim&&!RM?p.a:p.b)}</g></svg>`};
 const figPose=(pose,anim)=>fig.call(null,'__p_'+pose,anim);
@@ -499,7 +544,29 @@ function vFeedback(){const f=ui.fb;
   ${list.slice(0,12).map(x=>`<div class="card"><div class="row"><span class="tag">${esc(x.role||'Okänd roll')}</span><span class="tag">${esc(x.age||'Ålder ej angiven')}</span><span class="small mut">${hm(x.t)}</span></div>${x.good?`<p><strong>Bra:</strong> ${esc(x.good)}</p>`:''}${x.miss?`<p><strong>Saknas:</strong> ${esc(x.miss)}</p>`:''}${x.hard?`<p><strong>Osäker:</strong> ${esc(x.hard)}</p>`:''}</div>`).join('')}</div></div></div>`}
 
 /* ---------- exercise guidance (Figma: why + do/don't) ---------- */
-const GUIDE={knaboj:['Stärker lår och säte, som avlastar knät när du går i trappor och reser dig.','Låt inte knäna falla inåt.'],
+const GUIDE={raktben:['Stärker lårets framsida utan att belasta knät.','Svanka inte i ländryggen.'],
+halglid:['Ökar knäts rörlighet, särskilt efter operation.','Lyft inte hälen från underlaget.'],
+vaggsitt:['Stärker låren statiskt och skonsamt för knät.','Låt inte knäna gå förbi tårna.'],
+mussla:['Stärker höftens utsida, som stabiliserar knä och höft.','Rulla inte bakåt med bäckenet.'],
+hamstretch:['Ökar rörligheten i baksidan av låret.','Runda inte ryggen. Luta från höften.'],
+hoftbojare:['Töjer höftböjarna, som ofta blir stela av mycket sittande.','Svanka inte i ländryggen.'],
+enbro:['En svårare variant av bryggan som stärker säte och baksida lår.','Låt inte bäckenet sjunka på ena sidan.'],
+hoftfall:['Lär in en ryggvänlig lyftteknik och stärker baksidan.','Runda inte ryggen.'],
+fagelhund:['Tränar bålens stabilitet och koordination.','Svanka inte när benet lyfts.'],
+katt:['Mjukar upp hela ryggen.','Tvinga inte rörelsen. Stanna innan det gör ont.'],
+deadbug:['Stärker de djupa magmusklerna som skyddar ländryggen.','Låt inte ländryggen lyfta från golvet.'],
+backtipp:['Ett skonsamt första steg för att få kontakt med magmusklerna.','Lyft inte rumpan från golvet.'],
+pressup:['Kan lindra ländryggssmärta, särskilt vid utstrålning i benet.','Lyft inte höften från golvet.'],
+vadstretch:['Ökar rörligheten i vad och fotled.','Lyft inte den bakre hälen.'],
+ankelpump:['Ökar cirkulationen och minskar svullnad.','Gör inte rörelsen ryckigt.'],
+excentrisk:['Bygger upp hälsenan. Standardträning vid hälsenebesvär.','Gå inte upp på tå med träningsbenet ensamt.'],
+pendel:['Ger skonsam rörlighet i axeln, särskilt tidigt efter skada eller operation.','Använd inte axelmusklerna för att föra armen.'],
+utrot:['Stärker rotatorkuffen som stabiliserar axeln.','Låt inte armbågen glida ut från kroppen.'],
+rodd:['Stärker musklerna mellan skulderbladen och förbättrar hållningen.','Luta dig inte bakåt.'],
+vaggklatt:['Ökar axelns rörlighet uppåt på ett kontrollerat sätt.','Dra inte upp axeln mot örat.'],
+axelpress:['Stärker axlarna för vardagslyft över huvudet.','Svanka inte när armarna går upp.'],
+curl:['Stärker överarmen för vardagslyft.','Gunga inte med kroppen.'],
+knaboj:['Stärker lår och säte, som avlastar knät när du går i trappor och reser dig.','Låt inte knäna falla inåt.'],
 knastrack:['Stärker framsidan av låret, som håller knät stabilt.','Lyft inte benet med fart. Gör det långsamt.'],
 balans:['Tränar balansen och minskar risken att ramla.','Släpp inte stödet förrän du känner dig säker.'],
 tahavning:['Stärker vaderna, vilket ger bättre balans och gång.','Studsa inte. Ta det lugnt upp och ner.'],
@@ -734,12 +801,34 @@ function fProg(p){if(!ui.draft){ui.draft=clone(p.program);ui.draft.weeks=p.weeks
   <div class="savebar"><button class="btn pri" data-act="dsave" ${ui.dirty&&D.items.length?'':'disabled'}>Spara och skicka till ${esc(p.first)}</button>${ui.dirty?'<button class="btn" data-act="dundo">Ångra ändringar</button>':''}</div></div></div>`}
 
 /* ----- smart exercise library: metadata, search, facets, favourites, variants ----- */
-const META={
+const META={raktben:{pos:'Liggande',eq:['Ingen'],lvl:1,goal:['Styrka'],syn:'slr straight leg raise quadriceps quads',dx:'knäprotes protes korsband acl menisk knäartros efter operation',easier:'halglid',harder:'knaboj'},
+halglid:{pos:'Liggande',eq:['Ingen'],lvl:1,goal:['Rörlighet'],syn:'heel slide knäflexion flexion knäböjning',dx:'knäprotes protes korsband acl menisk efter operation',easier:'ankelpump',harder:'raktben'},
+vaggsitt:{pos:'Stående',eq:['Vägg'],lvl:2,goal:['Styrka'],syn:'wall sit isometrisk statisk quadriceps',dx:'patellofemoral främre knäsmärta knäartros',easier:'raktben',harder:'utfall'},
+mussla:{pos:'Liggande',eq:['Ingen'],lvl:1,goal:['Styrka'],syn:'clamshell clam gluteus medius glut med höftutåtrotation',dx:'patellofemoral knäsmärta höftartros coxartros trokanterit ländryggssmärta',easier:null,harder:'benlyft'},
+hamstretch:{pos:'Sittande',eq:['Stol'],lvl:1,goal:['Rörlighet'],syn:'hamstring hamstrings stretch töjning',dx:'ländryggssmärta stelhet knäartros löpare',easier:null,harder:null},
+hoftbojare:{pos:'På knä',eq:['Ingen'],lvl:1,goal:['Rörlighet'],syn:'iliopsoas höftböjare hip flexor stretch',dx:'ländryggssmärta höftsmärta stelhet',easier:null,harder:null},
+enbro:{pos:'Liggande',eq:['Ingen'],lvl:2,goal:['Styrka','Stabilitet'],syn:'single leg bridge enbensbäckenlyft gluteus hamstrings',dx:'ländryggssmärta höftartros knäsmärta löpare',easier:'bro',harder:null},
+hoftfall:{pos:'Stående',eq:['Ingen'],lvl:2,goal:['Styrka'],syn:'hip hinge deadlift marklyft good morning lyftteknik',dx:'ländryggssmärta lumbago ryggont höftartros',easier:'bro',harder:null},
+fagelhund:{pos:'På knä',eq:['Ingen'],lvl:2,goal:['Stabilitet','Balans'],syn:'bird dog fågelhund quadruped core',dx:'ländryggssmärta lumbago',easier:'katt',harder:'planka'},
+katt:{pos:'På knä',eq:['Ingen'],lvl:1,goal:['Rörlighet'],syn:'cat camel cat cow katten kossan ryggrörlighet',dx:'ländryggssmärta stelhet bröstrygg',easier:null,harder:'fagelhund'},
+deadbug:{pos:'Liggande',eq:['Ingen'],lvl:2,goal:['Stabilitet'],syn:'dead bug core magmuskler transversus',dx:'ländryggssmärta graviditet efter förlossning',easier:'backtipp',harder:'planka'},
+backtipp:{pos:'Liggande',eq:['Ingen'],lvl:1,goal:['Stabilitet','Rörlighet'],syn:'pelvic tilt bäckenrörlighet',dx:'ländryggssmärta lumbago graviditet efter förlossning',easier:null,harder:'deadbug'},
+pressup:{pos:'Liggande',eq:['Ingen'],lvl:1,goal:['Rörlighet'],syn:'mckenzie press up extension ryggextension cobra',dx:'ländryggssmärta ischias diskbråck utstrålning lumbago',easier:null,harder:null},
+vadstretch:{pos:'Stående',eq:['Vägg'],lvl:1,goal:['Rörlighet'],syn:'gastrocnemius soleus calf stretch töjning',dx:'hälsena achilles hälsporre plantar fasciit fotled',easier:null,harder:null},
+ankelpump:{pos:'Liggande',eq:['Ingen'],lvl:1,goal:['Rörlighet'],syn:'ankle pump dorsalflexion plantarflexion cirkulation',dx:'efter operation svullnad fotledsdistorsion stukning protes trombosprofylax',easier:null,harder:'halglid'},
+excentrisk:{pos:'Stående',eq:['Trappsteg'],lvl:2,goal:['Styrka'],syn:'alfredson eccentric heel drop excentrisk vadträning',dx:'hälsena achilles tendinopati hälseneinflammation',easier:'tahavning',harder:null},
+pendel:{pos:'Stående',eq:['Bord'],lvl:1,goal:['Rörlighet'],syn:'codman pendulum pendel',dx:'frusen skuldra frozen shoulder axeloperation rotatorcuff axelfraktur',easier:null,harder:'vaggklatt'},
+utrot:{pos:'Stående',eq:['Gummiband'],lvl:2,goal:['Styrka'],syn:'external rotation utåtrotation rotatorcuff infraspinatus theraband',dx:'impingement subakromiell rotatorcuff axelinstabilitet axelsmärta',easier:'armlyft',harder:'axelpress'},
+rodd:{pos:'Stående',eq:['Gummiband'],lvl:1,goal:['Styrka'],syn:'row rodd skulderbladsindragning rhomboideus trapezius theraband hållning',dx:'nacksmärta impingement axelsmärta hållning bröstrygg',easier:null,harder:null},
+vaggklatt:{pos:'Stående',eq:['Vägg'],lvl:1,goal:['Rörlighet'],syn:'wall walk wall slide finger walk flexion',dx:'frusen skuldra frozen shoulder axeloperation impingement',easier:'pendel',harder:'armlyft'},
+axelpress:{pos:'Stående',eq:['Ingen'],lvl:3,goal:['Styrka'],syn:'shoulder press overhead press militärpress deltoideus',dx:'axelsmärta rotatorcuff',easier:'armlyft',harder:null},
+curl:{pos:'Stående',eq:['Ingen'],lvl:1,goal:['Styrka'],syn:'biceps curl bicepscurl armböj',dx:'armbåge tennisarmbåge golfarmbåge',easier:null,harder:null},
+
 knaboj:{pos:'Stående',eq:['Stol'],lvl:2,goal:['Styrka'],syn:'squat sit to stand uppresning resa sig från stol quadriceps quads gluteus lårmuskel sätesmuskel benböj',dx:'knäartros artros gonartros höftartros patellofemoral främre knäsmärta korsband acl menisk knäprotes protes',easier:'knastrack',harder:'utfall'},
 knastrack:{pos:'Sittande',eq:['Stol'],lvl:1,goal:['Styrka'],syn:'quadriceps quads vmo knäextension extension lårets framsida benspark sträckning',dx:'knäartros gonartros knäprotes protes korsband acl menisk',easier:null,harder:'knaboj'},
 balans:{pos:'Stående',eq:['Ingen'],lvl:1,goal:['Balans'],syn:'enbensstående ett ben proprioception stabilitet fallrisk',dx:'fallprevention fall äldre fotledsdistorsion stukning ankel yrsel',easier:null,harder:'utfall'},
-tahavning:{pos:'Stående',eq:['Ingen'],lvl:1,goal:['Styrka'],syn:'heel raise calf raise gastrocnemius soleus vadmuskel vad',dx:'hälsena achilles tendinopati hälseneinflammation fotled fallprevention',easier:null,harder:'trappsteg'},
-bro:{pos:'Liggande',eq:['Ingen'],lvl:1,goal:['Styrka','Stabilitet'],syn:'bridge bäckenlyft höftlyft hip thrust gluteus säte rumpa',dx:'ländryggssmärta lumbago ryggont höftartros',easier:null,harder:'planka'},
+tahavning:{pos:'Stående',eq:['Ingen'],lvl:1,goal:['Styrka'],syn:'heel raise calf raise gastrocnemius soleus vadmuskel vad',dx:'hälsena achilles tendinopati hälseneinflammation fotled fallprevention',easier:null,harder:'excentrisk'},
+bro:{pos:'Liggande',eq:['Ingen'],lvl:1,goal:['Styrka','Stabilitet'],syn:'bridge bäckenlyft höftlyft hip thrust gluteus säte rumpa',dx:'ländryggssmärta lumbago ryggont höftartros',easier:'backtipp',harder:'enbro'},
 planka:{pos:'Liggande',eq:['Ingen'],lvl:2,goal:['Stabilitet'],syn:'plank core bål mage magmuskler stabilitet',dx:'ländryggssmärta lumbago ryggont',easier:'bro',harder:null},
 benlyft:{pos:'Liggande',eq:['Ingen'],lvl:1,goal:['Styrka'],syn:'abduktion höftabduktion gluteus medius glut med sidliggande',dx:'höftartros trokanterit ländryggssmärta patellofemoral knäsmärta',easier:null,harder:'utfall'},
 armlyft:{pos:'Stående',eq:['Ingen'],lvl:1,goal:['Rörlighet','Styrka'],syn:'flexion axelflexion frontlyft skulderlyft',dx:'impingement subakromiell axelsmärta frusen skuldra frozen shoulder rotatorcuff',easier:null,harder:'vaggarm'},
@@ -748,10 +837,10 @@ nacke:{pos:'Sittande',eq:['Ingen'],lvl:1,goal:['Rörlighet'],syn:'chin tuck retr
 utfall:{pos:'Stående',eq:['Ingen'],lvl:3,goal:['Styrka','Balans'],syn:'lunge utfallsteg split squat',dx:'korsband acl idrottsskada knä höft',easier:'knaboj',harder:null},
 trappsteg:{pos:'Stående',eq:['Trappsteg'],lvl:2,goal:['Styrka','Balans'],syn:'step up uppkliv trappa trappgång',dx:'knäartros knäprotes korsband acl fallprevention',easier:'knaboj',harder:'utfall'}};
 const LVL=['','Lätt','Medel','Svår'];
-const FAC=[['pos','Utgångsläge',['Stående','Sittande','Liggande']],['eq','Utrustning',['Ingen','Stol','Vägg','Trappsteg']],['lvl','Nivå',['Lätt','Medel','Svår']],['goal','Mål',['Styrka','Rörlighet','Balans','Stabilitet']]];
+const FAC=[['pos','Utgångsläge',['Stående','Sittande','Liggande','På knä']],['eq','Utrustning',['Ingen','Stol','Vägg','Trappsteg','Gummiband','Bord']],['lvl','Nivå',['Lätt','Medel','Svår']],['goal','Mål',['Styrka','Rörlighet','Balans','Stabilitet']]];
 const POSPOS={kneeExt:'Sittande',chin:'Sittande',bridge:'Liggande',plank:'Liggande',sideLeg:'Liggande'};
 const meta=e=>META[e.id]||{pos:POSPOS[e.pose]||'Stående',eq:['Ingen'],lvl:1,goal:[],syn:'',dx:'',easier:null,harder:null};
-const TPLKW=['knäartros artros gonartros knä knäprotes','ländrygg ländryggssmärta lumbago ryggont rygg','axel impingement subakromiell axelsmärta','balans fallprevention fall äldre yrsel'];
+const TPLKW=['knäartros artros gonartros knä knäprotes','ländrygg ländryggssmärta lumbago ryggont rygg','axel impingement subakromiell axelsmärta','balans fallprevention fall äldre yrsel','hälsena achilles tendinopati hälseneinflammation','höftartros coxartros höft','nacke nacksmärta hållning bröstrygg','knäprotes protes operation korsband acl menisk'];
 const nrm=s=>s.toLowerCase().replace(/[åä]/g,'a').replace(/ö/g,'o').replace(/é/g,'e');
 const STOP=new Set(['for','och','i','pa','med','ovning','ovningar','en','ett','av','vid','till','som','mot','det','den']);
 function lev(a,b){const m=a.length,n=b.length;let p=Array.from({length:n+1},(_,j)=>j);for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[n]}
