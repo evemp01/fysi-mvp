@@ -169,6 +169,9 @@ ol.steps li::before{content:counter(s);width:32px;height:32px;border-radius:50%;
 .runbar i.on{background:var(--ok)}.runbar i.cur{background:var(--t)}
 .runbox{display:grid;gap:10px;justify-items:center;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
 .runbox.rest{background:var(--tl)}
+.setrows{display:grid;gap:6px}
+.setrow{display:grid;grid-template-columns:4em auto auto 1fr;gap:10px;align-items:center}
+.setrow .x3{justify-self:end;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--mut);font-size:1.1rem}
 .setdots{display:flex;gap:8px;justify-content:center}
 .setdots i{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;background:var(--card)}
 .setdots i.cur{border-color:var(--t);box-shadow:0 0 0 3px var(--tl2)}
@@ -699,7 +702,8 @@ const logOf=(p,k)=>p.logs.find(l=>l.date===k);
 const unitL=ex=>EXM[ex].unit==='sek'?'sek':'rep';
 const dose=it=>`${it.sets} set × ${it.reps} ${unitL(it.ex)}`;
 const perWk=n=>n===1?'1 pass i veckan':n+' pass i veckan';
-const share=(it,x)=>x?Math.min(1,(x.sets*x.reps)/(it.sets*it.reps)):0;
+const doneAmt=x=>x?(Array.isArray(x.sr)?x.sr.reduce((a,b)=>a+b,0):x.sets*x.reps):0;
+const share=(it,x)=>x?Math.min(1,doneAmt(x)/(it.sets*it.reps)):0;
 function vol(p,l){const P=prog(p);if(!P.length)return 1;return P.reduce((s,it)=>s+share(it,l.items[it.ex]),0)/P.length}
 const wkStart=d=>addD(d,-dow(d));
 const inRange=(p,a,b)=>p.logs.filter(l=>l.date>=key(a)&&l.date<=key(b));
@@ -1050,7 +1054,7 @@ function renderModal(){const m=ui.modal;if(!m){$modal.innerHTML='';return}
     b=`<p class="mut" style="margin-top:-6px">${fmt(a)} – ${fmt(z)}</p>
     <div class="kpis"><div class="kpi"><strong>${L.length} av ${pl}</strong><span class="small mut">pass</span></div><div class="kpi"><strong>${P.length?(P.reduce((x,l)=>x+l.pain,0)/P.length).toFixed(1).replace('.',','):'–'}</strong><span class="small mut">smärta i snitt</span></div></div>
     <div class="note ${L.length>=pl?'ok':'in'}">${sum}</div>
-    ${L.length?`<div class="card" style="padding:6px 16px">${L.map(l=>{const dn=prog(p).filter(it=>l.items[it.ex]&&l.items[it.ex].sets>0).length;const fl=Object.entries(l.items).filter(([,x])=>x.flag);return `<div class="lex"><div class="between"><strong>${cap(fmtL(fromKey(l.date)))}</strong>${l.pain!=null?`<span class="vasb" style="background:${vasCol(l.pain)}">Smärta ${l.pain}</span>`:'<span class="small mut">Ingen smärta angiven</span>'}</div>
+    ${L.length?`<div class="card" style="padding:6px 16px">${L.map(l=>{const dn=prog(p).filter(it=>doneAmt(l.items[it.ex])>0).length;const fl=Object.entries(l.items).filter(([,x])=>x.flag);return `<div class="lex"><div class="between"><strong>${cap(fmtL(fromKey(l.date)))}</strong>${l.pain!=null?`<span class="vasb" style="background:${vasCol(l.pain)}">Smärta ${l.pain}</span>`:'<span class="small mut">Ingen smärta angiven</span>'}</div>
       <span class="small mut">${dn} av ${prog(p).length} övningar · ${Math.round(vol(p,l)*100)} % av planerat${l.effort?' · kändes '+l.effort.toLowerCase():''}</span>${fl.map(([ex,x])=>`<span class="small" style="color:var(--ami);font-weight:600">${esc(EXM[ex]?EXM[ex].name:ex)}: ${esc(x.flag)}${x.comment?' – '+esc(x.comment):''}</span>`).join('')}${l.note?`<span class="small">”${esc(l.note)}”</span>`:''}</div>`}).join('')}</div>`:'<p class="mut">Inga pass loggade den här veckan.</p>'}
     ${w===cur?`<button class="btn pri full" data-act="ptab" data-v="idag">Till dagens övningar</button>`:'<button class="btn full" data-act="close">Stäng</button>'}`}
   if(m.type==='remind'){const r=rem(p);t='Påminnelser';
@@ -1061,9 +1065,10 @@ function renderModal(){const m=ui.modal;if(!m){$modal.innerHTML='';return}
     <div class="note in small">${remTxt(p)}.</div><p class="small mut">I testversionen skickas inga riktiga notiser till mobilen.</p><button class="btn pri full" data-act="close">Klar</button>`}
   if(m.type==='log'){const f=ui.form;t='Logga ditt pass';
     b=`${f.fromRun?'<div class="note ok small">Ifyllt från passet du just körde. Ändra om något inte stämmer.</div>':''}<div class="card"><h4>När gjorde du passet?</h4><div class="row" style="gap:6px;margin-top:8px"><button class="chip" data-act="fdate" data-v="${TK}" aria-pressed="${!f.other}">I dag</button><button class="chip" data-act="fother" aria-pressed="${!!f.other}">Välj datum</button></div>${f.other?`<label class="small mut" for="logdate" style="display:block;margin-top:8px">Datum för passet</label><input type="date" id="logdate" class="dinp" value="${f.date}" max="${TK}" min="${key(addD(TODAY,-60))}"><p class="small" style="margin-top:4px;font-weight:700">${cap(fmtL(fromKey(f.date)))}${logOf(p,f.date)?' · ett pass finns redan, du ändrar det':''}</p>`:''}</div>
-    <div class="card"><h4>1. Hur mycket gjorde du?</h4><p class="small mut">Det planerade är redan ifyllt. Ändra om du gjorde mer eller mindre.</p>
-    ${prog(p).map(it=>{const x=f.items[it.ex];const e=EXM[it.ex];const sk=x.sets===0;return `<div class="lex${x.open?' flagged':''}"><div class="between"><strong style="font-size:1.05rem">${esc(e.name)}</strong><span class="small mut">Plan: ${dose(it)}</span></div>${pnotes(p,it.ex).length?`<div class="small exnote">${IC.edit.replace('<svg','<svg width="14" height="14"')}<span>Din anteckning: ${esc(pnotes(p,it.ex).slice(-1)[0].text)}</span></div>`:''}
-      <div class="row" style="gap:14px">${stepper('fstep',it.ex,'sets',x.sets,'Set')}${sk?'<span class="tag am">Hoppade över</span>':stepper('fstep',it.ex,'reps',x.reps,e.unit==='sek'?'Sekunder':'Repetitioner')}</div>
+    <div class="card"><h4>1. Hur mycket gjorde du?</h4><p class="small mut">${f.fromRun?'Det du gjorde under passet är ifyllt, set för set.':'Det planerade är redan ifyllt. Ändra om du gjorde mer eller mindre i något set.'}</p>
+    ${prog(p).map(it=>{const x=f.items[it.ex];const e=EXM[it.ex];const sk=!x.sr.length;return `<div class="lex${x.open?' flagged':''}"><div class="between"><strong style="font-size:1.05rem">${esc(e.name)}</strong><span class="small mut">Plan: ${dose(it)}</span></div>${pnotes(p,it.ex).length?`<div class="small exnote">${IC.edit.replace('<svg','<svg width="14" height="14"')}<span>Din anteckning: ${esc(pnotes(p,it.ex).slice(-1)[0].text)}</span></div>`:''}
+      ${x.sr.length?`<div class="setrows">${x.sr.map((v,k)=>`<div class="setrow"><span class="small" style="font-weight:700">Set ${k+1}</span><div class="stepper"><button data-act="fsr" data-ex="${it.ex}" data-k="${k}" data-d="-1" aria-label="Minska set ${k+1}">−</button><output>${v}</output><button data-act="fsr" data-ex="${it.ex}" data-k="${k}" data-d="1" aria-label="Öka set ${k+1}">+</button></div><span class="small mut">${e.unit==='sek'?'sek':'rep'}</span><button class="x3" data-act="fsrdel" data-ex="${it.ex}" data-k="${k}" aria-label="Ta bort set ${k+1}">×</button></div>`).join('')}</div>`:'<span class="tag am" style="justify-self:start">Hoppade över</span>'}
+      <button class="link small" data-act="fsradd" data-ex="${it.ex}" style="justify-self:start;padding-left:0">+ Lägg till set</button>
       ${x.open?`<div style="display:grid;gap:8px"><span class="small" style="font-weight:700">Vad var det som kändes konstigt?</span><div class="row" style="gap:6px">${FLAGS.map(v=>`<button class="chip" data-act="fflag" data-ex="${it.ex}" data-v="${v}" aria-pressed="${x.flag===v}">${v}</button>`).join('')}</div><label class="sr" for="c-${it.ex}">Kort kommentar</label><input type="text" id="c-${it.ex}" data-in="excom" data-ex="${it.ex}" value="${esc(x.comment)}" placeholder="Kort kommentar (valfritt)"><button class="link small" data-act="fopen" data-ex="${it.ex}" style="justify-self:start;padding-left:0">Ta bort</button></div>`
         :`<button class="link small" data-act="fopen" data-ex="${it.ex}" style="justify-self:start;padding-left:0">Kändes något konstigt?</button>`}</div>`}).join('')}</div>
     <div class="card"><div class="between"><h4>2. Hur ont har du efter passet?</h4><span class="small mut">Valfritt</span></div><p class="small mut">Tryck på en siffra. 0 = ingen smärta, 10 = värsta tänkbara.</p>${(()=>{const pi=painInfo(p);return pi&&f.pain==null?`<button class="chip vchip" data-act="vas" data-v="${pi.last.pain}" style="margin-top:6px">Samma som sist: ${pi.last.pain}</button>`:''})()}${vasPicker(f)}${f.pain!=null?`<button class="link small" data-act="vasclear" style="padding-left:0">Rensa</button>`:''}${limitNote(f,p)}
@@ -1141,7 +1146,7 @@ function after(){hydrateVideos();if(ro)ro.disconnect();ro=new ResizeObserver(es=
 /* ---------- actions ---------- */
 const $toast=document.getElementById('toast');let tT;
 const toast=msg=>{$toast.textContent=msg;$toast.hidden=false;clearTimeout(tT);tT=setTimeout(()=>$toast.hidden=true,3400)};
-function formFor(p,k){const l=logOf(p,k);const items={};for(const it of prog(p)){const o=l&&l.items[it.ex];items[it.ex]=o?{...o,open:!!(o.flag||o.comment)}:{sets:it.sets,reps:it.reps,flag:null,comment:'',open:false}}
+function formFor(p,k){const l=logOf(p,k);const items={};for(const it of prog(p)){const o=l&&l.items[it.ex];items[it.ex]=o?{...o,sr:Array.isArray(o.sr)?[...o.sr]:Array(o.sets||0).fill(o.reps),open:!!(o.flag||o.comment)}:{sr:Array(it.sets).fill(it.reps),flag:null,comment:'',open:false}}
   return {date:k,view:'fram',items,pain:l?l.pain:null,area:l?[...(l.area||[])]:[],type:l?[...(l.type||[])]:[],note:l?l.note||'':'',noteOpen:!!(l&&l.note),effort:l?l.effort||null:null}}
 function keepScroll(fn){const y=window.scrollY;const sh=document.querySelector('.sheet');const sy=sh?sh.scrollTop:0;fn();window.scrollTo(0,y);const s2=document.querySelector('.sheet');if(s2)s2.scrollTop=sy}
 function keepTexts(fn){const a=document.getElementById('ptext'),b=document.getElementById('ftext');const va=a?a.value:null,vb=b?b.value:null;keepScroll(fn);const a2=document.getElementById('ptext'),b2=document.getElementById('ftext');if(a2&&va!=null)a2.value=va;if(b2&&vb!=null)b2.value=vb}
@@ -1155,7 +1160,7 @@ let runTimer=null;function stopRun(){if(runTimer){clearInterval(runTimer);runTim
 function startTimer(done){stopRun();runTimer=setInterval(()=>{const r=ui.run;if(!r){stopRun();return}r.left--;const c=document.getElementById('rclock');if(c)c.textContent=mmss(r.left);if(r.left<=0){stopRun();done()}},1000)}
 function beep(){try{navigator.vibrate&&navigator.vibrate(300)}catch(e){}}
 function nextEx(p){const r=ui.run,P=prog(p);r.set=1;r.ticking=false;if(r.i<P.length){const it=P[r.i];r.reps=it.reps;r.left=EXM[it.ex].unit==='sek'?it.reps:0}}
-function runSetDone(p){stopRun();const r=ui.run,it=prog(p)[r.i],sek=EXM[it.ex].unit==='sek';const dn=r.done[it.ex]||(r.done[it.ex]={sets:0,repSum:0});dn.sets++;dn.repSum+=sek?(r.left<it.reps?Math.max(1,it.reps-Math.max(0,r.left)):it.reps):r.reps;
+function runSetDone(p){stopRun();const r=ui.run,it=prog(p)[r.i],sek=EXM[it.ex].unit==='sek';const dn=r.done[it.ex]||(r.done[it.ex]={sets:0,repSum:0});dn.sets++;const got=sek?(r.left<it.reps?Math.max(1,it.reps-Math.max(0,r.left)):it.reps):r.reps;dn.repSum+=got;(dn.list=dn.list||[]).push(got);
   r.flash=true;if(r.set<it.sets){r.set++;r.ticking=false;r.reps=it.reps;r.left=sek?it.reps:0}else{r.i++;nextEx(p)}renderModal();r.flash=false;const sh=document.querySelector('.sheet');if(sh)sh.scrollTop=0}
 function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   switch(a){
@@ -1169,6 +1174,9 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   case 'openlog':ui.form=formFor(p,TK);ui.modal={type:'log'};renderModal();break;
   case 'fdate':mod(()=>{ui.form=formFor(p,d.v)});break;
   case 'fother':mod(()=>{const k=ui.form.date===TK?key(addD(TODAY,-1)):ui.form.date;ui.form=formFor(p,k);ui.form.other=true});break;
+  case 'fsr':mod(()=>{const x=ui.form.items[d.ex];const sek=EXM[d.ex].unit==='sek';x.sr[+d.k]=Math.max(0,Math.min(300,x.sr[+d.k]+(+d.d)*(sek?5:1)))});break;
+  case 'fsrdel':mod(()=>{ui.form.items[d.ex].sr.splice(+d.k,1)});break;
+  case 'fsradd':mod(()=>{const x=ui.form.items[d.ex];const it=prog(p).find(q=>q.ex===d.ex);x.sr.push(x.sr.length?x.sr[x.sr.length-1]:it.reps)});break;
   case 'fstep':mod(()=>{const x=ui.form.items[d.ex];const sek=d.f==='reps'&&EXM[d.ex].unit==='sek';x[d.f]=Math.max(d.f==='sets'?0:1,Math.min(d.f==='sets'?10:300,x[d.f]+(+d.d)*(sek?5:1)))});break;
   case 'fopen':mod(()=>{const x=ui.form.items[d.ex];x.open=!x.open;if(!x.open){x.flag=null;x.comment=''}});break;
   case 'fflag':mod(()=>{const x=ui.form.items[d.ex];x.flag=x.flag===d.v?null:d.v});break;
@@ -1182,7 +1190,7 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   case 'zview':mod(()=>{const f=PF();f.zoom.view=d.v;f.view=d.v});break;
   case 'area':mod(()=>{const f=PF();f.area=f.area.includes(d.v)?f.area.filter(x=>x!==d.v):[...f.area,d.v]});break;
   case 'ptype':mod(()=>{const f=PF();f.type=f.type.includes(d.v)?f.type.filter(x=>x!==d.v):[...f.type,d.v]});break;
-  case 'savelog':{const f=ui.form;const items={};for(const ex in f.items){const x=f.items[ex];items[ex]={sets:x.sets,reps:x.reps,flag:x.flag||null,comment:(x.comment||'').trim()}}
+  case 'savelog':{const f=ui.form;const items={};for(const ex in f.items){const x=f.items[ex];const sr=x.sr.filter(v=>v>0);items[ex]={sets:sr.length,reps:sr.length?Math.round(sr.reduce((a,b)=>a+b,0)/sr.length):0,sr,flag:x.flag||null,comment:(x.comment||'').trim()}}
     let l=logOf(p,f.date);if(!l){l={date:f.date};p.logs.push(l);p.logs.sort((a,b)=>a.date<b.date?-1:1)}
     Object.assign(l,{items,pain:f.pain,area:f.area,type:f.type,note:(f.note||'').trim(),effort:f.effort||null});save();ui.modal=null;render();
     const n=weekDone(p),per=p.program.perWeek;toast(n>=per?`Pass sparat! Veckans mål på ${per} pass är nått.`:`Pass sparat! ${n} av ${per} pass den här veckan.`);break}
@@ -1197,9 +1205,9 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   case 'runtimer':{const r=ui.run;if(r.ticking){stopRun();r.ticking=false;keepScroll(renderModal);break}r.ticking=true;keepScroll(renderModal);startTimer(()=>{r.ticking=false;beep();keepScroll(renderModal)});break}
   case 'runreset':{stopRun();const r=ui.run,it=prog(p)[r.i];r.left=it.reps;r.ticking=false;keepScroll(renderModal);break}
   case 'runset':runSetDone(p);break;
-  case 'runall':{stopRun();const r=ui.run,it=prog(p)[r.i],sek=EXM[it.ex].unit==='sek';const dn=r.done[it.ex]||(r.done[it.ex]={sets:0,repSum:0});const rest=it.sets-dn.sets;if(rest>0){dn.sets+=rest;dn.repSum+=rest*(sek?it.reps:r.reps)}r.flash=true;r.i++;nextEx(p);renderModal();r.flash=false;const sh=document.querySelector('.sheet');if(sh)sh.scrollTop=0;break}
+  case 'runall':{stopRun();const r=ui.run,it=prog(p)[r.i],sek=EXM[it.ex].unit==='sek';const dn=r.done[it.ex]||(r.done[it.ex]={sets:0,repSum:0});const rest=it.sets-dn.sets;if(rest>0){dn.sets+=rest;dn.repSum+=rest*(sek?it.reps:r.reps);for(let k=0;k<rest;k++)(dn.list=dn.list||[]).push(k===0&&!sek?r.reps:it.reps)}r.flash=true;r.i++;nextEx(p);renderModal();r.flash=false;const sh=document.querySelector('.sheet');if(sh)sh.scrollTop=0;break}
   case 'runskip':{stopRun();ui.run.i++;nextEx(p);renderModal();break}
-  case 'runlog':{const r=ui.run;ui.form=formFor(p,TK);for(const it of prog(p)){const dn=r.done[it.ex];ui.form.items[it.ex].sets=dn?dn.sets:0;if(dn&&dn.sets)ui.form.items[it.ex].reps=Math.round(dn.repSum/dn.sets)}ui.form.fromRun=true;ui.modal={type:'log'};renderModal();break}
+  case 'runlog':{const r=ui.run;ui.form=formFor(p,TK);for(const it of prog(p)){const dn=r.done[it.ex];ui.form.items[it.ex].sr=dn&&dn.list?[...dn.list]:[]}ui.form.fromRun=true;ui.modal={type:'log'};renderModal();break}
   case 'compose':openCompose(p,'');break;
   case 'quick':if(d.v==='video')openCompose(p,'Här är en video på när jag gör övningen. Gör jag rätt? ');else if(d.v==='ont')openCompose(p,'',true);else openCompose(p,'Jag är osäker på hur jag ska göra ');break;
   case 'ack':ui.msgAck=true;ui.modal=null;ui.composer=true;render();if(ui.pendingPain){ui.pendingPain=false;ui.pform={pain:null,area:[],type:[],view:'fram'};ui.modal={type:'painpick'};renderModal()}else setTimeout(()=>{const t=document.getElementById('ptext');if(t){t.focus();t.setSelectionRange(t.value.length,t.value.length)}},30);break;
