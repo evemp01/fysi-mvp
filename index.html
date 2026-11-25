@@ -150,6 +150,8 @@ ol.steps li::before{content:counter(s);width:32px;height:32px;border-radius:50%;
 .mthumb .btn-cover{background:rgba(255,255,255,.9);color:var(--ink);min-height:28px}
 .vbadge{position:absolute;inset:0;display:grid;place-items:center;color:#fff;pointer-events:none}
 .vbadge svg{width:30px;height:30px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.6))}
+.matt{display:grid;gap:6px;margin-top:6px}
+.msg .exvideo,.msg .gimg{max-height:300px;border-radius:12px}
 .pmedia{display:grid;gap:8px;background:var(--bg);border:1px dashed var(--line);border-radius:14px;padding:10px 12px}
 .pmedia .mgrid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
 .sent{justify-self:end;color:var(--mut);display:flex;gap:4px;align-items:center}
@@ -671,7 +673,7 @@ const LS='fysi-mvp-8';
 let S=null;try{S=JSON.parse(localStorage.getItem(LS))}catch(e){}
 if(!S||S.v!==8){S=seed();try{for(const k of ['fysi-mvp-7','fysi-mvp-6','fysi-mvp-5','fysi-mvp-4','fysi-mvp-3','fysi-mvp-2','fysi-mvp-1']){const o=JSON.parse(localStorage.getItem(k));if(o&&o.custom&&o.custom.length&&!S.custom.length)S.custom=o.custom;if(o&&o.fbLocal&&o.fbLocal.length&&!S.fbLocal.length)S.fbLocal=o.fbLocal}}catch(e){}}
 const save=()=>{try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}};
-const ui={view:'start',pid:'olof',ptab:'idag',fpage:'oversikt',fpid:null,ftab:'uppf',fmsg:'anna',draft:null,dirty:false,q:'',area:'Alla',modal:null,form:null,composer:false,prefill:'',att:null,patt:null,fb:{tasks:{}},fbList:null,db:null,fs:0,editI:null,fac:{pos:[],eq:[],lvl:[],goal:[]},facOpen:false,libFirst:null,jopt:{notes:true,flags:true},libMode:'prog',bankTab:'alla'};
+const ui={view:'start',pid:'olof',ptab:'idag',fpage:'oversikt',fpid:null,ftab:'uppf',fmsg:'anna',draft:null,dirty:false,q:'',area:'Alla',modal:null,form:null,composer:false,prefill:'',att:null,patt:null,fb:{tasks:{}},fbList:null,db:null,fs:0,editI:null,fac:{pos:[],eq:[],lvl:[],goal:[]},facOpen:false,libFirst:null,atts:{p:[],f:[]},jopt:{notes:true,flags:true},libMode:'prog',bankTab:'alla'};
 try{ui.fs=+localStorage.getItem('fysi-fs')||0}catch(e){}
 const pat=id=>S.patients[id];
 if(!S.custom)S.custom=[];if(!S.fav)S.fav=['knaboj','bro','armlyft'];if(!S.recent)S.recent=['tahavning','balans','nacke'];
@@ -775,15 +777,16 @@ function pProgress(p){if(!prog(p).length)return `<div class="empty">Här ser du 
   <div class="card"><div class="between"><h3>Din utveckling</h3><span class="small mut">Per vecka</span></div><p class="small mut">Staplarna visar dina pass, linjen hur ont du har haft i snitt.</p><div class="fig" data-combo="${p.id}" style="min-height:230px"><svg></svg></div>
   <div class="legend"><span><i style="background:var(--t)"></i>Pass</span><span><i style="background:var(--co);height:4px;vertical-align:3px"></i>Smärta, snitt</span><span><i style="border-top:2px dashed var(--am);height:0;border-radius:0;vertical-align:3px"></i>Din smärtgräns ${p.painLimit}</span></div>${pi?`<div class="note in small" style="margin-top:8px">${msg}</div>`:''}</div>
   <div class="card"><h3>Per övning</h3><p class="small mut">Senaste 14 dagarna</p>${perExList(p)}</div>`}
-function msgHtml(m,pName,mine){return `<div class="msg ${mine?'me':'them'}">${!mine?'<strong class="small">'+esc(pName)+'</strong><br>':''}${esc(m.text)}${m.att&&m.att.data&&/^data:image\//.test(m.att.data)?`<img src="${m.att.data}" alt="Bifogad bild">`:''}${m.att?`<span class="small" style="display:block">Bifogad fil: ${esc(m.att.name)}</span>`:''}${painCard(m.pain)}<time>${hm(m.t)}</time></div>`}
+function attThumbs(who){const A=(ui.atts&&ui.atts[who])||[];if(!A.length)return '';return `<div class="mgrid">${A.map((a,i)=>`<div class="mthumb">${a.kind==='img'?`<img src="${a.url}" alt="">`:`<video src="${a.url}" muted playsinline></video><span class="vbadge">${PLAY}</span>`}<button class="x2" data-act="attrm" data-who="${who}" data-i="${i}" aria-label="Ta bort">×</button></div>`).join('')}</div>`}
+function msgHtml(m,pName,mine){return `<div class="msg ${mine?'me':'them'}">${!mine?'<strong class="small">'+esc(pName)+'</strong><br>':''}${esc(m.text)}${Array.isArray(m.att)?`<div class="matt">${m.att.map(a=>a.kind==='img'?`<img class="gimg" data-mkey="${esc(a.key)}" alt="Bifogad bild">`:`<video class="exvideo" data-mkey="${esc(a.key)}" controls playsinline preload="metadata"></video>`).join('')}</div>`:m.att?`${m.att.data&&/^data:image\//.test(m.att.data)?`<img src="${m.att.data}" alt="Bifogad bild">`:''}<span class="small" style="display:block">Bifogad fil: ${esc(m.att.name)}</span>`:''}${painCard(m.pain)}<time>${hm(m.t)}</time></div>`}
 function pMsgs(p){p.seenF=true;save();
   const thread=p.msgs.map(m=>msgHtml(m,'Erik, fysioterapeut',m.from==='p')).join('')||'<p class="mut">Inga meddelanden ännu.</p>';
   const wt=waiting(p);
   let box;
   if(ui.composer)box=`<div class="card" style="display:grid;gap:10px"><label class="lab" for="ptext">Ditt meddelande till Erik</label><textarea id="ptext" placeholder="Beskriv kort vad du undrar över">${esc(ui.prefill)}</textarea>
-    <div class="row" style="gap:8px"><button class="btn sm" data-act="painpick">${picon('Huggande',20)}Beskriv din smärta</button><label class="btn sm">Bifoga bild eller video<input type="file" id="patt" accept="image/*,video/*" class="sr"></label></div>${ui.att?`<span class="small">Bifogat: ${esc(ui.att.name)}</span>`:''}${ui.patt?`<div>${painCard(ui.patt)}<button class="link small" data-act="painrm">Ta bort smärtbeskrivningen</button></div>`:''}
+    <div class="row" style="gap:8px"><button class="btn sm" data-act="painpick">${picon('Huggande',20)}Beskriv din smärta</button>${COARSE?`<label class="btn sm">Filma eller fota<input type="file" class="sr chatt" data-who="p" accept="video/*,image/*" capture="environment"></label>`:''}<label class="btn sm">Bifoga video eller bild<input type="file" class="sr chatt" data-who="p" accept="video/*,image/*" multiple></label></div>${attThumbs('p')}${ui.patt?`<div>${painCard(ui.patt)}<button class="link small" data-act="painrm">Ta bort smärtbeskrivningen</button></div>`:''}
     <div class="row"><button class="btn pri" data-act="psend">Skicka</button><button class="btn" data-act="pcancel">Avbryt</button></div></div>`;
-  else box=`<div class="quick" aria-label="Snabbval"><button class="chip" data-act="quick" data-v="ont">Det gör ont</button><button class="chip" data-act="quick" data-v="hur">Hur gör jag?</button><button class="chip" data-act="book">Boka tid</button></div><button class="btn pri full" data-act="compose">${IC.chat.replace('<svg','<svg width="20" height="20"')} Skriv till Erik</button>`;
+  else box=`<div class="quick" aria-label="Snabbval"><button class="chip" data-act="quick" data-v="ont">Det gör ont</button><button class="chip" data-act="quick" data-v="hur">Hur gör jag?</button><button class="chip" data-act="quick" data-v="video">Skicka video</button><button class="chip" data-act="book">Boka tid</button></div><button class="btn pri full" data-act="compose">${IC.chat.replace('<svg','<svg width="20" height="20"')} Skriv till Erik</button>`;
   return `<div class="card row" style="gap:12px;padding:12px 14px"><div class="av">E</div><div><strong>Erik Lund</strong><br><span class="mut small">Din fysioterapeut · svarar vanligtvis inom 2 arbetsdagar</span></div></div>
   ${p.booking?`<div class="note ok"><strong>Telefonmöte bokat</strong><p>${esc(p.booking)}. Erik ringer upp dig.</p></div>`:''}
   <div class="thread">${thread}${wt?`<div class="sent small">${IC.check.replace('<svg','<svg width="14" height="14"')} Skickat. Erik svarar vanligtvis inom 2 arbetsdagar.</div>`:''}</div>${box}
@@ -826,7 +829,7 @@ function fThread(p){if(p.unread){p.unread=0;save()}const a=adherence(p),pi=painI
   ${prog(p).length?`<div class="note tl small">Senaste 14 dagarna: <strong>${a.done} av ${a.plan} pass</strong>${pi?`, smärta senast <strong>${pi.last.pain}/10</strong> (gräns ${p.painLimit})`:''}.${p.booking?' Telefonmöte bokat: '+esc(p.booking)+'.':''}</div>`:''}
   <div class="thread">${p.msgs.map(m=>msgHtml(m,p.first,m.from==='f')).join('')||'<p class="mut">Inga meddelanden ännu.</p>'}</div>
   <div class="quick"><button class="chip" data-act="fquick" data-v="Bra jobbat! Fortsätt som vanligt.">Bra jobbat</button><button class="chip" data-act="fquick" data-v="Minska antalet repetitioner tills det inte gör ont, och hör av dig om det inte blir bättre.">Minska belastningen</button><button class="chip" data-act="fquick" data-v="Jag ringer upp dig så pratar vi om det.">Jag ringer dig</button></div>
-  <label class="sr" for="ftext">Svara ${esc(p.first)}</label><textarea id="ftext" placeholder="Skriv ett svar till ${esc(p.first)}"></textarea><div class="row"><button class="btn pri" data-act="fsend" data-id="${p.id}">Skicka svar</button><button class="btn" data-act="fcall" data-id="${p.id}">${IC.phone.replace('<svg','<svg width="18" height="18"')}Ring upp i stället</button></div>`}
+  <label class="sr" for="ftext">Svara ${esc(p.first)}</label><textarea id="ftext" placeholder="Skriv ett svar till ${esc(p.first)}"></textarea>${attThumbs('f')}<div class="row"><label class="btn sm">${COARSE?'Filma eller bifoga':'Bifoga video eller bild'}<input type="file" class="sr chatt" data-who="f" accept="video/*,image/*" multiple></label><button class="btn pri" data-act="fsend" data-id="${p.id}">Skicka svar</button><button class="btn" data-act="fcall" data-id="${p.id}">${IC.phone.replace('<svg','<svg width="18" height="18"')}Ring upp i stället</button></div>`}
 function fProfile(p){const st=status(p);
   const tabs=[['uppf','Översikt'],['prog','Träningsprogram'],['msg','Meddelanden'+(p.unread?' ('+p.unread+')':'')]].map(([v,l])=>`<button data-act="ftab" data-v="${v}" aria-current="${ui.ftab===v}">${l}</button>`).join('');
   return `<button class="link" data-act="fback" style="justify-self:start;padding-left:0">← Patienter</button>
@@ -1129,6 +1132,7 @@ const toast=msg=>{$toast.textContent=msg;$toast.hidden=false;clearTimeout(tT);tT
 function formFor(p,k){const l=logOf(p,k);const items={};for(const it of prog(p)){const o=l&&l.items[it.ex];items[it.ex]=o?{...o,open:!!(o.flag||o.comment)}:{sets:it.sets,reps:it.reps,flag:null,comment:'',open:false}}
   return {date:k,view:'fram',items,pain:l?l.pain:null,area:l?[...(l.area||[])]:[],type:l?[...(l.type||[])]:[],note:l?l.note||'':'',noteOpen:!!(l&&l.note),effort:l?l.effort||null:null}}
 function keepScroll(fn){const y=window.scrollY;const sh=document.querySelector('.sheet');const sy=sh?sh.scrollTop:0;fn();window.scrollTo(0,y);const s2=document.querySelector('.sheet');if(s2)s2.scrollTop=sy}
+function keepTexts(fn){const a=document.getElementById('ptext'),b=document.getElementById('ftext');const va=a?a.value:null,vb=b?b.value:null;keepScroll(fn);const a2=document.getElementById('ptext'),b2=document.getElementById('ftext');if(a2&&va!=null)a2.value=va;if(b2&&vb!=null)b2.value=vb}
 function keepText(fn){const ta=document.getElementById('ptext');const v=ta?ta.value:null;fn();const t2=document.getElementById('ptext');if(t2&&v!=null)t2.value=v}
 const PF=()=>ui.modal&&ui.modal.type==='painpick'?ui.pform:ui.form;
 const mod=fn=>keepScroll(()=>{fn();renderModal()});
@@ -1185,12 +1189,13 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   case 'runskip':{stopRun();const r=ui.run;r.i++;nextEx(p);keepScroll(renderModal);break}
   case 'runlog':{const r=ui.run;ui.form=formFor(p,TK);for(const it of prog(p)){const dn=r.done[it.ex];ui.form.items[it.ex].sets=dn?dn.sets:0;if(dn&&dn.sets)ui.form.items[it.ex].reps=Math.round(dn.repSum/dn.sets)}ui.form.fromRun=true;ui.modal={type:'log'};renderModal();break}
   case 'compose':openCompose(p,'');break;
-  case 'quick':if(d.v==='ont')openCompose(p,'',true);else openCompose(p,'Jag är osäker på hur jag ska göra ');break;
+  case 'quick':if(d.v==='video')openCompose(p,'Här är en video på när jag gör övningen. Gör jag rätt? ');else if(d.v==='ont')openCompose(p,'',true);else openCompose(p,'Jag är osäker på hur jag ska göra ');break;
   case 'ack':ui.msgAck=true;ui.modal=null;ui.composer=true;render();if(ui.pendingPain){ui.pendingPain=false;ui.pform={pain:null,area:[],type:[],view:'fram'};ui.modal={type:'painpick'};renderModal()}else setTimeout(()=>{const t=document.getElementById('ptext');if(t){t.focus();t.setSelectionRange(t.value.length,t.value.length)}},30);break;
-  case 'pcancel':ui.composer=false;ui.att=null;ui.patt=null;ui.prefill='';render();break;
-  case 'psend':{const t=document.getElementById('ptext').value.trim();if(!t&&!ui.att&&!ui.patt){toast('Skriv något först.');return}p.msgs.push({from:'p',text:t,t:Date.now(),att:ui.att,pain:ui.patt});ui.patt=null;p.unread++;ui.composer=false;ui.att=null;ui.prefill='';save();render();toast('Skickat. Erik svarar vanligtvis inom 2 arbetsdagar.');break}
+  case 'pcancel':ui.composer=false;ui.att=null;if(ui.atts)ui.atts.p=[];ui.patt=null;ui.prefill='';render();break;
+  case 'psend':{const t=document.getElementById('ptext').value.trim();const AT=(ui.atts&&ui.atts.p)||[];if(!t&&!AT.length&&!ui.patt){toast('Skriv något först.');return}p.msgs.push({from:'p',text:t,t:Date.now(),att:AT.length?AT.map(a=>({kind:a.kind,key:a.key,name:a.name})):null,pain:ui.patt});ui.atts.p=[];ui.patt=null;p.unread++;ui.composer=false;ui.att=null;ui.prefill='';save();render();toast('Skickat. Erik svarar vanligtvis inom 2 arbetsdagar.');break}
   case 'painpick':ui.pform={pain:null,area:[],type:[],view:'fram'};ui.modal={type:'painpick'};renderModal();break;
   case 'painok':ui.patt=clone(ui.pform);delete ui.patt.view;ui.modal=null;keepText(render);break;
+  case 'attrm':{ui.atts[d.who].splice(+d.i,1);keepTexts(render);break}
   case 'painrm':ui.patt=null;keepText(render);break;
   case 'book':ui.modal={type:'book'};renderModal();break;
   case 'slot':mod(()=>{ui.modal.slot=d.v});break;
@@ -1242,7 +1247,7 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   case 'dundo':ui.draft=null;ui.editI=null;render();break;
   case 'dsave':{const D=ui.draft;p.program={perWeek:D.perWeek,items:D.items};p.weeks=D.weeks;p.painLimit=D.painLimit;if(!p.since)p.since=TK;p.msgs.push({from:'f',text:'Hej '+p.first+'! Jag har uppdaterat ditt träningsprogram: '+perWk(D.perWeek)+' i '+D.weeks+' veckor. Du hittar övningarna under Idag.',t:Date.now()});p.seenF=false;ui.draft=null;ui.dirty=false;ui.editI=null;save();render();toast('Programmet är skickat till '+p.first+'.');break}
   case 'farea':ui.area=d.v;document.querySelectorAll('[data-act=farea]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===ui.area));document.getElementById('lib').innerHTML=libList();break;
-  case 'fsend':{const t=document.getElementById('ftext').value.trim();if(!t)return;p.msgs.push({from:'f',text:t,t:Date.now()});p.seenF=false;save();render();toast('Svar skickat.');break}
+  case 'fsend':{const t=document.getElementById('ftext').value.trim();const AT=(ui.atts&&ui.atts.f)||[];if(!t&&!AT.length)return;p.msgs.push({from:'f',text:t,t:Date.now(),att:AT.length?AT.map(a=>({kind:a.kind,key:a.key,name:a.name})):null});ui.atts.f=[];p.seenF=false;save();render();toast('Svar skickat.');break}
   case 'fcall':p.msgs.push({from:'f',text:'Jag ringer upp dig så pratar vi om det.',t:Date.now()});p.seenF=false;save();render();toast('Svar skickat. Kom ihåg att ringa '+p.first+'.');break;
   case 'prm':{const G=ui.draft.items[+d.i].gallery;G.splice(+d.j,1);dr();break}
   case 'purl':{const v=document.getElementById('pu'+d.i).value.trim();const it=ui.draft.items[+d.i];const id=ytId(v);if(id)(it.gallery=it.gallery||[]).push({kind:'yt',id});else if(/^https:\/\/\S+\.\S+/.test(v))(it.gallery=it.gallery||[]).push({kind:'link',url:v});else{toast('Klistra in en länk som börjar med https://');return}dr();toast('Videon är tillagd. Glöm inte att spara programmet.');break}
@@ -1286,8 +1291,9 @@ document.addEventListener('change',e=>{const t=e.target;
   if(t.classList&&t.classList.contains('pmfile')&&t.files&&t.files.length){const it=ui.draft.items[+t.dataset.i];it.gallery=it.gallery||[];let n=0;for(const f of t.files){const img=/^image\//.test(f.type),vid=/^video\//.test(f.type);if(!img&&!vid)continue;if((img&&f.size>15e6)||(vid&&f.size>300e6))continue;const k='pm_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);VURL[k]=URL.createObjectURL(f);IDB.put(k,f).catch(()=>toast('Filen kunde inte sparas i den här webbläsaren.'));it.gallery.push({kind:img?'img':'file',key:k,name:f.name});n++}dr();toast(n?(n===1?'Filen är tillagd.':n+' filer tillagda.')+' Glöm inte att spara programmet.':'Inga filer kunde läggas till.')}
   if((t.id==='nxmedia'||t.id==='nxcam')&&t.files&&t.files.length){let n=0,skip=0;for(const f of t.files){const img=/^image\//.test(f.type),vid=/^video\//.test(f.type);if(!img&&!vid){skip++;continue}if((img&&f.size>15e6)||(vid&&f.size>300e6)){skip++;continue}ui.nx.gal.push({kind:img?'img':'file',blob:f,url:URL.createObjectURL(f),name:f.name||(img?'Foto':'Video')});n++}
     keepScroll(renderModal);toast((n===1?'1 fil tillagd.':n+' filer tillagda.')+(skip?` ${skip} hoppades över (fel format eller för stor).`:''))}
-  if(t.id==='patt'&&t.files&&t.files[0]){const f=t.files[0];ui.att={name:f.name};
-    if(/^image\//.test(f.type)&&f.size<400000){const r=new FileReader();r.onload=()=>{ui.att.data=r.result;keepText(render)};r.readAsDataURL(f)}else keepText(render)}});
+  if(t.classList&&t.classList.contains('chatt')&&t.files&&t.files.length){const who=t.dataset.who;ui.atts=ui.atts||{};const A=ui.atts[who]=ui.atts[who]||[];let n=0,skip=0;
+    for(const f of t.files){const img=/^image\//.test(f.type),vid=/^video\//.test(f.type);if(!img&&!vid||(img&&f.size>15e6)||(vid&&f.size>300e6)){skip++;continue}const k='ch_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);const u=URL.createObjectURL(f);VURL[k]=u;IDB.put(k,f).catch(()=>toast('Filen kunde inte sparas i den här webbläsaren.'));A.push({kind:img?'img':'file',key:k,name:f.name||(img?'Bild':'Video'),url:u});n++}
+    keepTexts(render);if(skip)toast(skip+' fil'+(skip>1?'er':'')+' hoppades över (fel format eller över 300 MB).')}});
 function route(){const h=location.hash.slice(1);ui.view=['patient','fysio','feedback'].includes(h)?h:'start';ui.modal=null;render();window.scrollTo(0,0)}
 window.addEventListener('hashchange',route);
 route();
