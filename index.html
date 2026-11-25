@@ -29,7 +29,7 @@ h1,h2,h3,h4{line-height:1.15;letter-spacing:-.02em;margin:0;text-wrap:balance}
 h1{font-size:clamp(1.9rem,4vw,2.5rem);font-weight:800}
 h2{font-size:1.45rem;font-weight:800}
 h3{font-size:1.15rem;font-weight:700}
-h4{font-size:1.05rem;font-weight:700}
+h4,.h4{font-size:1.05rem;font-weight:700}
 p{margin:.3em 0}
 button,input,textarea,select{font:inherit;color:inherit}
 button{cursor:pointer}
@@ -41,7 +41,7 @@ button{cursor:pointer}
 .roles a{padding:8px 14px;border-radius:10px;text-decoration:none;color:var(--ink);font-weight:700;min-height:44px;display:flex;align-items:center}
 .roles .smo{display:none}
 .roles a[aria-current=page]{background:var(--btn);color:var(--onbtn)}
-@media(max-width:560px){.fs>span{display:none}.top{gap:6px;flex-wrap:nowrap;padding:6px 10px}.brand{font-size:0;gap:0}.roles{flex-wrap:nowrap;padding:3px}.roles a{padding:6px 9px;min-height:40px;font-size:.92rem}.roles .lg{display:none}.roles .smo{display:inline}.fs button{min-width:36px;min-height:40px}.fs button:nth-child(3){display:none}}
+@media(max-width:560px){.fs>span{display:none}.top{gap:6px;flex-wrap:nowrap;padding:6px 10px}.brand{font-size:0;gap:0}.roles{flex-wrap:nowrap;padding:3px}.roles a{padding:6px 7px;min-height:40px;font-size:.88rem}.fs{gap:2px}.roles .lg{display:none}.roles .smo{display:inline}.top .fs button{min-width:32px;min-height:40px;padding:0 3px}}
 .fs{margin-left:auto;display:flex;align-items:center;gap:4px;font-size:.9rem;color:var(--mut)}
 .fs button{border:1px solid var(--line);background:var(--card);border-radius:10px;min-width:44px;min-height:44px;font-weight:800}
 .fs button[aria-pressed=true]{border-color:var(--t);background:var(--tl);color:var(--t)}
@@ -66,9 +66,9 @@ main{min-height:70vh}
 .tag{display:inline-flex;align-items:center;gap:5px;background:var(--tl);color:var(--t);border-radius:999px;padding:3px 10px;font-size:.82rem;font-weight:700;white-space:nowrap}
 .tag::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
 .tag.plain::before{display:none}
-.tag.co{background:var(--cos);color:var(--co)}
+.tag.co{background:var(--cos);color:light-dark(#9e3226,#ff9d8d)}
 .tag.am{background:var(--ams);color:var(--ami)}
-.tag.ok{background:var(--oks);color:var(--ok)}
+.tag.ok{background:var(--oks);color:light-dark(#21613c,#7fe0a8)}
 .tag.in{background:var(--ins);color:var(--in)}
 .av{width:44px;height:44px;border-radius:50%;background:var(--tl2);color:var(--t);display:grid;place-items:center;font-weight:800;flex:none}
 .note{border-radius:14px;padding:12px 14px;background:var(--ams)}
@@ -100,7 +100,7 @@ main{min-height:70vh}
 .pnav button[aria-current=true]{color:var(--t)}
 .pnav button[aria-current=true] span.ic{background:var(--tl2)}
 .pnav svg{width:24px;height:24px}
-.badge{position:absolute;top:4px;left:calc(50% + 12px);background:var(--co);color:#fff;border-radius:999px;font-size:.75rem;padding:0 6px;min-width:20px}
+.badge{position:absolute;top:4px;left:calc(50% + 12px);background:#b23a2d;color:#fff;border-radius:999px;font-size:.82rem;padding:0 6px;min-width:20px}
 .herocard{background:var(--hero);color:#fff;border-radius:22px;padding:18px 18px 16px;display:grid;gap:10px}
 .herocard .pill{background:var(--am);color:#2a1a00;border-radius:999px;padding:3px 10px;font-size:.82rem;font-weight:800;white-space:nowrap}
 .big{font-size:2.4rem;font-weight:800;letter-spacing:-.03em;line-height:1}
@@ -122,7 +122,8 @@ main{min-height:70vh}
 @media(min-width:700px){.back{align-items:center;padding:20px}}
 .sheet{background:var(--bg);width:100%;max-width:560px;max-height:94svh;overflow:auto;border-radius:24px 24px 0 0;padding:18px 18px 22px;display:grid;gap:12px}
 @media(min-width:700px){.sheet{border-radius:24px}}
-.sheet>header{display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:-18px;background:var(--bg);padding:6px 0;z-index:2}
+.mtitle{font-size:1.15rem}
+.sheet>.shead{display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:-18px;background:var(--bg);padding:6px 0;z-index:2}
 .sheet .card{padding:16px}
 .x{border:1px solid var(--line);background:var(--card);border-radius:999px;width:48px;height:48px;font-size:1.5rem;line-height:1;flex:none}
 .bigfig{background:var(--tl);border-radius:18px;aspect-ratio:16/10}
@@ -225,6 +226,8 @@ details.more summary{cursor:pointer;font-weight:700;color:var(--t);min-height:44
 /* pain module */
 .bodymap{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:start}
 .body{height:auto;max-width:100%;flex:none}
+.hit{fill:transparent;stroke:none;cursor:pointer}
+.regg{cursor:pointer}.regg:focus-visible{outline:none}.regg:focus-visible .reg{stroke-width:4;stroke-dasharray:none}
 .reg{fill:transparent;stroke:var(--co);stroke-width:2;stroke-dasharray:3 3;cursor:pointer}
 .reg:hover{fill:var(--cos)}
 .reg[aria-pressed=true]{fill:var(--co);stroke-dasharray:none}
@@ -261,7 +264,7 @@ details.more summary{cursor:pointer;font-weight:700;color:var(--t);min-height:44
 .msg{max-width:86%;padding:10px 14px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
 .msg.me{justify-self:end;background:var(--hero);border-color:var(--hero);color:#fff;border-bottom-right-radius:4px}
 .msg.them{border-bottom-left-radius:4px}
-.msg time{display:block;font-size:.78rem;opacity:.75;margin-top:2px}
+.msg time{display:block;font-size:.82rem;opacity:.75;margin-top:2px}
 .msg img{max-width:100%;border-radius:10px;margin-top:6px;display:block}
 .quick{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
 .quick .chip{flex:none}
@@ -300,7 +303,7 @@ details.more summary{cursor:pointer;font-weight:700;color:var(--t);min-height:44
 .side{background:var(--card);border-right:1px solid var(--line);padding:18px 12px;display:grid;align-content:start;gap:4px}
 .side button{display:flex;align-items:center;gap:10px;border:0;background:none;border-radius:12px;padding:10px 12px;font-weight:700;text-align:left;min-height:46px;color:var(--ink)}
 .side button[aria-current=true]{background:var(--btn);color:var(--onbtn)}
-.side button .n{margin-left:auto;background:var(--tl2);color:var(--t);border-radius:999px;font-size:.78rem;padding:0 8px}
+.side button .n{margin-left:auto;background:var(--tl2);color:var(--t);border-radius:999px;font-size:.82rem;padding:0 8px}
 .side svg{width:20px;height:20px;flex:none}
 .side .who{margin-top:18px;padding:12px;border-radius:12px;background:var(--tl);font-size:.88rem}
 @media(max-width:900px){.fshell{grid-template-columns:minmax(0,1fr)}.side{border-right:0;border-bottom:1px solid var(--line);display:flex;overflow-x:auto;padding:8px 12px}.side .who,.side .brandrow{display:none}.side button{flex:none}}
@@ -343,7 +346,7 @@ table.pt tr.rowlink:hover td{background:var(--tl)}
 .star{position:absolute;top:6px;left:6px;width:36px;height:36px;border-radius:50%;border:0;background:var(--card);display:grid;place-items:center;color:var(--mut);box-shadow:0 1px 3px rgba(0,0,0,.18)}
 .star svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}
 .star[aria-pressed=true]{color:var(--am)}.star[aria-pressed=true] svg{fill:currentColor}
-.lmeta{font-size:.78rem;color:var(--mut)}
+.lmeta{font-size:.82rem;color:var(--mut)}
 .why{font-size:.76rem;color:var(--t);font-weight:700;background:var(--tl2);border-radius:8px;padding:2px 7px;justify-self:start}
 .libgrid.bank{max-height:none;grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
 .libsec,.libinfo{grid-column:1/-1;margin:4px 0 0}
@@ -377,6 +380,7 @@ table.pt tr.rowlink:hover td{background:var(--tl)}
 .fbgrid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:26px;align-items:start}
 @media(max-width:900px){.fbgrid{grid-template-columns:minmax(0,1fr)}}
 .bar{display:grid;grid-template-columns:minmax(0,1fr) 3.2em;gap:8px;align-items:center;font-size:.92rem}
+.tundo{margin-left:14px;background:none;border:0;color:inherit;font-weight:800;text-decoration:underline;min-height:32px}
 .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:700;z-index:60;max-width:calc(100% - 32px);box-shadow:0 6px 20px rgba(0,0,0,.2)}
 footer{border-top:1px solid var(--line);padding:14px max(3vw,16px);display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:center;color:var(--mut);font-size:.88rem;background:var(--card)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
@@ -563,7 +567,7 @@ function bodyFig(view,sel,counts,interactive,w){
   const max=Math.max(1,...Object.values(counts||{}));let regs='';
   if(interactive){const fineSel=sel.map(a=>ZIDX[a]).filter(Boolean);
     regs=REG[view].map(([n,x,y,rx,ry])=>{const g=groupOf(n),s=sideOf(n);const on=sel.includes(n)||fineSel.some(z=>z.g===g&&(z.side===s||ZG[g].mid));
-      return `<ellipse class="reg" cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" role="button" tabindex="0" data-act="${g?'zoomin':'area'}" data-v="${n}" aria-pressed="${on}" aria-label="${g?'Zooma in på ':''}${n}"><title>${n}</title></ellipse>`}).join('');
+      return `<g class="regg" role="button" tabindex="0" data-act="${g?'zoomin':'area'}" data-v="${n}" aria-pressed="${on}" aria-label="${g?'Zooma in på ':''}${n}"><ellipse class="hit" cx="${x}" cy="${y}" rx="${Math.max(rx,13)}" ry="${Math.max(ry,13)}"/><ellipse class="reg" cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" aria-pressed="${on}"/><title>${n}</title></g>`}).join('');
     regs+=fineSel.filter(z=>z.view===view).map(z=>`<ellipse cx="${z.x}" cy="${z.y}" rx="${Math.max(2.5,z.rx*.8)}" ry="${Math.max(2.5,z.ry*.8)}" fill="var(--co)" stroke="var(--card)" stroke-width="1" pointer-events="none"/>`).join('')}
   else for(const [n,c] of Object.entries(counts||{})){const o=(.3+.7*c/max).toFixed(2);const r=REG[view].find(x=>x[0]===n);
     if(r)regs+=`<ellipse cx="${r[1]}" cy="${r[2]}" rx="${r[3]+2}" ry="${r[4]+2}" fill="var(--co)" opacity="${o}"><title>${n}: ${c}</title></ellipse>`;
@@ -574,15 +578,15 @@ function zoomFig(f){const z=f.zoom,G=ZG[z.g];const view=G[z.view]?z.view:(G.fram
   const zones=Z.map((q,i)=>{const on=f.area.includes(q.n);return `<g class="zone" role="button" tabindex="0" data-act="area" data-v="${q.n}" aria-pressed="${on}" aria-label="${q.n}"><ellipse cx="${q.x}" cy="${q.y}" rx="${q.rx}" ry="${q.ry}" vector-effect="non-scaling-stroke"/><text x="${q.x}" y="${q.y}" font-size="${fs}" text-anchor="middle" dominant-baseline="central">${i+1}</text></g>`}).join('');
   const outside=view==='fram'?(z.side==='Höger'?'vänster':'höger'):(z.side==='Höger'?'höger':'vänster');
   return `<div class="zoom"><div class="between"><button class="link" data-act="zoomout" style="padding-left:0">← Hela kroppen</button>${G.fram&&G.bak?`<div class="row" style="gap:4px"><button class="chip" style="min-height:40px;padding:4px 12px" data-act="zview" data-v="fram" aria-pressed="${view==='fram'}">Framsida</button><button class="chip" style="min-height:40px;padding:4px 12px" data-act="zview" data-v="bak" aria-pressed="${view==='bak'}">Baksida</button></div>`:''}</div>
-  <h4>${esc(cap(title))}, ${view==='fram'?'framifrån':'bakifrån'}</h4>${G.mid?'':`<p class="small mut">Utsidan är åt ${outside} på bilden.</p>`}
+  <h3 class="h4">${esc(cap(title))}, ${view==='fram'?'framifrån':'bakifrån'}</h3>${G.mid?'':`<p class="small mut">Utsidan är åt ${outside} på bilden.</p>`}
   <div class="zwrap"><svg class="zfig" viewBox="${b.join(' ')}" role="group" aria-label="Förstorad bild">${SIL(view)}${zones}</svg>
   <div class="zlist">${Z.map((q,i)=>`<button class="zchip" data-act="area" data-v="${q.n}" aria-pressed="${f.area.includes(q.n)}"><b>${i+1}</b>${esc(cap(G.mid?q.n:q.n.slice(z.side.length+1)))}</button>`).join('')}</div></div></div>`}
 function painPicker(f){const v=f.view||'fram';
-  return `<div class="picker"><div><h4>Var gör det ont?</h4><p class="small mut">${f.zoom?'Tryck på de ställen där det gör ont. Du kan välja flera.':'Tryck på en kroppsdel för att zooma in och visa exakt var det gör ont.'}</p></div>
+  return `<div class="picker"><div><h3 class="h4">Var gör det ont?</h3><p class="small mut">${f.zoom?'Tryck på de ställen där det gör ont. Du kan välja flera.':'Tryck på en kroppsdel för att zooma in och visa exakt var det gör ont.'}</p></div>
   ${f.zoom?zoomFig(f):`<div class="row" style="gap:6px"><button class="chip" data-act="bview" data-v="fram" aria-pressed="${v==='fram'}">Framsida</button><button class="chip" data-act="bview" data-v="bak" aria-pressed="${v==='bak'}">Baksida</button></div>
   <div class="bodymap">${bodyFig(v,f.area,null,true,170)}<div style="display:grid;gap:6px;align-content:start"><span class="small mut">${v==='fram'?'Du ser kroppen framifrån, som en annan person ser dig.':'Du ser kroppen bakifrån. Byt hit för rygg, säte, vad och häl.'}</span></div></div>`}
   <div class="row" style="gap:6px"><span class="small mut">Valt:</span>${f.area.length?f.area.map(a=>`<button class="tag co plain" data-act="area" data-v="${esc(a)}" style="border:0;min-height:34px" aria-label="Ta bort ${esc(a)}">${esc(a)} ×</button>`).join(''):'<span class="small">Inget valt än</span>'}</div>
-  <div><h4>Hur känns det?</h4><p class="small mut">Välj det eller de som stämmer bäst.</p><div class="ptiles">${PAINT.map(([n,dsc])=>`<button class="ptile" data-act="ptype" data-v="${n}" aria-pressed="${f.type.includes(n)}">${picon(n,34)}<span><strong>${n}</strong><small>${dsc}</small></span></button>`).join('')}</div></div></div>`}
+  <div><h3 class="h4">Hur känns det?</h3><p class="small mut">Välj det eller de som stämmer bäst.</p><div class="ptiles">${PAINT.map(([n,dsc])=>`<button class="ptile" data-act="ptype" data-v="${n}" aria-pressed="${f.type.includes(n)}">${picon(n,34)}<span><strong>${n}</strong><small>${dsc}</small></span></button>`).join('')}</div></div></div>`}
 const vasCol=v=>`hsl(${140-13.5*v} 62% ${74-v*1.2}%)`;
 function vasPicker(f){return `<div class="vas" role="group" aria-label="Smärta 0 till 10" style="margin-top:8px">${Array.from({length:11},(_,v)=>`<button data-act="vas" data-v="${v}" aria-pressed="${f.pain===v}" style="--c:${vasCol(v)}">${v}</button>`).join('')}</div><div class="between small mut" style="margin-top:4px"><span>Ingen smärta</span><span>Värsta tänkbara</span></div>${f.pain!=null?`<p style="font-weight:700;margin-top:6px">${['Ingen smärta','Lite ont','Lite ont','Lite ont','Måttligt ont','Måttligt ont','Måttligt ont','Mycket ont','Mycket ont','Mycket ont','Värsta tänkbara'][f.pain]}</p>`:''}`}
 function painCard(pn){if(!pn)return '';const cnt={};(pn.area||[]).forEach(a=>cnt[a]=1);const views=['fram','bak'].filter(v=>(pn.area||[]).some(a=>viewOf(a)===v));
@@ -853,7 +857,7 @@ function fThread(p){if(p.unread){p.unread=0;save()}const a=adherence(p),pi=painI
 function fProfile(p){const st=status(p);
   const tabs=[['uppf','Översikt'],['prog','Träningsprogram'],['msg','Meddelanden'+(p.unread?' ('+p.unread+')':'')]].map(([v,l])=>`<button data-act="ftab" data-v="${v}" aria-current="${ui.ftab===v}">${l}</button>`).join('');
   return `<button class="link" data-act="fback" style="justify-self:start;padding-left:0">← Patienter</button>
-  <div class="card phd"><span class="av" style="width:56px;height:56px;font-size:1.1rem">${esc(p.first[0]+p.name.split(' ')[1][0])}</span><div><div class="row" style="gap:8px"><h2>${esc(p.name)}</h2><span class="tag ${st[1]}">${st[0]}</span></div><p class="small mut">${p.age} år · ${esc(p.dx)}${prog(p).length?' · Vecka '+progWeek(p)+' av '+p.weeks:''} · Nästa besök ${fmt(fromKey(p.nextVisit))}</p></div>
+  <div class="card phd"><span class="av" style="width:56px;height:56px;font-size:1.1rem">${esc(p.first[0]+p.name.split(' ')[1][0])}</span><div><div class="row" style="gap:8px"><h1 style="font-size:1.6rem">${esc(p.name)}</h1><span class="tag ${st[1]}">${st[0]}</span></div><p class="small mut">${p.age} år · ${esc(p.dx)}${prog(p).length?' · Vecka '+progWeek(p)+' av '+p.weeks:''} · Nästa besök ${fmt(fromKey(p.nextVisit))}</p></div>
   <div class="row" style="gap:8px"><button class="btn sm" data-act="ftab" data-v="msg">${IC.chat.replace('<svg','<svg width="18" height="18"')}Meddelande</button><button class="btn sm" data-act="journal">${IC.doc.replace('<svg','<svg width="18" height="18"')}Exportera till journal</button><button class="btn sm pri" data-act="ftab" data-v="prog">${IC.edit.replace('<svg','<svg width="18" height="18"')}Justera program</button></div></div>
   <nav class="tabs">${tabs}</nav>${ui.ftab==='uppf'?fFollow(p):ui.ftab==='prog'?fProg(p):`<div style="max-width:760px;display:grid;gap:14px">${fThread(p)}</div>`}`}
 function weekBars(p){if(!p.since)return '';const s=wkStart(fromKey(p.since)),cur=progWeek(p),per=p.program.perWeek;const n=Math.min(p.weeks,8);let h='';
@@ -967,9 +971,9 @@ function libList(){const q=ui.q.trim();const R=q?search(q):null;const bank=ui.li
   if(bank){const L=EX.filter(ok);if(ui.bankTab==='fav')return L.length?L.map(e=>tile(e)).join(''):'<div class="empty libinfo">Inga favoriter än. Tryck på stjärnan på en övning för att spara den här.</div>';
     return newTile('')+L.map(e=>tile(e)).join('')+(ui.bankTab==='egna'&&!L.length?'<p class="libinfo">Du har inga egna övningar än. Övningar du skapar, i banken eller för en patient, hamnar här och kan användas för alla patienter.</p>':'')}
   const fav=S.fav.map(id=>EXM[id]).filter(Boolean),rec=S.recent.map(id=>EXM[id]).filter(e=>e&&!S.fav.includes(e.id)).slice(0,6);let h=`<div class="libsec"><span class="small mut">Snabbstart med en mall</span><div class="quick" style="margin-top:4px">${TPL.map((t,i)=>`<button class="chip vchip" data-act="tpl" data-i="${i}">+ ${t.name}</button>`).join('')}</div></div>`;
-  if(fav.length)h+=`<h4 class="libsec">Mina favoriter</h4>`+fav.map(e=>tile(e)).join('');
-  if(rec.length)h+=`<h4 class="libsec">Senast använda</h4>`+rec.map(e=>tile(e)).join('');
-  return h+`<h4 class="libsec">Alla övningar</h4>`+newTile('')+EX.map(e=>tile(e)).join('')}
+  if(fav.length)h+=`<h3 class="libsec h4">Mina favoriter</h3>`+fav.map(e=>tile(e)).join('');
+  if(rec.length)h+=`<h3 class="libsec h4">Senast använda</h3>`+rec.map(e=>tile(e)).join('');
+  return h+`<h3 class="libsec h4">Alla övningar</h3>`+newTile('')+EX.map(e=>tile(e)).join('')}
 function libPanel(mode){ui.libMode=mode||'prog';const n=facCount();const bank=ui.libMode==='bank';
   return `<div class="card" style="align-self:start;display:grid;gap:10px">${bank?'':`<div class="between"><h3>Övningsbibliotek</h3><span class="small mut">${EX.length} övningar</span></div>`}
   <div class="search">${sv('<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>')}<label class="sr" for="q">Sök övning</label><input type="search" id="q" data-in="q" value="${esc(ui.q)}" placeholder="Övning, muskel eller diagnos" autocomplete="off"></div>
@@ -1031,7 +1035,11 @@ function notesBox(p,ex){const N=pnotes(p,ex);
   <label class="sr" for="pnote">Ny anteckning</label><textarea id="pnote" style="min-height:70px" placeholder="T.ex. Lägg en kudde på stolen, då blir det lagom djupt"></textarea>
   <button class="btn sm" data-act="pnadd" data-ex="${ex}" style="justify-self:start">+ Spara anteckning</button></div>`}
 const hydrateLater=()=>setTimeout(hydrateVideos,0);
-function renderModal(){const m=ui.modal;if(!m){$modal.innerHTML='';return}
+let lastModalKey=null,returnFocus=null;
+function renderModal(){const m=ui.modal;if(!m){$modal.innerHTML='';if(lastModalKey){lastModalKey=null;if(returnFocus&&document.contains(returnFocus))try{returnFocus.focus()}catch(e){}}return}
+  const mk=m.type+(m.ex||'')+(m.w||'');const isNew=mk!==lastModalKey;if(isNew&&!lastModalKey)returnFocus=document.activeElement;lastModalKey=mk;setTimeout(()=>{if(isNew){const h=document.getElementById('mt');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true})}}},0);
+  renderModalInner(m)}
+function renderModalInner(m){
   let t='',b='';const p=pat(ui.view==='fysio'?ui.fpid:ui.pid);
   if(m.type==='instr'){const it=prog(p).find(x=>x.ex===m.ex)||{ex:m.ex,sets:3,reps:10,note:''};const e=EXM[m.ex];const g=GUIDE[m.ex]||[e.why||'',e.dont||''];const idx=prog(p).findIndex(x=>x.ex===m.ex);t=idx>=0?`Övning ${idx+1} av ${prog(p).length}`:e.name;
     b=`${mediaFor(prog(p).find(x=>x.ex===m.ex),e)}<h2>${esc(e.name)}</h2>
@@ -1041,7 +1049,7 @@ function renderModal(){const m=ui.modal;if(!m){$modal.innerHTML='';return}
     <h3>Tänk på</h3><div class="dodont note ok"><b style="background:var(--ok)">${IC.check.replace('<svg','<svg width="14" height="14"')}</b><span>${esc(it.tip||e.tip)}</span></div>${g[1]?`<div class="dodont note co"><b style="background:var(--co)">${IC.x.replace('<svg','<svg width="12" height="12"')}</b><span>${esc(g[1])}</span></div>`:''}
     ${it.note?`<div class="quote"><span class="av" style="width:36px;height:36px">E</span><div><span class="small mut">Erik skriver</span><br>”${esc(it.note)}”</div></div>`:''}
     ${ui.view==="patient"?notesBox(p,m.ex):""}<div class="row" style="display:grid;grid-template-columns:1fr 1.4fr;gap:8px"><button class="btn" data-act="askex" data-ex="${m.ex}">${IC.chat.replace('<svg','<svg width="18" height="18"')}Fråga</button><button class="btn pri" data-act="close">Jag förstår</button></div>`}
-  if(m.type==='run'){const r=ui.run,P=prog(p);t='Kör passet';
+  if(m.type==='run'){const r=ui.run,P=prog(p);t='Träningspass';
     if(r.i>=P.length){b=`<div class="runend"><span class="bigcheck">${IC.check}</span><h2>Bra jobbat, ${esc(p.first)}!</h2><p class="mut">Passet är klart. Det du gjort är redan ifyllt i loggen, du behöver bara kontrollera.</p></div><button class="btn pri full" data-act="runlog" style="min-height:58px;font-size:1.1rem">Logga passet</button>`}
     else{const it=P[r.i],e=EXM[it.ex],sek=e.unit==='sek';const started=r.left<it.reps;
     b=`<div class="runbar" aria-hidden="true">${P.map((_,i)=>`<i class="${i<r.i?'on':i===r.i?'cur':''}"></i>`).join('')}</div><div class="between"><span class="small mut">Övning ${r.i+1} av ${P.length}</span><button class="link small" data-act="runskip">Hoppa över övningen</button></div>
@@ -1052,6 +1060,7 @@ function renderModal(){const m=ui.modal;if(!m){$modal.innerHTML='';return}
     :`<span class="clock"><input class="numin big" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-in="runnum" value="${r.reps}" aria-label="Antal repetitioner"><small> rep</small></span><div class="row" style="justify-content:center;gap:8px"><button class="btn" data-act="runrep" data-d="-1" aria-label="Färre repetitioner">− 1</button><button class="btn" data-act="runrep" data-d="1" aria-label="Fler repetitioner">+ 1</button></div><span class="small mut">Gjorde du fler eller färre? Tryck på siffran och skriv, eller använd − och +.</span>`}
     <button class="btn pri full" data-act="runset" style="min-height:58px;font-size:1.1rem">${IC.check.replace('<svg','<svg width="20" height="20"')} ${r.set<it.sets?`Set ${r.set} klart`:r.i<P.length-1?'Klar, nästa övning':'Klar, avsluta passet'}</button>
     ${r.set<it.sets?`<button class="btn full" data-act="runall">Hela övningen klar, gå till ${r.i<P.length-1?'nästa övning':'slutet'} ›</button>`:''}</div>`}}
+  if(m.type==='confirm'){t=m.title;b=`<p style="font-size:1.08rem">${esc(m.text)}</p><button class="btn pri full" data-act="cfyes">${esc(m.yesL)}</button>${m.altL?`<button class="btn full" data-act="cfalt">${esc(m.altL)}</button>`:''}<button class="btn full" data-act="cfno" style="border-color:transparent">${esc(m.noL||'Avbryt')}</button>`}
   if(m.type==='week'){const w=+m.w;const a=addD(wkStart(fromKey(p.since)),(w-1)*7),z=addD(a,6);const L=inRange(p,a,z).sort((x,y)=>x.date<y.date?-1:1);const pl=wkPlan(p,w);const P=L.filter(l=>l.pain!=null);const cur=progWeek(p);
     t='Vecka '+w;
     const sum=L.length>=pl?`Du gjorde alla ${pl} pass. Snyggt!`:w===cur?`${L.length} av ${pl} pass hittills. Veckan är inte slut än.`:`Du gjorde ${L.length} av ${pl} pass. Det är helt okej, varje pass räknas.`;
@@ -1068,17 +1077,17 @@ function renderModal(){const m=ui.modal;if(!m){$modal.innerHTML='';return}
     <label class="row" style="gap:10px;cursor:pointer"><button class="switch sm" role="switch" aria-checked="${r.smart}" data-act="rset" data-k="smart" aria-label="Bara om jag inte tränat"><i></i></button><span>Påminn bara om jag inte redan har tränat den dagen</span></label>`:''}</div>
     <div class="note in small">${remTxt(p)}.</div><p class="small mut">I testversionen skickas inga riktiga notiser till mobilen.</p><button class="btn pri full" data-act="close">Klar</button>`}
   if(m.type==='log'){const f=ui.form;t='Logga ditt pass';
-    b=`${f.fromRun?'<div class="note ok small">Ifyllt från passet du just körde. Ändra om något inte stämmer.</div>':''}<div class="card"><h4>När gjorde du passet?</h4><div class="row" style="gap:6px;margin-top:8px"><button class="chip" data-act="fdate" data-v="${TK}" aria-pressed="${!f.other}">I dag</button><button class="chip" data-act="fother" aria-pressed="${!!f.other}">Välj datum</button></div>${f.other?`<label class="small mut" for="logdate" style="display:block;margin-top:8px">Datum för passet</label><input type="date" id="logdate" class="dinp" value="${f.date}" max="${TK}" min="${key(addD(TODAY,-60))}"><p class="small" style="margin-top:4px;font-weight:700">${cap(fmtL(fromKey(f.date)))}${logOf(p,f.date)?' · ett pass finns redan, du ändrar det':''}</p>`:''}</div>
-    <div class="card"><h4>1. Hur mycket gjorde du?</h4><p class="small mut">${f.fromRun?'Det du gjorde under passet är ifyllt, set för set. Tryck på en siffra för att skriva in ett annat antal.':'Det planerade är redan ifyllt. Tryck på en siffra för att skriva in antalet, eller använd − och +.'}</p>
+    b=`${f.fromRun?'<div class="note ok small">Ifyllt från passet du just körde. Ändra om något inte stämmer.</div>':''}<div class="card"><h3 class="h4">När gjorde du passet?</h3><div class="row" style="gap:6px;margin-top:8px"><button class="chip" data-act="fdate" data-v="${TK}" aria-pressed="${!f.other}">I dag</button><button class="chip" data-act="fother" aria-pressed="${!!f.other}">Välj datum</button></div>${f.other?`<label class="small mut" for="logdate" style="display:block;margin-top:8px">Datum för passet</label><input type="date" id="logdate" class="dinp" value="${f.date}" max="${TK}" min="${key(addD(TODAY,-60))}"><p class="small" style="margin-top:4px;font-weight:700">${cap(fmtL(fromKey(f.date)))}${logOf(p,f.date)?' · ett pass finns redan, du ändrar det':''}</p>`:''}</div>
+    <div class="card"><h3 class="h4">1. Hur mycket gjorde du?</h3><p class="small mut">${f.fromRun?'Det du gjorde under passet är ifyllt, set för set. Tryck på en siffra för att skriva in ett annat antal.':'Det planerade är redan ifyllt. Tryck på en siffra för att skriva in antalet, eller använd − och +.'}</p>
     ${prog(p).map(it=>{const x=f.items[it.ex];const e=EXM[it.ex];const sk=!x.sr.length;return `<div class="lex${x.open?' flagged':''}"><div class="between"><strong style="font-size:1.05rem">${esc(e.name)}</strong><span class="small mut">Plan: ${dose(it)}</span></div>${pnotes(p,it.ex).length?`<div class="small exnote">${IC.edit.replace('<svg','<svg width="14" height="14"')}<span>Din anteckning: ${esc(pnotes(p,it.ex).slice(-1)[0].text)}</span></div>`:''}
       ${x.sr.length?`<div class="setrows">${x.sr.map((v,k)=>`<div class="setrow"><span class="small" style="font-weight:700">Set ${k+1}</span><div class="stepper"><button data-act="fsr" data-ex="${it.ex}" data-k="${k}" data-d="-1" aria-label="Minska set ${k+1}">−</button><input class="numin" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-in="srnum" data-ex="${it.ex}" data-k="${k}" value="${v}" aria-label="Set ${k+1}"><button data-act="fsr" data-ex="${it.ex}" data-k="${k}" data-d="1" aria-label="Öka set ${k+1}">+</button></div><span class="small mut">${e.unit==='sek'?'sek':'rep'}</span><button class="x3" data-act="fsrdel" data-ex="${it.ex}" data-k="${k}" aria-label="Ta bort set ${k+1}">×</button></div>`).join('')}</div>`:'<span class="tag am" style="justify-self:start">Hoppade över</span>'}
       <button class="link small" data-act="fsradd" data-ex="${it.ex}" style="justify-self:start;padding-left:0">+ Lägg till set</button>
       ${x.open?`<div style="display:grid;gap:8px"><span class="small" style="font-weight:700">Vad var det som kändes konstigt?</span><div class="row" style="gap:6px">${FLAGS.map(v=>`<button class="chip" data-act="fflag" data-ex="${it.ex}" data-v="${v}" aria-pressed="${x.flag===v}">${v}</button>`).join('')}</div><label class="sr" for="c-${it.ex}">Kort kommentar</label><input type="text" id="c-${it.ex}" data-in="excom" data-ex="${it.ex}" value="${esc(x.comment)}" placeholder="Kort kommentar (valfritt)"><button class="link small" data-act="fopen" data-ex="${it.ex}" style="justify-self:start;padding-left:0">Ta bort</button></div>`
         :`<button class="link small" data-act="fopen" data-ex="${it.ex}" style="justify-self:start;padding-left:0">Kändes något konstigt?</button>`}</div>`}).join('')}</div>
-    <div class="card"><div class="between"><h4>2. Hur ont har du efter passet?</h4><span class="small mut">Valfritt</span></div><p class="small mut">Tryck på en siffra. 0 = ingen smärta, 10 = värsta tänkbara.</p>${(()=>{const pi=painInfo(p);return pi&&f.pain==null?`<button class="chip vchip" data-act="vas" data-v="${pi.last.pain}" style="margin-top:6px">Samma som sist: ${pi.last.pain}</button>`:''})()}${vasPicker(f)}${f.pain!=null?`<button class="link small" data-act="vasclear" style="padding-left:0">Rensa</button>`:''}${limitNote(f,p)}
+    <div class="card"><div class="between"><h3 class="h4">2. Hur ont har du efter passet?</h3><span class="small mut">Valfritt</span></div><p class="small mut">Tryck på en siffra. 0 = ingen smärta, 10 = värsta tänkbara.</p>${(()=>{const pi=painInfo(p);return pi&&f.pain==null?`<button class="chip vchip" data-act="vas" data-v="${pi.last.pain}" style="margin-top:6px">Samma som sist: ${pi.last.pain}</button>`:''})()}${vasPicker(f)}${f.pain!=null?`<button class="link small" data-act="vasclear" style="padding-left:0">Rensa</button>`:''}${limitNote(f,p)}
     ${f.pain>0?`<details class="more"${f.mapOpen||f.zoom||f.area.length||f.type.length?' open':''}><summary>Visa var och hur det gör ont</summary>${painPicker(f)}</details>`:''}</div>
-    <div class="card"><h4>3. Hur kändes passet?</h4><div class="seg" role="group" aria-label="Ansträngning" style="margin-top:8px">${['Lätt','Lagom','Tungt'].map(v=>`<button data-act="feff" data-v="${v}" aria-pressed="${f.effort===v}">${v}</button>`).join('')}</div></div>
-    <div class="card"><h4>4. Något speciellt? <span class="small mut" style="font-weight:500">Valfritt</span></h4>${f.noteOpen?`<label class="sr" for="lognote">Kommentar</label><textarea id="lognote" data-in="lognote" placeholder="T.ex. Jag var extra trött i dag" style="margin-top:8px">${esc(f.note)}</textarea>`:`<p class="small mut">Bara om något var annorlunda än vanligt. Allt annat syns redan för Erik.</p><button class="link" data-act="fnote" style="padding-left:0">+ Skriv en kommentar</button>`}</div>
+    <div class="card"><h3 class="h4">3. Hur kändes passet?</h3><div class="seg" role="group" aria-label="Ansträngning" style="margin-top:8px">${['Lätt','Lagom','Tungt'].map(v=>`<button data-act="feff" data-v="${v}" aria-pressed="${f.effort===v}">${v}</button>`).join('')}</div></div>
+    <div class="card"><h3 class="h4">4. Något speciellt? <span class="small mut" style="font-weight:500">Valfritt</span></h3>${f.noteOpen?`<label class="sr" for="lognote">Kommentar</label><textarea id="lognote" data-in="lognote" placeholder="T.ex. Jag var extra trött i dag" style="margin-top:8px">${esc(f.note)}</textarea>`:`<p class="small mut">Bara om något var annorlunda än vanligt. Allt annat syns redan för Erik.</p><button class="link" data-act="fnote" style="padding-left:0">+ Skriv en kommentar</button>`}</div>
     <button class="btn pri full" data-act="savelog" style="min-height:58px;position:sticky;bottom:0">${IC.check.replace('<svg','<svg width="20" height="20"')} Spara och skicka till Erik</button><p class="small mut" style="text-align:center">Erik ser din logg direkt i sin översikt.</p>`}
   if(m.type==='exview'){const e=EXM[m.ex];const mt=meta(e);const g=GUIDE[e.id]||[e.why||'',e.dont||''];const U=usedBy(e.id);const ez=mt.easier&&EXM[mt.easier],hd=mt.harder&&EXM[mt.harder];t=e.custom?'Egen övning':'Övning';
     b=`${e.gallery&&e.gallery.length?gallery(e):demoPlayer(e.id)}<div class="between"><h2>${esc(e.name)}</h2><button class="star" style="position:static;width:44px;height:44px" data-act="favm" data-ex="${e.id}" aria-pressed="${S.fav.includes(e.id)}" aria-label="Favorit">${STAR}</button></div>
@@ -1087,7 +1096,7 @@ function renderModal(){const m=ui.modal;if(!m){$modal.innerHTML='';return}
     <div class="dodont note ok"><b style="background:var(--ok)">${IC.check.replace('<svg','<svg width="14" height="14"')}</b><span>${esc(e.tip)}</span></div>${g[1]?`<div class="dodont note co"><b style="background:var(--co)">${IC.x.replace('<svg','<svg width="12" height="12"')}</b><span>${esc(g[1])}</span></div>`:''}
     ${ez||hd?`<div class="row" style="gap:6px"><span class="small mut">Varianter</span>${ez?`<button class="chip vchip" data-act="exview" data-ex="${ez.id}">↓ Lättare: ${esc(ez.name)}</button>`:''}${hd?`<button class="chip vchip" data-act="exview" data-ex="${hd.id}">↑ Svårare: ${esc(hd.name)}</button>`:''}</div>`:''}
     ${mt.syn||mt.dx?`<p class="small mut">Hittas även på: ${esc([mt.syn,mt.dx].join(' ').split(' ').slice(0,14).join(', '))}</p>`:''}
-    <div class="card" style="display:grid;gap:8px"><h4>Lägg till i ett program</h4><p class="small mut" style="margin:0">${U.length?'Finns redan hos '+U.map(p=>esc(p.first)).join(', ')+'.':'Används inte i något program än.'} Välj en patient så öppnas programmet, där du justerar dos och sparar.</p><div class="row" style="gap:6px">${S.order.map(pat).map(p=>{const has=U.includes(p);return `<button class="chip vchip" data-act="bankadd" data-ex="${e.id}" data-id="${p.id}" ${has?'disabled':''}>${has?'✓ ':'+ '}${esc(p.first)}</button>`}).join('')}</div></div>
+    <div class="card" style="display:grid;gap:8px"><h3 class="h4">Lägg till i ett program</h3><p class="small mut" style="margin:0">${U.length?'Finns redan hos '+U.map(p=>esc(p.first)).join(', ')+'.':'Används inte i något program än.'} Välj en patient så öppnas programmet, där du justerar dos och sparar.</p><div class="row" style="gap:6px">${S.order.map(pat).map(p=>{const has=U.includes(p);return `<button class="chip vchip" data-act="bankadd" data-ex="${e.id}" data-id="${p.id}" ${has?'disabled':''}>${has?'✓ ':'+ '}${esc(p.first)}</button>`}).join('')}</div></div>
     ${e.custom?`<div class="row"><button class="btn sm" data-act="exedit" data-ex="${e.id}">${IC.edit.replace('<svg','<svg width="18" height="18"')}Ändra övningen</button><button class="btn sm" data-act="exdel" data-ex="${e.id}" style="color:var(--co)">Ta bort</button></div>`:''}`}
   if(m.type==='newex'){const n=ui.nx;t=n.id?'Ändra egen övning':'Ny egen övning';const poses=[['squat','Knäböj'],['lunge','Utfall'],['stepUp','Trappsteg'],['kneeExt','Sittande'],['balance','Balans'],['calf','Tåhävning'],['bridge','Liggande rygg'],['plank','Planka'],['sideLeg','Sidoliggande'],['armRaise','Armlyft'],['wallPush','Mot vägg'],['chin','Nacke']];
     b=`<p class="small mut">${n.id?'Ändringarna gäller i alla program där övningen används.':ui.draft&&p?'Övningen läggs till i '+esc(p.first)+'s program och sparas i din övningsbank, så att du kan använda den för alla patienter.':'Övningen sparas i din övningsbank och kan användas för alla patienter.'}</p>
@@ -1103,7 +1112,7 @@ function renderModal(){const m=ui.modal;if(!m){$modal.innerHTML='';return}
     <div class="card" style="display:grid;gap:10px"><div><label class="lab" for="nx-steps">Så gör du *</label><p class="small mut" style="margin:0 0 6px">Ett steg per rad. Skriv som du skulle säga det till patienten.</p><textarea id="nx-steps" data-in="nx" data-k="steps" placeholder="Stå med fötterna höftbrett isär.&#10;Gå långsamt bakåt tio steg.&#10;Vänd och gå tillbaka.">${esc(n.steps)}</textarea></div>
     <details class="more"${n.tip||n.dont||n.why?' open':''}><summary>Fler fält (valfritt)</summary><div style="display:grid;gap:10px;margin-top:6px"><div><label class="lab" for="nx-tip">Tänk på</label><input type="text" id="nx-tip" data-in="nx" data-k="tip" value="${esc(n.tip)}" placeholder="T.ex. Titta framåt, inte ner i golvet"></div><div><label class="lab" for="nx-dont">Undvik</label><input type="text" id="nx-dont" data-in="nx" data-k="dont" value="${esc(n.dont)}" placeholder="T.ex. Släpa inte fötterna"></div><div><label class="lab" for="nx-why">Varför den här övningen?</label><input type="text" id="nx-why" data-in="nx" data-k="why" value="${esc(n.why)}" placeholder="T.ex. Tränar balans och koordination"></div></div></details></div>
     <button class="btn pri full" data-act="nxsave" style="min-height:56px">${IC.check.replace('<svg','<svg width="20" height="20"')} ${n.id?'Spara ändringarna':ui.draft?'Spara och lägg till i programmet':'Spara i övningsbanken'}</button><p class="small mut" style="text-align:center">* måste fyllas i</p>`}
-  if(m.type==='painpick'){const f=ui.pform;t='Beskriv din smärta';b=`<p class="mut">Skickas med ditt meddelande, så att Erik ser hur och var det gör ont utan att du behöver komma in.</p><div class="card"><h4>Hur ont har du just nu?</h4><p class="small mut">0 = ingen smärta, 10 = värsta tänkbara</p>${vasPicker(f)}${f.pain>0?painPicker(f):''}</div><button class="btn pri full" data-act="painok" style="min-height:56px" ${f.pain==null?'disabled':''}>Bifoga till meddelandet</button>`}
+  if(m.type==='painpick'){const f=ui.pform;t='Beskriv din smärta';b=`<p class="mut">Skickas med ditt meddelande, så att Erik ser hur och var det gör ont utan att du behöver komma in.</p><div class="card"><h3 class="h4">Hur ont har du just nu?</h3><p class="small mut">0 = ingen smärta, 10 = värsta tänkbara</p>${vasPicker(f)}${f.pain>0?painPicker(f):''}</div><button class="btn pri full" data-act="painok" style="min-height:56px" ${f.pain==null?'disabled':''}>Bifoga till meddelandet</button>`}
   if(m.type==='msginfo'){t='Innan du skriver';b=`<div class="note" style="font-size:1.08rem"><strong>Meddelanden är till för viktiga frågor</strong> om din träning, till exempel om en övning gör ont eller om du är osäker på hur den görs.</div>
     <p><strong>Erik svarar vanligtvis inom 2 arbetsdagar</strong> (vardagar). Ibland går det fortare.</p><p>Har du många frågor? Ett telefonmöte går ofta snabbare.</p><div class="note co"><strong>Akut?</strong> Ring 1177 för sjukvårdsrådgivning eller 112 vid nödläge. Vänta inte på svar här.</div>
     <button class="btn pri full" data-act="ack">Jag förstår, skriv meddelande</button><button class="btn full" data-act="book">Boka telefonmöte i stället</button>`}
@@ -1112,7 +1121,7 @@ function renderModal(){const m=ui.modal;if(!m){$modal.innerHTML='';return}
   if(m.type==='journal'){t='Exportera till journal';b=`<p class="small mut">Kopiera och klistra in i journalsystemet. Texten är skriven för att kunna användas som underlag vid en uppföljning utan återbesök.</p><div class="row" style="gap:6px"><button class="chip vchip" data-act="jopt" data-k="notes" aria-pressed="${ui.jopt.notes}">Ta med mina anteckningar</button><button class="chip vchip" data-act="jopt" data-k="flags" aria-pressed="${ui.jopt.flags}">Ta med patientens flaggor</button></div><textarea id="jtext" readonly style="min-height:260px">${esc(journalText(p))}</textarea><button class="btn pri" data-act="copy" data-src="jtext">Kopiera text</button>`}
   if(m.type==='copyfb'){t='Feedback som tabell';b=`<p class="small mut">Tabbseparerad text, klistra in i Excel eller Google Kalkylark.</p><textarea id="fbtext" readonly style="min-height:220px">${esc(fbTable())}</textarea><button class="btn pri" data-act="copy" data-src="fbtext">Kopiera</button>`}
   if(m.type==='reset'){t='Återställa demodata?';b=`<p>Alla pass, program och meddelanden du har ändrat i testet tas bort och exempeldatan kommer tillbaka. Inskickad feedback påverkas inte.</p><div class="row"><button class="btn co" data-act="doreset">Återställ</button><button class="btn" data-act="close">Avbryt</button></div>`}
-  hydrateLater();$modal.innerHTML=`<div class="back"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mt"><header><h3 id="mt">${esc(t)}</h3><button class="x" data-act="close" aria-label="Stäng">×</button></header>${b}</div></div>`;
+  hydrateLater();$modal.innerHTML=`<div class="back"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mt"><div class="shead"><h2 id="mt" class="mtitle">${esc(t)}</h2><button class="x" data-act="close" aria-label="Stäng">×</button></div>${b}</div></div>`;
 }
 function journalText(p){const a=adherence(p),pi=painInfo(p);const L=inRange(p,a.from,TODAY);const ar={},ty={},ef={};L.forEach(l=>{(l.area||[]).forEach(x=>ar[x]=(ar[x]||0)+1);(l.type||[]).forEach(x=>ty[x]=(ty[x]||0)+1);if(l.effort)ef[l.effort]=(ef[l.effort]||0)+1});
   const F=flags(p,14);
@@ -1149,7 +1158,15 @@ function after(){hydrateVideos();if(ro)ro.disconnect();ro=new ResizeObserver(es=
 
 /* ---------- actions ---------- */
 const $toast=document.getElementById('toast');let tT;
-const toast=msg=>{$toast.textContent=msg;$toast.hidden=false;clearTimeout(tT);tT=setTimeout(()=>$toast.hidden=true,3400)};
+const toast=(msg,undo)=>{$toast.innerHTML='';$toast.append(document.createTextNode(msg));if(undo){const b=document.createElement('button');b.className='tundo';b.textContent='Ångra';b.onclick=()=>{undo();$toast.hidden=true};$toast.append(b)}$toast.hidden=false;clearTimeout(tT);tT=setTimeout(()=>$toast.hidden=true,undo?6000:3400)};
+function confirmBox(o){ui.modal={type:'confirm',...o};renderModal()}
+const formSnap=()=>JSON.stringify(ui.form&&{i:ui.form.items,p:ui.form.pain,a:ui.form.area,t:ui.form.type,n:ui.form.note,e:ui.form.effort,d:ui.form.date});
+function requestClose(){const m=ui.modal;if(!m)return;if(m.type==='confirm'){act('cfno',{});return}const back=m;const plain=()=>{stopRun();ui.modal=null;renderModal()};
+  if(m.type==='log'&&(m.fromRun||formSnap()!==ui.formOrig)){confirmBox({title:'Spara passet?',text:'Du har fyllt i passet men inte sparat det.',yesL:'Spara passet',yes:()=>act('savelog',{}),altL:'Stäng utan att spara',alt:()=>{ui.modal=null;renderModal()},noL:'Fortsätt fylla i',back});return}
+  if(m.type==='run'&&ui.run&&ui.run.i<prog(pat(ui.pid)).length&&Object.keys(ui.run.done).length){stopRun();ui.run.ticking=false;confirmBox({title:'Avsluta passet?',text:'Du har gjort en del av passet. Vill du logga det du har gjort?',yesL:'Logga det jag gjort',yes:()=>act('runlog',{}),altL:'Avsluta utan att logga',alt:()=>{ui.modal=null;renderModal()},noL:'Fortsätt träna',back});return}
+  if(m.type==='newex'&&ui.nx&&(ui.nx.name.trim()||ui.nx.steps.trim()||ui.nx.gal.length)&&!ui.nx.id){confirmBox({title:'Kasta övningen?',text:'Det du har fyllt i sparas inte.',yesL:'Kasta övningen',yes:()=>{ui.modal=null;renderModal()},noL:'Fortsätt redigera',back});return}
+  plain()}
+function guardDraft(go){if(ui.view==='fysio'&&ui.dirty&&ui.draft&&ui.fpid){const p=pat(ui.fpid);confirmBox({title:'Osparade ändringar',text:`Du har ändrat ${p.first}s program men inte sparat.`,yesL:`Spara och skicka till ${p.first}`,yes:()=>{act('dsave',{id:p.id});go()},altL:'Släng ändringarna',alt:()=>{ui.dirty=false;ui.draft=null;go()},noL:'Stanna kvar'});return true}return false}
 function formFor(p,k){const l=logOf(p,k);const items={};for(const it of prog(p)){const o=l&&l.items[it.ex];items[it.ex]=o?{...o,sr:Array.isArray(o.sr)?[...o.sr]:Array(o.sets||0).fill(o.reps),open:!!(o.flag||o.comment)}:{sr:Array(it.sets).fill(it.reps),flag:null,comment:'',open:false}}
   return {date:k,view:'fram',items,pain:l?l.pain:null,area:l?[...(l.area||[])]:[],type:l?[...(l.type||[])]:[],note:l?l.note||'':'',noteOpen:!!(l&&l.note),effort:l?l.effort||null:null}}
 function keepScroll(fn){const y=window.scrollY;const sh=document.querySelector('.sheet');const sy=sh?sh.scrollTop:0;fn();window.scrollTo(0,y);const s2=document.querySelector('.sheet');if(s2)s2.scrollTop=sy}
@@ -1173,9 +1190,9 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   case 'instr':ui.modal={type:'instr',ex:d.ex};renderModal();break;
   case 'pnadd':{const t=document.getElementById('pnote').value.trim();if(!t){toast('Skriv något först.');document.getElementById('pnote').focus();return}
     if(!p.pnotes)p.pnotes={};(p.pnotes[d.ex]=p.pnotes[d.ex]||[]).push({text:t,t:Date.now()});save();keepScroll(()=>{render()});toast('Anteckningen är sparad.');break}
-  case 'pndel':{pnotes(p,d.ex).splice(+d.i,1);save();keepScroll(()=>{render()});break}
+  case 'pndel':{const N=pnotes(p,d.ex),i=+d.i,old=N.splice(i,1)[0];save();keepScroll(()=>{render()});toast('Anteckningen är borttagen.',()=>{N.splice(i,0,old);save();keepScroll(render)});break}
   case 'askex':ui.modal=null;ui.ptab='msg';render();openCompose(p,'Fråga om '+EXM[d.ex].name.toLowerCase()+': ');break;
-  case 'openlog':ui.form=formFor(p,TK);ui.modal={type:'log'};renderModal();break;
+  case 'openlog':ui.form=formFor(p,TK);ui.formOrig=formSnap();ui.modal={type:'log'};renderModal();break;
   case 'fdate':mod(()=>{ui.form=formFor(p,d.v)});break;
   case 'fother':mod(()=>{const k=ui.form.date===TK?key(addD(TODAY,-1)):ui.form.date;ui.form=formFor(p,k);ui.form.other=true});break;
   case 'fsr':mod(()=>{const x=ui.form.items[d.ex];const sek=EXM[d.ex].unit==='sek';x.sr[+d.k]=Math.max(0,Math.min(300,x.sr[+d.k]+(+d.d)*(sek?5:1)))});break;
@@ -1198,7 +1215,10 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
     let l=logOf(p,f.date);if(!l){l={date:f.date};p.logs.push(l);p.logs.sort((a,b)=>a.date<b.date?-1:1)}
     Object.assign(l,{items,pain:f.pain,area:f.area,type:f.type,note:(f.note||'').trim(),effort:f.effort||null});save();ui.modal=null;render();
     const n=weekDone(p),per=p.program.perWeek;toast(n>=per?`Pass sparat! Veckans mål på ${per} pass är nått.`:`Pass sparat! ${n} av ${per} pass den här veckan.`);break}
-  case 'close':stopRun();ui.modal=null;renderModal();break;
+  case 'close':if(ui.modal&&ui.modal.type==='confirm'){act('cfno',{});break}requestClose();break;
+  case 'cfyes':{const c=ui.modal;ui.modal=c.back||null;c.yes();break}
+  case 'cfalt':{const c=ui.modal;ui.modal=c.back||null;c.alt();break}
+  case 'cfno':{const c=ui.modal;ui.modal=c.back||null;if(c.no)c.no();else renderModal();break}
   case 'dplay':DEMO.paused=!DEMO.paused;keepScroll(()=>{ui.modal?renderModal():render()});break;
   case 'dslow':DEMO.slow=!DEMO.slow;keepScroll(()=>{ui.modal?renderModal():render()});break;
   case 'week':ui.modal={type:'week',w:d.v};renderModal();break;
@@ -1211,7 +1231,7 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   case 'runset':runSetDone(p);break;
   case 'runall':{stopRun();const r=ui.run,it=prog(p)[r.i],sek=EXM[it.ex].unit==='sek';const dn=r.done[it.ex]||(r.done[it.ex]={sets:0,repSum:0});const rest=it.sets-dn.sets;if(rest>0){dn.sets+=rest;dn.repSum+=rest*(sek?it.reps:r.reps);for(let k=0;k<rest;k++)(dn.list=dn.list||[]).push(k===0&&!sek?r.reps:it.reps)}r.flash=true;r.i++;nextEx(p);renderModal();r.flash=false;const sh=document.querySelector('.sheet');if(sh)sh.scrollTop=0;break}
   case 'runskip':{stopRun();ui.run.i++;nextEx(p);renderModal();break}
-  case 'runlog':{const r=ui.run;ui.form=formFor(p,TK);for(const it of prog(p)){const dn=r.done[it.ex];ui.form.items[it.ex].sr=dn&&dn.list?[...dn.list]:[]}ui.form.fromRun=true;ui.modal={type:'log'};renderModal();break}
+  case 'runlog':{const r=ui.run;ui.form=formFor(p,TK);for(const it of prog(p)){const dn=r.done[it.ex];ui.form.items[it.ex].sr=dn&&dn.list?[...dn.list]:[]}ui.form.fromRun=true;ui.formOrig=null;ui.modal={type:'log',fromRun:true};renderModal();break}
   case 'compose':openCompose(p,'');break;
   case 'quick':if(d.v==='video')openCompose(p,'Här är en video på när jag gör övningen. Gör jag rätt? ');else if(d.v==='ont')openCompose(p,'',true);else openCompose(p,'Jag är osäker på hur jag ska göra ');break;
   case 'ack':ui.msgAck=true;ui.modal=null;ui.composer=true;render();if(ui.pendingPain){ui.pendingPain=false;ui.pform={pain:null,area:[],type:[],view:'fram'};ui.modal={type:'painpick'};renderModal()}else setTimeout(()=>{const t=document.getElementById('ptext');if(t){t.focus();t.setSelectionRange(t.value.length,t.value.length)}},30);break;
@@ -1224,10 +1244,10 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   case 'book':ui.modal={type:'book'};renderModal();break;
   case 'slot':mod(()=>{ui.modal.slot=d.v});break;
   case 'dobook':p.booking=ui.modal.slot;ui.modal=null;save();render();toast('Telefonmötet är bokat.');break;
-  case 'fpage':ui.q='';ui.fpage=d.v;ui.fpid=null;ui.draft=null;ui.dirty=false;render();window.scrollTo(0,0);break;
-  case 'fsel':ui.q='';ui.editI=null;ui.fpid=d.id;ui.ftab=d.tab||'uppf';ui.draft=null;ui.dirty=false;ui.q='';ui.area='Alla';render();window.scrollTo(0,0);break;
-  case 'fback':ui.fpid=null;ui.draft=null;ui.dirty=false;if(ui.fpage==='oversikt')ui.fpage='patienter';render();break;
-  case 'ftab':ui.editI=null;ui.ftab=d.v;if(d.v!=='prog'){ui.draft=null;ui.dirty=false}render();break;
+  case 'fpage':if(guardDraft(()=>act('fpage',d)))break;ui.q='';ui.fpage=d.v;ui.fpid=null;ui.draft=null;ui.dirty=false;render();window.scrollTo(0,0);break;
+  case 'fsel':if(ui.fpid!==d.id&&guardDraft(()=>act('fsel',d)))break;ui.q='';ui.editI=null;ui.fpid=d.id;ui.ftab=d.tab||'uppf';ui.draft=null;ui.dirty=false;ui.q='';ui.area='Alla';render();window.scrollTo(0,0);break;
+  case 'fback':if(guardDraft(()=>act('fback',d)))break;ui.fpid=null;ui.draft=null;ui.dirty=false;if(ui.fpage==='oversikt')ui.fpage='patienter';render();break;
+  case 'ftab':if(d.v!=='prog'&&guardDraft(()=>act('ftab',d)))break;ui.editI=null;ui.ftab=d.v;if(d.v!=='prog'){ui.draft=null;ui.dirty=false}render();break;
   case 'fmsg':ui.fmsg=d.id;render();break;
   case 'fquick':{const t=document.getElementById('ftext');t.value=d.v;t.focus();break}
   case 'dper':ui.draft.perWeek=Math.max(1,Math.min(7,ui.draft.perWeek+(+d.d)));dr();break;
@@ -1256,7 +1276,7 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   case 'favm':S.fav=S.fav.includes(d.ex)?S.fav.filter(x=>x!==d.ex):[...S.fav,d.ex];save();keepScroll(render);break;
   case 'bankadd':{const pp=pat(d.id);ui.modal=null;ui.fpid=pp.id;ui.ftab='prog';ui.editI=null;ui.draft=clone(pp.program);ui.draft.weeks=pp.weeks;ui.draft.painLimit=pp.painLimit;const e=EXM[d.ex];ui.draft.items.push({ex:d.ex,sets:3,reps:e.unit==='sek'?30:10,note:''});ui.dirty=true;S.recent=[d.ex,...S.recent.filter(x=>x!==d.ex)].slice(0,8);save();ui.q='';render();window.scrollTo(0,0);toast(e.name+' är tillagd i '+pp.first+'s program. Justera dosen och spara.');break}
   case 'exedit':{const e=EXM[d.ex];ui.nx={id:e.id,name:e.name,area:e.area,unit:e.unit,pose:e.pose||'squat',gal:clone(e.gallery||[]).map(x=>x.key&&VURL[x.key]?{...x,url:VURL[x.key]}:x),steps:e.steps.join('\n'),tip:e.tip||'',dont:e.dont||'',why:e.why||''};ui.modal={type:'newex'};renderModal();break}
-  case 'exdel':{const U=usedBy(d.ex);if(U.length){toast('Övningen används hos '+U.map(p=>p.first).join(', ')+'. Ta bort den från programmet först.');return}((EXM[d.ex]&&EXM[d.ex].gallery)||[]).forEach(x=>{if(x.key)IDB.del(x.key).catch(()=>{})});const i=EX.findIndex(e=>e.id===d.ex);if(i>=0)EX.splice(i,1);S.custom=S.custom.filter(e=>e.id!==d.ex);S.fav=S.fav.filter(x=>x!==d.ex);delete EXM[d.ex];save();ui.modal=null;render();toast('Övningen är borttagen.');break}
+  case 'exdel':{if(!d.ok){const e=EXM[d.ex];confirmBox({title:'Ta bort övningen?',text:`${e.name} tas bort från din övningsbank. Det går inte att ångra.`,yesL:'Ta bort',yes:()=>act('exdel',{ex:d.ex,ok:1}),noL:'Avbryt',back:ui.modal});break}const U=usedBy(d.ex);if(U.length){toast('Övningen används hos '+U.map(p=>p.first).join(', ')+'. Ta bort den från programmet först.');return}((EXM[d.ex]&&EXM[d.ex].gallery)||[]).forEach(x=>{if(x.key)IDB.del(x.key).catch(()=>{})});const i=EX.findIndex(e=>e.id===d.ex);if(i>=0)EX.splice(i,1);S.custom=S.custom.filter(e=>e.id!==d.ex);S.fav=S.fav.filter(x=>x!==d.ex);delete EXM[d.ex];save();ui.modal=null;render();toast('Övningen är borttagen.');break}
   case 'facet':{const A=ui.fac[d.k];ui.fac[d.k]=A.includes(d.v)?A.filter(x=>x!==d.v):[...A,d.v];ui.facOpen=true;keepScroll(render);break}
   case 'libclear':ui.q='';ui.area='Alla';ui.fac={pos:[],eq:[],lvl:[],goal:[]};keepScroll(render);break;
   case 'fav':{S.fav=S.fav.includes(d.ex)?S.fav.filter(x=>x!==d.ex):[...S.fav,d.ex];save();const y=document.getElementById('lib').scrollTop;document.getElementById('lib').innerHTML=libList();document.getElementById('lib').scrollTop=y;toast(S.fav.includes(d.ex)?EXM[d.ex].name+' är en favorit.':'Borttagen från favoriter.');break}
@@ -1277,7 +1297,7 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   case 'purl':{const v=document.getElementById('pu'+d.i).value.trim();const it=ui.draft.items[+d.i];const id=ytId(v);if(id)(it.gallery=it.gallery||[]).push({kind:'yt',id});else if(/^https:\/\/\S+\.\S+/.test(v))(it.gallery=it.gallery||[]).push({kind:'link',url:v});else{toast('Klistra in en länk som börjar med https://');return}dr();toast('Videon är tillagd. Glöm inte att spara programmet.');break}
   case 'jopt':ui.jopt[d.k]=!ui.jopt[d.k];keepScroll(renderModal);break;
   case 'fnadd':{const t=document.getElementById('fnote').value.trim();if(!t){toast('Skriv något först.');return}(p.fnotes=p.fnotes||[]).push({text:t,t:Date.now()});save();keepScroll(render);toast('Anteckningen är sparad.');break}
-  case 'fndel':p.fnotes.splice(+d.i,1);save();keepScroll(render);break;
+  case 'fndel':{const i=+d.i,old=p.fnotes.splice(i,1)[0];save();keepScroll(render);toast('Anteckningen är borttagen.',()=>{p.fnotes.splice(i,0,old);save();keepScroll(render)});break}
   case 'journal':ui.modal={type:'journal'};renderModal();break;
   case 'copy':{const t=document.getElementById(d.src);t.select();(navigator.clipboard?navigator.clipboard.writeText(t.value):Promise.reject()).then(()=>toast('Kopierat.')).catch(()=>{try{document.execCommand('copy');toast('Kopierat.')}catch(e){toast('Markera texten och kopiera manuellt.')}});break}
   case 'fbset':ui.fb[d.k]=ui.fb[d.k]===d.v?null:d.v;keepScroll(render);break;
@@ -1294,9 +1314,10 @@ async function sendFb(){const f=ui.fb;const has=f.role||Object.keys(f.tasks).len
   ui.fb={tasks:{}};render();window.scrollTo(0,0);toast(shared?'Tack! Din feedback är skickad.':'Tack! Feedbacken är sparad i den här webbläsaren.')}
 
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled)return;act(b.dataset.act,b.dataset,b)});
-$modal.addEventListener('click',e=>{if(e.target.classList&&e.target.classList.contains('back')){if(ui.modal&&ui.modal.type==='run')return;stopRun();ui.modal=null;renderModal()}},true);
-document.addEventListener('keydown',e=>{if(e.key==='Escape')stopRun();if(e.target.id==='q'&&e.key==='Enter'){e.preventDefault();const id=ui.libFirst;if(!id)return;if(ui.libMode==='bank'){act('exview',{ex:id});return}if(ui.draft.items.some(x=>x.ex===id)){toast(EXM[id].name+' finns redan i programmet.');return}ui.q='';act('dadd',{ex:id});const q=document.getElementById('q');if(q){q.value='';q.focus()}return}
-  if(e.key==='Escape'&&ui.modal){ui.modal=null;renderModal()}
+$modal.addEventListener('click',e=>{if(e.target.classList&&e.target.classList.contains('back')){e.stopPropagation();requestClose()}},true);
+document.addEventListener('keydown',e=>{if(e.target.id==='q'&&e.key==='Enter'){e.preventDefault();const id=ui.libFirst;if(!id)return;if(ui.libMode==='bank'){act('exview',{ex:id});return}if(ui.draft.items.some(x=>x.ex===id)){toast(EXM[id].name+' finns redan i programmet.');return}ui.q='';act('dadd',{ex:id});const q=document.getElementById('q');if(q){q.value='';q.focus()}return}
+  if(e.key==='Escape'&&ui.modal){requestClose();return}
+  if(e.key==='Tab'&&ui.modal){const sh=document.querySelector('.sheet');if(sh){const f=[...sh.querySelectorAll('button,a[href],input,textarea,select,[tabindex]:not([tabindex="-1"])')].filter(x=>!x.disabled&&x.offsetParent!==null);if(f.length){const a=f[0],z=f[f.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}}}}
   const r=e.target.closest&&e.target.closest('[role=button][data-act]');if(r&&(e.key==='Enter'||e.key===' ')){e.preventDefault();r.dispatchEvent(new MouseEvent('click',{bubbles:true}))}});
 document.addEventListener('input',e=>{const t=e.target;const k=t.dataset&&t.dataset.in;if(!k)return;
   if(k==='q'){ui.q=t.value;document.getElementById('lib').innerHTML=libList()}
@@ -1328,7 +1349,7 @@ document.addEventListener('change',e=>{const t=e.target;
   if(t.classList&&t.classList.contains('chatt')&&t.files&&t.files.length){const who=t.dataset.who;ui.atts=ui.atts||{};const A=ui.atts[who]=ui.atts[who]||[];let n=0,skip=0;
     for(const f of t.files){const img=/^image\//.test(f.type),vid=/^video\//.test(f.type);if(!img&&!vid||(img&&f.size>15e6)||(vid&&f.size>300e6)){skip++;continue}const k='ch_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);const u=URL.createObjectURL(f);VURL[k]=u;IDB.put(k,f).catch(()=>toast('Filen kunde inte sparas i den här webbläsaren.'));A.push({kind:img?'img':'file',key:k,name:f.name||(img?'Bild':'Video'),url:u});n++}
     keepTexts(render);if(skip)toast(skip+' fil'+(skip>1?'er':'')+' hoppades över (fel format eller över 300 MB).')}});
-function route(){const h=location.hash.slice(1);ui.view=['patient','fysio','feedback'].includes(h)?h:'start';ui.modal=null;render();window.scrollTo(0,0)}
+function route(){if(ui.view==='fysio'&&ui.dirty&&ui.draft&&location.hash.slice(1)!=='fysio'){const h=location.hash;history.replaceState(null,'','#fysio');guardDraft(()=>{location.hash=h})||0;return}const h=location.hash.slice(1);ui.view=['patient','fysio','feedback'].includes(h)?h:'start';ui.modal=null;render();window.scrollTo(0,0)}
 window.addEventListener('hashchange',route);
 route();
 (async()=>{try{if(!window.claude||!window.claude.use)return;const db=await window.claude.use('db');if(!db)return;ui.db=db;
