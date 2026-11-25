@@ -260,6 +260,21 @@ table.pt tr.rowlink:hover td{background:var(--tl)}
 .exl:last-child{border-bottom:0}
 .libgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;max-height:620px;overflow:auto;padding:2px}
 .libt{border:1.5px solid var(--line);border-radius:14px;background:var(--card);padding:8px;display:grid;gap:6px;text-align:left;position:relative}
+.search{position:relative}
+.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--mut);pointer-events:none}
+.search input{padding-left:42px;min-height:52px;font-size:1.02rem}
+.libmain{border:0;background:none;padding:0;display:grid;gap:5px;text-align:left;width:100%;color:inherit;cursor:pointer;align-content:start}
+.libt.on{border-color:var(--t);background:var(--tl)}
+.star{position:absolute;top:6px;left:6px;width:36px;height:36px;border-radius:50%;border:0;background:var(--card);display:grid;place-items:center;color:var(--mut);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.star svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}
+.star[aria-pressed=true]{color:var(--am)}.star[aria-pressed=true] svg{fill:currentColor}
+.lmeta{font-size:.78rem;color:var(--mut)}
+.why{font-size:.76rem;color:var(--t);font-weight:700;background:var(--tl2);border-radius:8px;padding:2px 7px;justify-self:start}
+.libsec,.libinfo{grid-column:1/-1;margin:4px 0 0}
+.libinfo{font-size:.9rem;color:var(--mut)}
+.facets summary{cursor:pointer;font-weight:700;color:var(--t);min-height:40px;display:flex;align-items:center}
+.facgrp{display:grid;gap:4px;margin-top:8px}
+.vchip{min-height:38px;padding:4px 12px;font-size:.88rem}
 .libt.new{border-style:dashed;border-color:var(--t);justify-items:center;align-content:center;text-align:center;color:var(--t);min-height:150px}
 .libt.new .plus{width:44px;height:44px;border-radius:50%;background:var(--tl2);display:grid;place-items:center;font-size:1.6rem;font-weight:800}
 .posegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
@@ -461,7 +476,7 @@ function painPicture(p,n=14){const from=key(addD(TODAY,-n));const L=p.logs.filte
   <p class="small">Senast ${fmt(fromKey(last.d))}${last.msg?' (i meddelande)':''}: VAS ${last.pain}${last.area.length?', '+esc(last.area.join(', ')):''}${last.type.length?', '+esc(last.type.join(', ').toLowerCase()):''}.</p></div></div>`}
 
 /* ----- feedback ----- */
-const TASKS=[['f1','Fysioterapeut','Skapa ett program med 3 övningar åt Lisa: välj övningar, set, repetitioner och hur många pass i veckan.'],['f2','Fysioterapeut','Ta reda på hur det går för Olof. Har han tränat, och hur har smärtan ändrats?'],['f3','Fysioterapeut','Lägg till en egen övning som inte finns i biblioteket.'],['p1','Patient','Hitta instruktionerna för en av övningarna i ditt pass.'],['p2','Patient','Logga ett pass: hur mycket du gjorde och hur ont du har. Flagga en övning som kändes konstig.'],['p3','Patient','Skriv ett meddelande till din fysioterapeut.'],['p4','Patient','Beskriv din smärta för fysioterapeuten: var det gör ont och hur det känns.'],['p5','Patient','Lägg till en egen anteckning på en övning, något du vill komma ihåg.']];
+const TASKS=[['f1','Fysioterapeut','Skapa ett program med 3 övningar åt Lisa: välj övningar, set, repetitioner och hur många pass i veckan.'],['f2','Fysioterapeut','Ta reda på hur det går för Olof. Har han tränat, och hur har smärtan ändrats?'],['f3','Fysioterapeut','Lägg till en egen övning som inte finns i biblioteket.'],['f4','Fysioterapeut','Hitta en övning genom att söka på en muskel eller diagnos, t.ex. ”quadriceps” eller ”hälsena”.'],['p1','Patient','Hitta instruktionerna för en av övningarna i ditt pass.'],['p2','Patient','Logga ett pass: hur mycket du gjorde och hur ont du har. Flagga en övning som kändes konstig.'],['p3','Patient','Skriv ett meddelande till din fysioterapeut.'],['p4','Patient','Beskriv din smärta för fysioterapeuten: var det gör ont och hur det känns.'],['p5','Patient','Lägg till en egen anteckning på en övning, något du vill komma ihåg.']];
 const RES=['Klarade det','Med lite hjälp','Klarade inte'];
 function vFeedback(){const f=ui.fb;
   const chips=(k,opts)=>opts.map(o=>`<button class="chip" data-act="fbset" data-k="${k}" data-v="${o}" aria-pressed="${f[k]===o}">${o}</button>`).join('');
@@ -531,10 +546,10 @@ const LS='fysi-mvp-6';
 let S=null;try{S=JSON.parse(localStorage.getItem(LS))}catch(e){}
 if(!S||S.v!==6){S=seed();try{for(const k of ['fysi-mvp-5','fysi-mvp-4','fysi-mvp-3','fysi-mvp-2','fysi-mvp-1']){const o=JSON.parse(localStorage.getItem(k));if(o&&o.custom&&o.custom.length&&!S.custom.length)S.custom=o.custom;if(o&&o.fbLocal&&o.fbLocal.length&&!S.fbLocal.length)S.fbLocal=o.fbLocal}}catch(e){}}
 const save=()=>{try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}};
-const ui={view:'start',pid:'olof',ptab:'idag',fpage:'oversikt',fpid:null,ftab:'uppf',fmsg:'anna',draft:null,dirty:false,q:'',area:'Alla',modal:null,form:null,composer:false,prefill:'',att:null,patt:null,fb:{tasks:{}},fbList:null,db:null,fs:0,editI:null};
+const ui={view:'start',pid:'olof',ptab:'idag',fpage:'oversikt',fpid:null,ftab:'uppf',fmsg:'anna',draft:null,dirty:false,q:'',area:'Alla',modal:null,form:null,composer:false,prefill:'',att:null,patt:null,fb:{tasks:{}},fbList:null,db:null,fs:0,editI:null,fac:{pos:[],eq:[],lvl:[],goal:[]},facOpen:false,libFirst:null};
 try{ui.fs=+localStorage.getItem('fysi-fs')||0}catch(e){}
 const pat=id=>S.patients[id];
-if(!S.custom)S.custom=[];
+if(!S.custom)S.custom=[];if(!S.fav)S.fav=['knaboj','bro','armlyft'];if(!S.recent)S.recent=['tahavning','balans','nacke'];
 function loadCustom(){for(const c of S.custom)if(!EXM[c.id]){EX.push(c);EXM[c.id]=c}}
 loadCustom();
 for(const k in POSES)EXM['__p_'+k]={pose:k};
@@ -705,18 +720,77 @@ function fProg(p){if(!ui.draft){ui.draft=clone(p.program);ui.draft.weeks=p.weeks
   const st=(act,v,lab,unit)=>`<div><span class="small" style="font-weight:700">${lab}</span><div class="stepper"><button data-act="${act}" data-d="-1" aria-label="Minska ${lab.toLowerCase()}">−</button><output>${v}</output><button data-act="${act}" data-d="1" aria-label="Öka ${lab.toLowerCase()}">+</button></div><span class="small mut">${unit}</span></div>`;
   const items=D.items.map((it,i)=>{const e=EXM[it.ex];return `<div class="ditem"><div class="pic">${fig(it.ex,false)}</div><div><div class="between"><h3>${esc(e.name)}</h3><span class="tag plain">${esc(e.area)}</span></div><div class="row" style="gap:0"><button class="link small" data-act="dmove" data-i="${i}" data-d="-1" ${i===0?'disabled':''}>↑ Upp</button><button class="link small" data-act="dmove" data-i="${i}" data-d="1" ${i===D.items.length-1?'disabled':''}>↓ Ned</button><button class="link small" data-act="drm" data-i="${i}" style="color:var(--co)">Ta bort</button></div></div>
   <div class="ctl"><div class="row" style="gap:16px"><div><span class="small mut">Set</span><br><div class="stepper"><button data-act="dstep" data-i="${i}" data-f="sets" data-d="-1" aria-label="Färre set">−</button><output>${it.sets}</output><button data-act="dstep" data-i="${i}" data-f="sets" data-d="1" aria-label="Fler set">+</button></div></div><div><span class="small mut">${e.unit==='sek'?'Sekunder':'Repetitioner'}</span><br><div class="stepper"><button data-act="dstep" data-i="${i}" data-f="reps" data-d="-1" aria-label="Färre">−</button><output>${it.reps}</output><button data-act="dstep" data-i="${i}" data-f="reps" data-d="1" aria-label="Fler">+</button></div></div></div>
-  <div><label class="small mut" for="dn${i}">Egen instruktion till ${esc(p.first)} (valfritt)</label><input type="text" id="dn${i}" data-in="dnote" data-i="${i}" value="${esc(it.note)}" placeholder="T.ex. Använd en stol med armstöd"></div>
+  ${variants(it,i)}<div><label class="small mut" for="dn${i}">Egen instruktion till ${esc(p.first)} (valfritt)</label><input type="text" id="dn${i}" data-in="dnote" data-i="${i}" value="${esc(it.note)}" placeholder="T.ex. Använd en stol med armstöd"></div>
   ${ui.editI===i?`<div class="note tl" style="display:grid;gap:8px"><label class="small" for="ds${i}"><strong>Instruktionssteg</strong>, ett steg per rad</label><textarea id="ds${i}" data-in="dsteps" data-i="${i}">${esc((it.steps||e.steps).join('\n'))}</textarea><label class="small" for="dt${i}"><strong>Tänk på</strong></label><input type="text" id="dt${i}" data-in="dtip" data-i="${i}" value="${esc(it.tip||e.tip)}"><div class="row"><button class="btn sm pri" data-act="dedit" data-i="${i}">Klar</button>${it.steps||it.tip?`<button class="link small" data-act="dorig" data-i="${i}">Återställ bibliotekets text</button>`:''}</div></div>`:`<button class="link small" data-act="dedit" data-i="${i}" style="justify-self:start;padding-left:0">Ändra instruktionstext${it.steps||it.tip?' (ändrad för '+esc(p.first)+')':''}</button>`}</div></div>`}).join('');
-  return `<div class="g2" style="grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)"><div class="card" style="align-self:start;display:grid;gap:10px"><div class="between"><h3>Övningsbibliotek</h3><span class="small mut">${EX.length} övningar</span></div><label class="sr" for="q">Sök övning</label><input type="search" id="q" data-in="q" value="${esc(ui.q)}" placeholder="Sök: knä, rygg, balans, axel…"><div class="row" style="gap:6px">${AREAS.map(a=>`<button class="chip" style="padding:6px 12px;min-height:40px" data-act="farea" data-v="${a}" aria-pressed="${ui.area===a}">${a}</button>`).join('')}</div>
-  <div><span class="small mut">Snabbstart med en mall</span><div class="row" style="gap:6px;margin-top:4px">${TPL.map((t,i)=>`<button class="chip" style="min-height:40px;padding:6px 12px" data-act="tpl" data-i="${i}">+ ${t.name}</button>`).join('')}</div></div><div class="libgrid" id="lib">${libList()}</div></div>
+  return `<div class="g2" style="grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)">${libPanel()}
   <div style="display:grid;gap:12px;align-content:start"><div class="between"><h2>Program för ${esc(p.first)}</h2>${ui.dirty?'<span class="tag am">Osparade ändringar</span>':'<span class="tag ok">Sparat</span>'}</div>
   <div class="setgrid">${st('dper',D.perWeek,'Pass per vecka',D.perWeek===1?'Patienten väljer dag':'Patienten väljer dagar')}${st('dweeks',D.weeks,'Programlängd','veckor')}${st('dlimit',D.painLimit,'Smärtgräns','av 10 på VAS')}</div>
   <p class="small mut">Ett pass = alla övningar nedan · ${D.items.length} övningar</p>${items||'<div class="empty">Passet är tomt. Välj övningar i biblioteket eller börja från en mall.</div>'}
   <div class="savebar"><button class="btn pri" data-act="dsave" ${ui.dirty&&D.items.length?'':'disabled'}>Spara och skicka till ${esc(p.first)}</button>${ui.dirty?'<button class="btn" data-act="dundo">Ångra ändringar</button>':''}</div></div></div>`}
-function libList(){const q=ui.q.trim().toLowerCase();const r=EX.filter(e=>(ui.area==='Alla'||e.area===ui.area)&&(!q||q.split(/\s+/).every(w=>(e.name+' '+e.tags+' '+e.area).toLowerCase().includes(w))));
-  const nw=`<button class="libt new" data-act="newex" data-v="${esc(ui.q.trim())}"><span class="plus">+</span><strong class="small">${q?'Skapa ”'+esc(ui.q.trim())+'”':'Skapa egen övning'}</strong><span class="small mut" style="font-size:.8rem">${q?'som egen övning':'Om den inte finns här'}</span></button>`;
-  if(!r.length)return nw+'<p class="mut small" style="grid-column:1/-1">Ingen övning i biblioteket matchar. Skapa den som egen övning, eller prova ett annat ord.</p>';
-  return nw+r.map(e=>{const inP=ui.draft&&ui.draft.items.some(it=>it.ex===e.id);return `<button class="libt" data-act="${inP?'dremove':'dadd'}" data-ex="${e.id}" aria-pressed="${inP}"><div class="pic">${fig(e.id,false)}</div><strong class="small">${esc(e.name)}</strong><span class="small mut" style="font-size:.8rem">${esc(e.area)}${e.custom?' · <b style="color:var(--ami)">Egen</b>':''}</span>${inP?`<span class="ck">${IC.check}</span>`:''}</button>`}).join('')}
+
+/* ----- smart exercise library: metadata, search, facets, favourites, variants ----- */
+const META={
+knaboj:{pos:'Stående',eq:['Stol'],lvl:2,goal:['Styrka'],syn:'squat sit to stand uppresning resa sig från stol quadriceps quads gluteus lårmuskel sätesmuskel benböj',dx:'knäartros artros gonartros höftartros patellofemoral främre knäsmärta korsband acl menisk knäprotes protes',easier:'knastrack',harder:'utfall'},
+knastrack:{pos:'Sittande',eq:['Stol'],lvl:1,goal:['Styrka'],syn:'quadriceps quads vmo knäextension extension lårets framsida benspark sträckning',dx:'knäartros gonartros knäprotes protes korsband acl menisk',easier:null,harder:'knaboj'},
+balans:{pos:'Stående',eq:['Ingen'],lvl:1,goal:['Balans'],syn:'enbensstående ett ben proprioception stabilitet fallrisk',dx:'fallprevention fall äldre fotledsdistorsion stukning ankel yrsel',easier:null,harder:'utfall'},
+tahavning:{pos:'Stående',eq:['Ingen'],lvl:1,goal:['Styrka'],syn:'heel raise calf raise gastrocnemius soleus vadmuskel vad',dx:'hälsena achilles tendinopati hälseneinflammation fotled fallprevention',easier:null,harder:'trappsteg'},
+bro:{pos:'Liggande',eq:['Ingen'],lvl:1,goal:['Styrka','Stabilitet'],syn:'bridge bäckenlyft höftlyft hip thrust gluteus säte rumpa',dx:'ländryggssmärta lumbago ryggont höftartros',easier:null,harder:'planka'},
+planka:{pos:'Liggande',eq:['Ingen'],lvl:2,goal:['Stabilitet'],syn:'plank core bål mage magmuskler stabilitet',dx:'ländryggssmärta lumbago ryggont',easier:'bro',harder:null},
+benlyft:{pos:'Liggande',eq:['Ingen'],lvl:1,goal:['Styrka'],syn:'abduktion höftabduktion gluteus medius glut med sidliggande',dx:'höftartros trokanterit ländryggssmärta patellofemoral knäsmärta',easier:null,harder:'utfall'},
+armlyft:{pos:'Stående',eq:['Ingen'],lvl:1,goal:['Rörlighet','Styrka'],syn:'flexion axelflexion frontlyft skulderlyft',dx:'impingement subakromiell axelsmärta frusen skuldra frozen shoulder rotatorcuff',easier:null,harder:'vaggarm'},
+vaggarm:{pos:'Stående',eq:['Vägg'],lvl:1,goal:['Styrka'],syn:'push up armhävning serratus bröstmuskel triceps',dx:'impingement subakromiell axelsmärta axelinstabilitet',easier:'armlyft',harder:null},
+nacke:{pos:'Sittande',eq:['Ingen'],lvl:1,goal:['Rörlighet'],syn:'chin tuck retraktion nackretraktion djupa nackflexorer hållning',dx:'nacksmärta whiplash spänningshuvudvärk huvudvärk',easier:null,harder:null},
+utfall:{pos:'Stående',eq:['Ingen'],lvl:3,goal:['Styrka','Balans'],syn:'lunge utfallsteg split squat',dx:'korsband acl idrottsskada knä höft',easier:'knaboj',harder:null},
+trappsteg:{pos:'Stående',eq:['Trappsteg'],lvl:2,goal:['Styrka','Balans'],syn:'step up uppkliv trappa trappgång',dx:'knäartros knäprotes korsband acl fallprevention',easier:'knaboj',harder:'utfall'}};
+const LVL=['','Lätt','Medel','Svår'];
+const FAC=[['pos','Utgångsläge',['Stående','Sittande','Liggande']],['eq','Utrustning',['Ingen','Stol','Vägg','Trappsteg']],['lvl','Nivå',['Lätt','Medel','Svår']],['goal','Mål',['Styrka','Rörlighet','Balans','Stabilitet']]];
+const POSPOS={kneeExt:'Sittande',chin:'Sittande',bridge:'Liggande',plank:'Liggande',sideLeg:'Liggande'};
+const meta=e=>META[e.id]||{pos:POSPOS[e.pose]||'Stående',eq:['Ingen'],lvl:1,goal:[],syn:'',dx:'',easier:null,harder:null};
+const TPLKW=['knäartros artros gonartros knä knäprotes','ländrygg ländryggssmärta lumbago ryggont rygg','axel impingement subakromiell axelsmärta','balans fallprevention fall äldre yrsel'];
+const nrm=s=>s.toLowerCase().replace(/[åä]/g,'a').replace(/ö/g,'o').replace(/é/g,'e');
+const STOP=new Set(['for','och','i','pa','med','ovning','ovningar','en','ett','av','vid','till','som','mot','det','den']);
+function lev(a,b){const m=a.length,n=b.length;let p=Array.from({length:n+1},(_,j)=>j);for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[n]}
+function tokMatch(q,t){if(t===q)return 1;if(q.length===3&&t.length===3&&q.slice(0,2)===t.slice(0,2))return .5;if(q.length>=3&&t.startsWith(q))return .7;if(t.length>=4&&q.startsWith(t)&&q.length-t.length<=3)return .75;if(q.length>=4&&t.includes(q))return .6;
+  if(q.length>=4&&Math.abs(q.length-t.length)<=2){const d=lev(q,t);if(d<=(q.length>=7?2:1))return .5}
+  if(q.length>=5&&t.length>q.length){const d=lev(q,t.slice(0,q.length));if(d<=1)return .45}return 0}
+function fieldsOf(e){const m=meta(e);return [[e.name,10,'namn'],[m.syn,6,'syn'],[e.tags||'',5,'ord'],[m.dx,4,'dx'],[e.area,3,'area'],[[m.pos,...m.eq,...m.goal,LVL[m.lvl]].join(' '),2,'egen']]}
+function search(q){const qs=q.toLowerCase().split(/[\s,;/]+/).map(nrm).filter(w=>w&&!STOP.has(w));if(!qs.length)return null;
+  const out=[];
+  for(const e of EX){let tot=0,hit=0,why=null,whyS=0;const fz=[];
+    for(const w of qs){let best=0,bf=null,bt=null,bs=0;
+      for(const [txt,wt,f] of fieldsOf(e))for(const t of txt.toLowerCase().split(/[\s,;/()]+/)){if(!t)continue;const sc=tokMatch(w,nrm(t));if(sc&&sc*wt>best){best=sc*wt;bf=f;bt=t;bs=sc}}
+      if(best){hit++;tot+=best;if(bf!=='namn'&&bf!=='area'&&bf!=='egen'&&best>whyS){whyS=best;why=bf==='dx'?'Vid '+bt:bf==='syn'?'Synonym: '+bt:'Sökord: '+bt}if(bs<.5)fz.push(bt);else if(bs===.5)fz.push(bt)}}
+    if(hit)out.push({e,tot,hit,why,fz})}
+  const all=out.filter(x=>x.hit===qs.length);const list=(all.length?all:out).sort((a,b)=>b.hit-a.hit||b.tot-a.tot);
+  const fixes=[...new Set(list.slice(0,3).flatMap(x=>x.fz))].slice(0,3);
+  const tpl=TPL.map((t,i)=>i).filter(i=>qs.some(w=>TPLKW[i].split(' ').some(k=>tokMatch(w,nrm(k))>=.75)));
+  return {list,partial:!all.length&&out.length>0,fixes,tpl}}
+const facCount=()=>Object.values(ui.fac).reduce((s,a)=>s+a.length,0);
+function facOk(e){const m=meta(e),F=ui.fac;return (!F.pos.length||F.pos.includes(m.pos))&&(!F.eq.length||F.eq.some(x=>m.eq.includes(x)))&&(!F.lvl.length||F.lvl.includes(LVL[m.lvl]))&&(!F.goal.length||F.goal.some(x=>m.goal.includes(x)))}
+const STAR='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3-4.6-4.5 6.4-.9z"/></svg>';
+function tile(e,why){const m=meta(e);const inP=ui.draft&&ui.draft.items.some(it=>it.ex===e.id);
+  return `<div class="libt${inP?' on':''}"><button class="libmain" data-act="${inP?'dremove':'dadd'}" data-ex="${e.id}" aria-pressed="${inP}" aria-label="${inP?'Ta bort':'Lägg till'} ${esc(e.name)}"><div class="pic">${fig(e.id,false)}</div><strong class="small">${esc(e.name)}</strong><span class="lmeta">${esc(m.pos)} · ${LVL[m.lvl]}${e.custom?' · <b style="color:var(--ami)">Egen</b>':''}</span>${why?`<span class="why">${esc(why)}</span>`:''}</button><button class="star" data-act="fav" data-ex="${e.id}" aria-pressed="${S.fav.includes(e.id)}" aria-label="Favorit: ${esc(e.name)}">${STAR}</button>${inP?`<span class="ck">${IC.check}</span>`:''}</div>`}
+const newTile=q=>`<button class="libt new" data-act="newex" data-v="${esc(q)}"><span class="plus">+</span><strong class="small">${q?'Skapa ”'+esc(q)+'”':'Skapa egen övning'}</strong><span class="small mut" style="font-size:.8rem">${q?'som egen övning':'Om den inte finns här'}</span></button>`;
+function libList(){const q=ui.q.trim();const R=q?search(q):null;const ok=e=>(ui.area==='Alla'||e.area===ui.area)&&facOk(e);
+  const list=R?R.list.filter(x=>ok(x.e)):EX.filter(ok).map(e=>({e}));ui.libFirst=list.length?list[0].e.id:null;
+  if(q||facCount()||ui.area!=='Alla'){let h=`<div class="libinfo"><strong>${list.length} ${list.length===1?'träff':'träffar'}</strong>${R&&R.fixes.length?` · Visar träffar för ”${R.fixes.map(esc).join('”, ”')}”`:''}${R&&R.partial?' · Ingen övning matchade alla ord, här är de närmaste':''} <button class="link small" data-act="libclear">Rensa</button></div>`;
+    if(R&&R.tpl.length)h+=`<div class="libinfo row" style="gap:6px">${R.tpl.map(i=>`<button class="chip vchip" data-act="tpl" data-i="${i}">Använd mallen ${esc(TPL[i].name)}</button>`).join('')}</div>`;
+    h+=list.map(x=>tile(x.e,x.why)).join('')+newTile(q);
+    if(!list.length)h+=`<p class="libinfo">Ingen övning matchar. Skapa den som egen övning, eller ta bort några filter.</p>`;
+    return h}
+  const fav=S.fav.map(id=>EXM[id]).filter(Boolean),rec=S.recent.map(id=>EXM[id]).filter(e=>e&&!S.fav.includes(e.id)).slice(0,6);let h=`<div class="libsec"><span class="small mut">Snabbstart med en mall</span><div class="row" style="gap:6px;margin-top:4px">${TPL.map((t,i)=>`<button class="chip vchip" data-act="tpl" data-i="${i}">+ ${t.name}</button>`).join('')}</div></div>`;
+  if(fav.length)h+=`<h4 class="libsec">Mina favoriter</h4>`+fav.map(e=>tile(e)).join('');
+  if(rec.length)h+=`<h4 class="libsec">Senast använda</h4>`+rec.map(e=>tile(e)).join('');
+  return h+`<h4 class="libsec">Alla övningar</h4>`+newTile('')+EX.map(e=>tile(e)).join('')}
+function libPanel(){const n=facCount();
+  return `<div class="card" style="align-self:start;display:grid;gap:10px"><div class="between"><h3>Övningsbibliotek</h3><span class="small mut">${EX.length} övningar</span></div>
+  <div class="search">${sv('<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>')}<label class="sr" for="q">Sök övning</label><input type="search" id="q" data-in="q" value="${esc(ui.q)}" placeholder="Övning, muskel eller diagnos" autocomplete="off"></div>
+  <p class="small mut" style="margin:-4px 0 0">Förstår synonymer, latin och stavfel, t.ex. ”quadriceps”, ”hälsena” eller ”impingment”. Enter lägger till första träffen.</p>
+  <div class="row" style="gap:6px">${AREAS.map(a=>`<button class="chip vchip" data-act="farea" data-v="${a}" aria-pressed="${ui.area===a}">${a}</button>`).join('')}</div>
+  <details class="facets"${ui.facOpen||n?' open':''}><summary>Fler filter${n?` · ${n} valda`:''}</summary>${FAC.map(([k,l,opts])=>`<div class="facgrp"><span class="small mut">${l}</span><div class="row" style="gap:6px">${opts.map(o=>`<button class="chip vchip" data-act="facet" data-k="${k}" data-v="${o}" aria-pressed="${ui.fac[k].includes(o)}">${o}</button>`).join('')}</div></div>`).join('')}</details>
+  <div class="libgrid" id="lib">${libList()}</div></div>`}
+function variants(it,i){const m=meta(EXM[it.ex]);const ez=m.easier&&EXM[m.easier],hd=m.harder&&EXM[m.harder];if(!ez&&!hd)return '';
+  return `<div class="row" style="gap:6px"><span class="small mut">Byt till</span>${ez?`<button class="chip vchip" data-act="dswap" data-i="${i}" data-ex="${ez.id}">↓ Lättare: ${esc(ez.name)}</button>`:''}${hd?`<button class="chip vchip" data-act="dswap" data-i="${i}" data-ex="${hd.id}">↑ Svårare: ${esc(hd.name)}</button>`:''}</div>`}
 
 /* ----- modals ----- */
 const FLAGS=['Gjorde ont','Kändes fel','För tungt','För lätt'];
@@ -854,7 +928,7 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   case 'dper':ui.draft.perWeek=Math.max(1,Math.min(7,ui.draft.perWeek+(+d.d)));dr();break;
   case 'dweeks':ui.draft.weeks=Math.max(1,Math.min(26,ui.draft.weeks+(+d.d)));dr();break;
   case 'dlimit':ui.draft.painLimit=Math.max(1,Math.min(10,ui.draft.painLimit+(+d.d)));dr();break;
-  case 'dadd':{const e=EXM[d.ex];ui.draft.items.push({ex:d.ex,sets:3,reps:e.unit==='sek'?30:10,note:''});dr();toast(e.name+' tillagd');break}
+  case 'dadd':{const e=EXM[d.ex];S.recent=[d.ex,...S.recent.filter(x=>x!==d.ex)].slice(0,8);save();ui.draft.items.push({ex:d.ex,sets:3,reps:e.unit==='sek'?30:10,note:''});dr();toast(e.name+' tillagd');break}
   case 'newex':ui.nx={name:d.v||'',area:ui.area!=='Alla'?ui.area:'Knä & höft',unit:'rep',pose:'squat',img:null,steps:'',tip:'',dont:'',why:''};ui.modal={type:'newex'};renderModal();setTimeout(()=>{const t=document.getElementById(d.v?'nx-steps':'nx-name');t&&t.focus()},40);break;
   case 'nxset':mod(()=>{ui.nx[d.k]=d.k==='img'?null:d.v});break;
   case 'nxsave':{const n=ui.nx;const steps=n.steps.split('\n').map(x=>x.trim()).filter(Boolean);
@@ -864,6 +938,10 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
     S.custom.push(e);EX.push(e);EXM[id]=e;save();ui.modal=null;
     if(ui.draft){ui.draft.items.push({ex:id,sets:3,reps:n.unit==='sek'?30:10,note:''});ui.dirty=true}
     ui.q='';render();toast(e.name+' är skapad och tillagd i programmet.');break}
+  case 'facet':{const A=ui.fac[d.k];ui.fac[d.k]=A.includes(d.v)?A.filter(x=>x!==d.v):[...A,d.v];ui.facOpen=true;keepScroll(render);break}
+  case 'libclear':ui.q='';ui.area='Alla';ui.fac={pos:[],eq:[],lvl:[],goal:[]};keepScroll(render);break;
+  case 'fav':{S.fav=S.fav.includes(d.ex)?S.fav.filter(x=>x!==d.ex):[...S.fav,d.ex];save();const y=document.getElementById('lib').scrollTop;document.getElementById('lib').innerHTML=libList();document.getElementById('lib').scrollTop=y;toast(S.fav.includes(d.ex)?EXM[d.ex].name+' är en favorit.':'Borttagen från favoriter.');break}
+  case 'dswap':{const it=ui.draft.items[+d.i];if(ui.draft.items.some(x=>x.ex===d.ex)){toast(EXM[d.ex].name+' finns redan i programmet.');return}const old=EXM[it.ex],nw=EXM[d.ex];if(old.unit!==nw.unit)it.reps=nw.unit==='sek'?30:10;it.ex=d.ex;delete it.steps;delete it.tip;ui.editI=null;dr();toast('Bytt till '+nw.name+'.');break}
   case 'dremove':ui.draft.items=ui.draft.items.filter(x=>x.ex!==d.ex);dr();break;
   case 'drm':ui.draft.items.splice(+d.i,1);ui.editI=null;dr();break;
   case 'dmove':{const I=ui.draft.items,i=+d.i,j=i+(+d.d);if(j<0||j>=I.length)return;[I[i],I[j]]=[I[j],I[i]];dr();break}
@@ -883,7 +961,7 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   case 'fbsend':sendFb();break;
   case 'fbcopy':ui.modal={type:'copyfb'};renderModal();break;
   case 'resetask':ui.modal={type:'reset'};renderModal();break;
-  case 'doreset':{const fb=S.fbLocal,cu=S.custom;S=seed();S.fbLocal=fb;S.custom=cu;save();ui.modal=null;ui.draft=null;ui.dirty=false;ui.composer=false;ui.fpid=null;render();toast('Demodatan är återställd.');break}
+  case 'doreset':{const fb=S.fbLocal,cu=S.custom,fv=S.fav,rc=S.recent;S=seed();S.fbLocal=fb;S.custom=cu;S.fav=fv;S.recent=rc;save();ui.modal=null;ui.draft=null;ui.dirty=false;ui.composer=false;ui.fpid=null;render();toast('Demodatan är återställd.');break}
   }}
 async function sendFb(){const f=ui.fb;const has=f.role||Object.keys(f.tasks).length||f.good||f.miss||f.hard;if(!has){toast('Fyll i något först.');return}
   const id='fb'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);const o={id,t:Date.now(),role:f.role||'',age:f.age||'',tasks:f.tasks,good:f.good||'',miss:f.miss||'',hard:f.hard||''};
@@ -893,7 +971,8 @@ async function sendFb(){const f=ui.fb;const has=f.role||Object.keys(f.tasks).len
 
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b||b.disabled)return;act(b.dataset.act,b.dataset,b)});
 $modal.addEventListener('click',e=>{if(e.target.classList&&e.target.classList.contains('back')){ui.modal=null;renderModal()}},true);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ui.modal){ui.modal=null;renderModal()}
+document.addEventListener('keydown',e=>{if(e.target.id==='q'&&e.key==='Enter'){e.preventDefault();const id=ui.libFirst;if(!id)return;if(ui.draft.items.some(x=>x.ex===id)){toast(EXM[id].name+' finns redan i programmet.');return}ui.q='';act('dadd',{ex:id});const q=document.getElementById('q');if(q){q.value='';q.focus()}return}
+  if(e.key==='Escape'&&ui.modal){ui.modal=null;renderModal()}
   const r=e.target.closest&&e.target.closest('[role=button][data-act]');if(r&&(e.key==='Enter'||e.key===' ')){e.preventDefault();r.dispatchEvent(new MouseEvent('click',{bubbles:true}))}});
 document.addEventListener('input',e=>{const t=e.target;const k=t.dataset&&t.dataset.in;if(!k)return;
   if(k==='q'){ui.q=t.value;document.getElementById('lib').innerHTML=libList()}
@@ -903,7 +982,7 @@ document.addEventListener('input',e=>{const t=e.target;const k=t.dataset&&t.data
   if(k==='excom')ui.form.items[t.dataset.ex].comment=t.value;
   if(k==='fb')ui.fb[t.dataset.k]=t.value;
   if(k==='nx')ui.nx[t.dataset.k]=t.value});
-document.addEventListener('toggle',e=>{const t=e.target;if(t.classList&&t.classList.contains('more')&&ui.form)ui.form.mapOpen=t.open},true);
+document.addEventListener('toggle',e=>{const t=e.target;if(t.classList&&t.classList.contains('more')&&ui.form)ui.form.mapOpen=t.open;if(t.classList&&t.classList.contains('facets'))ui.facOpen=t.open},true);
 document.addEventListener('change',e=>{const t=e.target;
   if(t.id==='logdate'&&t.value&&ui.form){const k=t.value>TK?TK:t.value;keepScroll(()=>{ui.form=formFor(pat(ui.pid),k);ui.form.other=true;renderModal()})}
   if(t.dataset&&t.dataset.in==='psel'){ui.pid=t.value;ui.composer=false;render()}
