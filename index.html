@@ -155,7 +155,7 @@ ol.steps li::before{content:counter(s);width:32px;height:32px;border-radius:50%;
 .sent{justify-self:end;color:var(--mut);display:flex;gap:4px;align-items:center}
 .demo{display:grid;gap:8px}
 .dctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.pbody .kpis{grid-template-columns:1fr 1fr}
+.pbody .kpis,.sheet .kpis{grid-template-columns:1fr 1fr}
 .pbody .kpi strong{font-size:1.7rem}
 .ctagrid{display:grid;grid-template-columns:1.25fr 1fr;gap:8px}
 .ctagrid .btn{font-size:1rem}
@@ -256,7 +256,11 @@ details.more summary{cursor:pointer;font-weight:700;color:var(--t);min-height:44
 .wk i{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:800;border:1.5px solid var(--line);background:var(--bg);color:var(--mut)}
 .wk i.full{background:var(--ok);border-color:var(--ok);color:#fff}
 .wk i.part{background:var(--am);border-color:var(--am);color:#2a1a00}
-.wk i.open{border:2px dashed var(--t);color:var(--t);background:var(--card)}
+.wk i.open,.wk i.now{border:0;background:conic-gradient(var(--t) calc(var(--p)*1%),var(--tl2) 0);position:relative}
+.wk i.open::after,.wk i.now::after{content:'';position:absolute;inset:5px;border-radius:50%;background:var(--card)}
+.wk i.now{box-shadow:0 0 0 2px var(--t)}
+.wkb{border:0;background:none;padding:0;display:grid;justify-items:center;gap:4px;font-size:.82rem;color:var(--mut);font-weight:700;cursor:pointer;font-family:inherit}
+.wkb:hover i{transform:scale(1.06)}
 .dots i.carry{border-style:dashed}
 .wk i.now{border:2px solid var(--t);color:var(--t)}
 .wk svg{width:18px;height:18px}
@@ -755,8 +759,9 @@ function pToday(p){
   return h}
 function weekCircles(p){if(!p.since)return '';const s=wkStart(fromKey(p.since)),cur=progWeek(p);let h='';
   for(let w=1;w<=p.weeks;w++){const a=addD(s,(w-1)*7);const c=inRange(p,a,addD(a,6)).length;const pl=wkPlan(p,w);const cls=w>cur?'':w===cur?(c>=pl?'full':'now'):c>=pl?'full':'open';
-    h+=`<div><i class="${cls}">${cls==='full'?IC.check:cls==='open'?c:w}</i>v${w}</div>`}
-  return `<div class="wk">${h}<div><i>${IC.cal.replace('<svg','<svg width="18" height="18"')}</i>Besök</div></div>`}
+    const pct=Math.min(100,Math.round(c/pl*100));const lab=`Vecka ${w}: ${w>cur?'kommande':c+' av '+pl+' pass'}`;
+    h+=w>cur?`<div><i aria-hidden="true"></i><span>v${w}</span></div>`:`<button class="wkb" data-act="week" data-v="${w}" aria-label="${lab}. Visa sammanställning."><i class="${cls}" style="--p:${pct}">${cls==='full'?IC.check:''}</i><span>v${w}</span></button>`}
+  return `<div class="wk">${h}<div><i>${IC.cal.replace('<svg','<svg width="18" height="18"')}</i>Besök</div></div><p class="small mut" style="margin:0">Tryck på en vecka för att se vad du gjorde.</p>`}
 function dayCircles(p){const s=wkStart(TODAY);let h='';for(let i=0;i<7;i++){const d=addD(s,i);const k=key(d);const l=logOf(p,k);const cls=l?(vol(p,l)>=.9?'full':'part'):k===TK?'now':'';h+=`<div><i class="${cls}">${l?IC.check:''}</i>${DAY[i]}</div>`}return `<div class="wk">${h}</div>`}
 function perExList(p){const a=adherence(p);const L=inRange(p,a.from,TODAY);return prog(p).map(it=>{const v=L.length?Math.round(L.reduce((s,l)=>s+share(it,l.items[it.ex]),0)/L.length*100):null;const fl=L.filter(l=>l.items[it.ex]&&l.items[it.ex].flag).length;
   const t=fl?['co',fl===1?'Flaggad 1 gång':'Flaggad '+fl+' ggr']:v==null?['in','Ingen data']:v>=90?['ok','Gör allt']:['am','Gör '+v+' %'];
@@ -1024,6 +1029,15 @@ function renderModal(){const m=ui.modal;if(!m){$modal.innerHTML='';return}
       :`<span class="clock">${r.reps}<small> rep</small></span><div class="row" style="justify-content:center;gap:8px"><button class="btn" data-act="runrep" data-d="-1" aria-label="Färre repetitioner">− 1</button><button class="btn" data-act="runrep" data-d="1" aria-label="Fler repetitioner">+ 1</button></div><span class="small mut">Ändra om du gjorde fler eller färre</span>`}
       <button class="btn pri full" data-act="runset" style="min-height:58px;font-size:1.1rem">${IC.check.replace('<svg','<svg width="20" height="20"')} Set klart</button></div>`}
     <div class="small mut" style="text-align:center">${dose(it)} · klart hittills: ${dn.sets} set</div>`}}
+  if(m.type==='week'){const w=+m.w;const a=addD(wkStart(fromKey(p.since)),(w-1)*7),z=addD(a,6);const L=inRange(p,a,z).sort((x,y)=>x.date<y.date?-1:1);const pl=wkPlan(p,w);const P=L.filter(l=>l.pain!=null);const cur=progWeek(p);
+    t='Vecka '+w;
+    const sum=L.length>=pl?`Du gjorde alla ${pl} pass. Snyggt!`:w===cur?`${L.length} av ${pl} pass hittills. Veckan är inte slut än.`:`Du gjorde ${L.length} av ${pl} pass. Det är helt okej, varje pass räknas.`;
+    b=`<p class="mut" style="margin-top:-6px">${fmt(a)} – ${fmt(z)}</p>
+    <div class="kpis"><div class="kpi"><strong>${L.length} av ${pl}</strong><span class="small mut">pass</span></div><div class="kpi"><strong>${P.length?(P.reduce((x,l)=>x+l.pain,0)/P.length).toFixed(1).replace('.',','):'–'}</strong><span class="small mut">smärta i snitt</span></div></div>
+    <div class="note ${L.length>=pl?'ok':'in'}">${sum}</div>
+    ${L.length?`<div class="card" style="padding:6px 16px">${L.map(l=>{const dn=prog(p).filter(it=>l.items[it.ex]&&l.items[it.ex].sets>0).length;const fl=Object.entries(l.items).filter(([,x])=>x.flag);return `<div class="lex"><div class="between"><strong>${cap(fmtL(fromKey(l.date)))}</strong>${l.pain!=null?`<span class="vasb" style="background:${vasCol(l.pain)}">Smärta ${l.pain}</span>`:'<span class="small mut">Ingen smärta angiven</span>'}</div>
+      <span class="small mut">${dn} av ${prog(p).length} övningar · ${Math.round(vol(p,l)*100)} % av planerat${l.effort?' · kändes '+l.effort.toLowerCase():''}</span>${fl.map(([ex,x])=>`<span class="small" style="color:var(--ami);font-weight:600">${esc(EXM[ex]?EXM[ex].name:ex)}: ${esc(x.flag)}${x.comment?' – '+esc(x.comment):''}</span>`).join('')}${l.note?`<span class="small">”${esc(l.note)}”</span>`:''}</div>`}).join('')}</div>`:'<p class="mut">Inga pass loggade den här veckan.</p>'}
+    ${w===cur?`<button class="btn pri full" data-act="ptab" data-v="idag">Till dagens övningar</button>`:'<button class="btn full" data-act="close">Stäng</button>'}`}
   if(m.type==='remind'){const r=rem(p);t='Påminnelser';
     b=`<div class="card" style="display:grid;gap:14px"><div class="between"><div><strong>Påminn mig om att träna</strong><br><span class="small mut">Du bestämmer själv, och kan stänga av när du vill.</span></div><button class="switch" role="switch" aria-checked="${r.on}" data-act="rset" data-k="on" aria-label="Påminnelser på eller av"><i></i></button></div>
     ${r.on?`<div><label class="lab" for="rtime">Tid</label><input type="time" id="rtime" data-in="rtime" value="${r.time}" style="max-width:160px"></div>
@@ -1160,6 +1174,7 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   case 'close':stopRun();ui.modal=null;renderModal();break;
   case 'dplay':DEMO.paused=!DEMO.paused;keepScroll(()=>{ui.modal?renderModal():render()});break;
   case 'dslow':DEMO.slow=!DEMO.slow;keepScroll(()=>{ui.modal?renderModal():render()});break;
+  case 'week':ui.modal={type:'week',w:d.v};renderModal();break;
   case 'remind':ui.modal={type:'remind'};renderModal();break;
   case 'rset':{const r=rem(p);if(d.k==='on')r.on=!r.on;if(d.k==='smart')r.smart=!r.smart;if(d.k==='day'){const v=+d.v;r.days=r.days.includes(v)?r.days.filter(x=>x!==v):[...r.days,v].sort()}save();keepScroll(()=>{renderModal();render()});break}
   case 'runstart':{if(!prog(p).length)return;ui.run={i:0,set:1,phase:'work',done:{},reps:prog(p)[0].reps,left:EXM[prog(p)[0].ex].unit==='sek'?prog(p)[0].reps:0,ticking:false};ui.modal={type:'run'};renderModal();break}
