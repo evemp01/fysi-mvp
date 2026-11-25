@@ -169,6 +169,14 @@ ol.steps li::before{content:counter(s);width:32px;height:32px;border-radius:50%;
 .runbar i.on{background:var(--ok)}.runbar i.cur{background:var(--t)}
 .runbox{display:grid;gap:10px;justify-items:center;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
 .runbox.rest{background:var(--tl)}
+.setdots{display:flex;gap:8px;justify-content:center}
+.setdots i{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;background:var(--card)}
+.setdots i.cur{border-color:var(--t);box-shadow:0 0 0 3px var(--tl2)}
+.setdots i.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.setdots svg{width:16px;height:16px}
+@keyframes flash{from{background:var(--oks)}to{background:var(--card)}}
+.runbox.flash{animation:flash .6s ease-out}
+@media(prefers-reduced-motion:reduce){.runbox.flash{animation:none}}
 .setlbl{font-weight:800;font-size:1.05rem;color:var(--t)}
 .rbtns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .rbtns .btn{min-width:130px}
@@ -1030,11 +1038,12 @@ function renderModal(){const m=ui.modal;if(!m){$modal.innerHTML='';return}
     else{const it=P[r.i],e=EXM[it.ex],sek=e.unit==='sek';const started=r.left<it.reps;
     b=`<div class="runbar" aria-hidden="true">${P.map((_,i)=>`<i class="${i<r.i?'on':i===r.i?'cur':''}"></i>`).join('')}</div><div class="between"><span class="small mut">Övning ${r.i+1} av ${P.length}</span><button class="link small" data-act="runskip">Hoppa över övningen</button></div>
     ${mediaFor(it,e,true)}<h2>${esc(e.name)}</h2>
-    <div class="runbox"><span class="setlbl">Set ${r.set} av ${it.sets}</span>
+    <div class="runbox${r.flash?' flash':''}"><span class="setlbl">Set ${r.set} av ${it.sets}</span><div class="setdots" aria-hidden="true">${Array.from({length:it.sets},(_,k)=>`<i class="${k<r.set-1?'on':k===r.set-1?'cur':''}">${k<r.set-1?IC.check:''}</i>`).join('')}</div>
     ${sek?`<span class="clock${r.left<=0?' done':''}" id="rclock">${r.left<=0?'Klart!':mmss(r.left)}</span><span class="small mut">${r.left<=0?'Tiden är ute.':'Håll i '+it.reps+' sekunder. Starta timern när du är redo.'}</span>
       <div class="rbtns">${r.left>0?`<button class="btn ${r.ticking?'':'pri'}" data-act="runtimer">${r.ticking?'Pausa':started?'Fortsätt':PLAY+' Starta timer'}</button>`:''}${started||r.ticking?`<button class="btn" data-act="runreset">Starta om</button>`:''}</div>`
     :`<span class="clock">${r.reps}<small> rep</small></span><div class="row" style="justify-content:center;gap:8px"><button class="btn" data-act="runrep" data-d="-1" aria-label="Färre repetitioner">− 1</button><button class="btn" data-act="runrep" data-d="1" aria-label="Fler repetitioner">+ 1</button></div><span class="small mut">Ändra om du gjorde fler eller färre</span>`}
-    <button class="btn pri full" data-act="runset" style="min-height:58px;font-size:1.1rem">${IC.check.replace('<svg','<svg width="20" height="20"')} Klar${r.set<it.sets?', nästa set':r.i<P.length-1?', nästa övning':', avsluta passet'}</button></div>`}}
+    <button class="btn pri full" data-act="runset" style="min-height:58px;font-size:1.1rem">${IC.check.replace('<svg','<svg width="20" height="20"')} ${r.set<it.sets?`Set ${r.set} klart`:r.i<P.length-1?'Klar, nästa övning':'Klar, avsluta passet'}</button>
+    ${r.set<it.sets?`<button class="btn full" data-act="runall">Hela övningen klar, gå till ${r.i<P.length-1?'nästa övning':'slutet'} ›</button>`:''}</div>`}}
   if(m.type==='week'){const w=+m.w;const a=addD(wkStart(fromKey(p.since)),(w-1)*7),z=addD(a,6);const L=inRange(p,a,z).sort((x,y)=>x.date<y.date?-1:1);const pl=wkPlan(p,w);const P=L.filter(l=>l.pain!=null);const cur=progWeek(p);
     t='Vecka '+w;
     const sum=L.length>=pl?`Du gjorde alla ${pl} pass. Snyggt!`:w===cur?`${L.length} av ${pl} pass hittills. Veckan är inte slut än.`:`Du gjorde ${L.length} av ${pl} pass. Det är helt okej, varje pass räknas.`;
@@ -1147,7 +1156,7 @@ function startTimer(done){stopRun();runTimer=setInterval(()=>{const r=ui.run;if(
 function beep(){try{navigator.vibrate&&navigator.vibrate(300)}catch(e){}}
 function nextEx(p){const r=ui.run,P=prog(p);r.set=1;r.ticking=false;if(r.i<P.length){const it=P[r.i];r.reps=it.reps;r.left=EXM[it.ex].unit==='sek'?it.reps:0}}
 function runSetDone(p){stopRun();const r=ui.run,it=prog(p)[r.i],sek=EXM[it.ex].unit==='sek';const dn=r.done[it.ex]||(r.done[it.ex]={sets:0,repSum:0});dn.sets++;dn.repSum+=sek?(r.left<it.reps?Math.max(1,it.reps-Math.max(0,r.left)):it.reps):r.reps;
-  if(r.set<it.sets){r.set++;r.ticking=false;r.reps=it.reps;r.left=sek?it.reps:0}else{r.i++;nextEx(p)}renderModal();const sh=document.querySelector('.sheet');if(sh)sh.scrollTop=0}
+  r.flash=true;if(r.set<it.sets){r.set++;r.ticking=false;r.reps=it.reps;r.left=sek?it.reps:0}else{r.i++;nextEx(p)}renderModal();r.flash=false;const sh=document.querySelector('.sheet');if(sh)sh.scrollTop=0}
 function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   switch(a){
   case 'fs':ui.fs=+d.v;try{localStorage.setItem('fysi-fs',ui.fs)}catch(e){}render();break;
@@ -1188,6 +1197,7 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   case 'runtimer':{const r=ui.run;if(r.ticking){stopRun();r.ticking=false;keepScroll(renderModal);break}r.ticking=true;keepScroll(renderModal);startTimer(()=>{r.ticking=false;beep();keepScroll(renderModal)});break}
   case 'runreset':{stopRun();const r=ui.run,it=prog(p)[r.i];r.left=it.reps;r.ticking=false;keepScroll(renderModal);break}
   case 'runset':runSetDone(p);break;
+  case 'runall':{stopRun();const r=ui.run,it=prog(p)[r.i],sek=EXM[it.ex].unit==='sek';const dn=r.done[it.ex]||(r.done[it.ex]={sets:0,repSum:0});const rest=it.sets-dn.sets;if(rest>0){dn.sets+=rest;dn.repSum+=rest*(sek?it.reps:r.reps)}r.flash=true;r.i++;nextEx(p);renderModal();r.flash=false;const sh=document.querySelector('.sheet');if(sh)sh.scrollTop=0;break}
   case 'runskip':{stopRun();ui.run.i++;nextEx(p);renderModal();break}
   case 'runlog':{const r=ui.run;ui.form=formFor(p,TK);for(const it of prog(p)){const dn=r.done[it.ex];ui.form.items[it.ex].sets=dn?dn.sets:0;if(dn&&dn.sets)ui.form.items[it.ex].reps=Math.round(dn.repSum/dn.sets)}ui.form.fromRun=true;ui.modal={type:'log'};renderModal();break}
   case 'compose':openCompose(p,'');break;
