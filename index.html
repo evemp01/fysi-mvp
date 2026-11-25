@@ -130,6 +130,10 @@ ol.steps li{counter-increment:s;display:grid;grid-template-columns:36px 1fr;gap:
 ol.steps li::before{content:counter(s);width:32px;height:32px;border-radius:50%;background:var(--tl2);color:var(--t);display:grid;place-items:center;font-weight:800}
 .dodont{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:center;border-radius:12px;padding:10px 12px}
 .dodont b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:.9rem}
+.pnote{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start;background:var(--ams);border-radius:12px;padding:10px 12px}
+.exnote{display:flex;gap:6px;align-items:flex-start;color:var(--ami);margin-top:4px;font-weight:600}
+.exnote svg{flex:none;margin-top:3px}
+.exnote span{overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .quote{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
 .stepper{display:inline-flex;align-items:center;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:3px}
 .stepper button{width:44px;height:44px;border-radius:10px;border:0;background:var(--card);font-size:1.35rem;font-weight:700}
@@ -457,7 +461,7 @@ function painPicture(p,n=14){const from=key(addD(TODAY,-n));const L=p.logs.filte
   <p class="small">Senast ${fmt(fromKey(last.d))}${last.msg?' (i meddelande)':''}: VAS ${last.pain}${last.area.length?', '+esc(last.area.join(', ')):''}${last.type.length?', '+esc(last.type.join(', ').toLowerCase()):''}.</p></div></div>`}
 
 /* ----- feedback ----- */
-const TASKS=[['f1','Fysioterapeut','Skapa ett program med 3 övningar åt Lisa: välj övningar, set, repetitioner och hur många pass i veckan.'],['f2','Fysioterapeut','Ta reda på hur det går för Olof. Har han tränat, och hur har smärtan ändrats?'],['f3','Fysioterapeut','Lägg till en egen övning som inte finns i biblioteket.'],['p1','Patient','Hitta instruktionerna för en av övningarna i ditt pass.'],['p2','Patient','Logga ett pass: hur mycket du gjorde och hur ont du har. Flagga en övning som kändes konstig.'],['p3','Patient','Skriv ett meddelande till din fysioterapeut.'],['p4','Patient','Beskriv din smärta för fysioterapeuten: var det gör ont och hur det känns.']];
+const TASKS=[['f1','Fysioterapeut','Skapa ett program med 3 övningar åt Lisa: välj övningar, set, repetitioner och hur många pass i veckan.'],['f2','Fysioterapeut','Ta reda på hur det går för Olof. Har han tränat, och hur har smärtan ändrats?'],['f3','Fysioterapeut','Lägg till en egen övning som inte finns i biblioteket.'],['p1','Patient','Hitta instruktionerna för en av övningarna i ditt pass.'],['p2','Patient','Logga ett pass: hur mycket du gjorde och hur ont du har. Flagga en övning som kändes konstig.'],['p3','Patient','Skriv ett meddelande till din fysioterapeut.'],['p4','Patient','Beskriv din smärta för fysioterapeuten: var det gör ont och hur det känns.'],['p5','Patient','Lägg till en egen anteckning på en övning, något du vill komma ihåg.']];
 const RES=['Klarade det','Med lite hjälp','Klarade inte'];
 function vFeedback(){const f=ui.fb;
   const chips=(k,opts)=>opts.map(o=>`<button class="chip" data-act="fbset" data-k="${k}" data-v="${o}" aria-pressed="${f[k]===o}">${o}</button>`).join('');
@@ -515,16 +519,17 @@ function seed(){
   mkLogs(P.olof,24,.47,6.3,2.8,'Höger knä, insida','Molande');
   mkLogs(P.anna,17,.36,3,5.6,'Vänster axel, framsida','Huggande');
   mkLogs(P.karin,30,.42,5,2,'Höger hälsena','Stelt');
+  P.olof.pnotes={knaboj:[{text:'Lägg en kudde på stolen, då blir det lagom djupt.',t:addD(TODAY,-6).getTime()}]};
   const ol=P.olof.logs,al=P.anna.logs;
   ol[ol.length-6].items.knaboj={sets:2,reps:8,flag:'Kändes fel',comment:'Knät vek sig lite inåt på sista setet.'};
   ol[ol.length-2].note='Lättare att gå i trappan nu.';
   al[al.length-1].items.armlyft={sets:2,reps:6,flag:'Gjorde ont',comment:'Hugger till när armen kommer över axelhöjd.'};al[al.length-1].pain=6;al[al.length-1].effort='Tungt';
   al[al.length-2].items.armlyft.flag='Gjorde ont';
-  return {v:5,patients:P,order:['olof','anna','karin','lisa'],fbLocal:[],custom:[]};
+  return {v:6,patients:P,order:['olof','anna','karin','lisa'],fbLocal:[],custom:[]};
 }
-const LS='fysi-mvp-5';
+const LS='fysi-mvp-6';
 let S=null;try{S=JSON.parse(localStorage.getItem(LS))}catch(e){}
-if(!S||S.v!==5){S=seed();try{for(const k of ['fysi-mvp-4','fysi-mvp-3','fysi-mvp-2','fysi-mvp-1']){const o=JSON.parse(localStorage.getItem(k));if(o&&o.fbLocal&&o.fbLocal.length){S.fbLocal=o.fbLocal;break}}}catch(e){}}
+if(!S||S.v!==6){S=seed();try{for(const k of ['fysi-mvp-5','fysi-mvp-4','fysi-mvp-3','fysi-mvp-2','fysi-mvp-1']){const o=JSON.parse(localStorage.getItem(k));if(o&&o.custom&&o.custom.length&&!S.custom.length)S.custom=o.custom;if(o&&o.fbLocal&&o.fbLocal.length&&!S.fbLocal.length)S.fbLocal=o.fbLocal}}catch(e){}}
 const save=()=>{try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}};
 const ui={view:'start',pid:'olof',ptab:'idag',fpage:'oversikt',fpid:null,ftab:'uppf',fmsg:'anna',draft:null,dirty:false,q:'',area:'Alla',modal:null,form:null,composer:false,prefill:'',att:null,patt:null,fb:{tasks:{}},fbList:null,db:null,fs:0,editI:null};
 try{ui.fs=+localStorage.getItem('fysi-fs')||0}catch(e){}
@@ -607,7 +612,7 @@ function pToday(p){
   if(lt)h+=`<p class="small mut" style="text-align:center;margin-top:-6px">Dagens pass är loggat. Smärta ${lt.pain} av 10.</p>`;
   if(lastF&&!p.seenF)h+=`<button class="notice" data-act="ptab" data-v="msg"><span class="av" style="width:40px;height:40px">E</span><span><strong>Nytt från Erik</strong><br><span class="small">${esc(lastF.text.length>80?lastF.text.slice(0,78)+'…':lastF.text)}</span></span>${IC.chev}</button>`;
   h+=`<div class="sec"><h2>Ditt pass</h2><span class="small mut">${prog(p).length} övningar</span></div>`;
-  h+=prog(p).map(it=>{const e=EXM[it.ex];const ok=lt&&share(it,lt.items[it.ex])>=.9;return `<button class="exrow" data-act="instr" data-ex="${it.ex}"><div class="pic">${fig(it.ex,true)}</div><div><h3>${esc(e.name)}</h3><div class="dose">${dose(it)}</div></div><span class="go${ok?' ok':''}" aria-label="${ok?'Gjord i dag':'Visa'}">${ok?IC.check:IC.chev}</span></button>`}).join('');
+  h+=prog(p).map(it=>{const e=EXM[it.ex];const ok=lt&&share(it,lt.items[it.ex])>=.9;return `<button class="exrow" data-act="instr" data-ex="${it.ex}"><div class="pic">${fig(it.ex,true)}</div><div><h3>${esc(e.name)}</h3><div class="dose">${dose(it)}</div>${pnotes(p,it.ex).length?`<div class="small exnote">${IC.edit.replace('<svg','<svg width="14" height="14"')}<span>${esc(pnotes(p,it.ex).slice(-1)[0].text)}</span></div>`:''}</div><span class="go${ok?' ok':''}" aria-label="${ok?'Gjord i dag':'Visa'}">${ok?IC.check:IC.chev}</span></button>`}).join('');
   if(p.booking)h+=`<div class="card row" style="gap:12px">${'<span class="av">'+IC.phone.replace('<svg','<svg width="20" height="20"')+'</span>'}<div><strong>Telefonmöte med Erik</strong><br><span class="small mut">${esc(p.booking)}</span></div></div>`;
   return h}
 function weekCircles(p){if(!p.since)return '';const s=wkStart(fromKey(p.since)),cur=progWeek(p);let h='';
@@ -717,6 +722,12 @@ function libList(){const q=ui.q.trim().toLowerCase();const r=EX.filter(e=>(ui.ar
 const FLAGS=['Gjorde ont','Kändes fel','För tungt','För lätt'];
 const stepper=(act,ex,f,v,label)=>`<div><span class="small mut">${label}</span><br><div class="stepper"><button data-act="${act}" data-ex="${ex}" data-f="${f}" data-d="-1" aria-label="Minska ${label.toLowerCase()}">−</button><output>${v}</output><button data-act="${act}" data-ex="${ex}" data-f="${f}" data-d="1" aria-label="Öka ${label.toLowerCase()}">+</button></div></div>`;
 function limitNote(f,p){if(f.pain==null)return '';return f.pain<=p.painLimit?`<div class="note ok small" style="margin-top:8px">${IC.check.replace('<svg','<svg width="16" height="16" style="vertical-align:-3px"')} Inom din gräns på ${p.painLimit}/10. Fortsätt som vanligt.</div>`:`<div class="note co small" style="margin-top:8px"><strong>Över din gräns på ${p.painLimit}/10.</strong> Ta det lugnare nästa pass. Håller det i sig, skriv till Erik.</div>`}
+const pnotes=(p,ex)=>(p.pnotes&&p.pnotes[ex])||[];
+function notesBox(p,ex){const N=pnotes(p,ex);
+  return `<div class="card mynotes" style="display:grid;gap:10px"><div><h3>${IC.edit.replace('<svg','<svg width="18" height="18" style="vertical-align:-3px;margin-right:6px"')}Mina anteckningar</h3><p class="small mut">Saker du vill komma ihåg. Bara du ser dem. Vill du fråga Erik något, tryck på Fråga.</p></div>
+  ${N.map((n,i)=>`<div class="pnote"><div><span>${esc(n.text)}</span><span class="small mut" style="display:block">${fmt(new Date(n.t))}</span></div><button class="link small" data-act="pndel" data-ex="${ex}" data-i="${i}" aria-label="Ta bort anteckningen">Ta bort</button></div>`).join('')}
+  <label class="sr" for="pnote">Ny anteckning</label><textarea id="pnote" style="min-height:70px" placeholder="T.ex. Lägg en kudde på stolen, då blir det lagom djupt"></textarea>
+  <button class="btn sm" data-act="pnadd" data-ex="${ex}" style="justify-self:start">+ Spara anteckning</button></div>`}
 function renderModal(){const m=ui.modal;if(!m){$modal.innerHTML='';return}
   let t='',b='';const p=pat(ui.view==='fysio'?ui.fpid:ui.pid);
   if(m.type==='instr'){const it=prog(p).find(x=>x.ex===m.ex)||{ex:m.ex,sets:3,reps:10,note:''};const e=EXM[m.ex];const g=GUIDE[m.ex]||[e.why||'',e.dont||''];const idx=prog(p).findIndex(x=>x.ex===m.ex);t=idx>=0?`Övning ${idx+1} av ${prog(p).length}`:e.name;
@@ -726,11 +737,11 @@ function renderModal(){const m=ui.modal;if(!m){$modal.innerHTML='';return}
     <h3>Så gör du</h3><ol class="steps">${(it.steps||e.steps).map(s=>`<li>${esc(s)}</li>`).join('')}</ol>
     <h3>Tänk på</h3><div class="dodont note ok"><b style="background:var(--ok)">${IC.check.replace('<svg','<svg width="14" height="14"')}</b><span>${esc(it.tip||e.tip)}</span></div>${g[1]?`<div class="dodont note co"><b style="background:var(--co)">${IC.x.replace('<svg','<svg width="12" height="12"')}</b><span>${esc(g[1])}</span></div>`:''}
     ${it.note?`<div class="quote"><span class="av" style="width:36px;height:36px">E</span><div><span class="small mut">Erik skriver</span><br>”${esc(it.note)}”</div></div>`:''}
-    <div class="row" style="display:grid;grid-template-columns:1fr 1.4fr;gap:8px"><button class="btn" data-act="askex" data-ex="${m.ex}">${IC.chat.replace('<svg','<svg width="18" height="18"')}Fråga</button><button class="btn pri" data-act="close">Jag förstår</button></div>`}
+    ${ui.view==="patient"?notesBox(p,m.ex):""}<div class="row" style="display:grid;grid-template-columns:1fr 1.4fr;gap:8px"><button class="btn" data-act="askex" data-ex="${m.ex}">${IC.chat.replace('<svg','<svg width="18" height="18"')}Fråga</button><button class="btn pri" data-act="close">Jag förstår</button></div>`}
   if(m.type==='log'){const f=ui.form;t='Logga ditt pass';
     b=`<div class="card"><h4>När gjorde du passet?</h4><div class="row" style="gap:6px;margin-top:8px"><button class="chip" data-act="fdate" data-v="${TK}" aria-pressed="${!f.other}">I dag</button><button class="chip" data-act="fother" aria-pressed="${!!f.other}">Välj datum</button></div>${f.other?`<label class="small mut" for="logdate" style="display:block;margin-top:8px">Datum för passet</label><input type="date" id="logdate" class="dinp" value="${f.date}" max="${TK}" min="${key(addD(TODAY,-60))}"><p class="small" style="margin-top:4px;font-weight:700">${cap(fmtL(fromKey(f.date)))}${logOf(p,f.date)?' · ett pass finns redan, du ändrar det':''}</p>`:''}</div>
     <div class="card"><h4>1. Hur mycket gjorde du?</h4><p class="small mut">Det planerade är redan ifyllt. Ändra om du gjorde mer eller mindre.</p>
-    ${prog(p).map(it=>{const x=f.items[it.ex];const e=EXM[it.ex];const sk=x.sets===0;return `<div class="lex${x.open?' flagged':''}"><div class="between"><strong style="font-size:1.05rem">${esc(e.name)}</strong><span class="small mut">Plan: ${dose(it)}</span></div>
+    ${prog(p).map(it=>{const x=f.items[it.ex];const e=EXM[it.ex];const sk=x.sets===0;return `<div class="lex${x.open?' flagged':''}"><div class="between"><strong style="font-size:1.05rem">${esc(e.name)}</strong><span class="small mut">Plan: ${dose(it)}</span></div>${pnotes(p,it.ex).length?`<div class="small exnote">${IC.edit.replace('<svg','<svg width="14" height="14"')}<span>Din anteckning: ${esc(pnotes(p,it.ex).slice(-1)[0].text)}</span></div>`:''}
       <div class="row" style="gap:14px">${stepper('fstep',it.ex,'sets',x.sets,'Set')}${sk?'<span class="tag am">Hoppade över</span>':stepper('fstep',it.ex,'reps',x.reps,e.unit==='sek'?'Sekunder':'Repetitioner')}</div>
       ${x.open?`<div style="display:grid;gap:8px"><span class="small" style="font-weight:700">Vad var det som kändes konstigt?</span><div class="row" style="gap:6px">${FLAGS.map(v=>`<button class="chip" data-act="fflag" data-ex="${it.ex}" data-v="${v}" aria-pressed="${x.flag===v}">${v}</button>`).join('')}</div><label class="sr" for="c-${it.ex}">Kort kommentar</label><input type="text" id="c-${it.ex}" data-in="excom" data-ex="${it.ex}" value="${esc(x.comment)}" placeholder="Kort kommentar (valfritt)"><button class="link small" data-act="fopen" data-ex="${it.ex}" style="justify-self:start;padding-left:0">Ta bort</button></div>`
         :`<button class="link small" data-act="fopen" data-ex="${it.ex}" style="justify-self:start;padding-left:0">Kändes något konstigt?</button>`}</div>`}).join('')}</div>
@@ -799,6 +810,9 @@ function act(a,d,el){const p=pat(ui.view==='fysio'?(d.id||ui.fpid):ui.pid);
   case 'fs':ui.fs=+d.v;try{localStorage.setItem('fysi-fs',ui.fs)}catch(e){}render();break;
   case 'ptab':ui.ptab=d.v;ui.composer=false;ui.modal=null;render();window.scrollTo(0,0);break;
   case 'instr':ui.modal={type:'instr',ex:d.ex};renderModal();break;
+  case 'pnadd':{const t=document.getElementById('pnote').value.trim();if(!t){toast('Skriv något först.');document.getElementById('pnote').focus();return}
+    if(!p.pnotes)p.pnotes={};(p.pnotes[d.ex]=p.pnotes[d.ex]||[]).push({text:t,t:Date.now()});save();keepScroll(()=>{render()});toast('Anteckningen är sparad.');break}
+  case 'pndel':{pnotes(p,d.ex).splice(+d.i,1);save();keepScroll(()=>{render()});break}
   case 'askex':ui.modal=null;ui.ptab='msg';render();openCompose(p,'Fråga om '+EXM[d.ex].name.toLowerCase()+': ');break;
   case 'openlog':ui.form=formFor(p,TK);ui.modal={type:'log'};renderModal();break;
   case 'fdate':mod(()=>{ui.form=formFor(p,d.v)});break;
