@@ -1,0 +1,147 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/plus-jakarta-sans";
+
+/* Dark mode follows the OS. Colors use light-dark(), so one definition covers both. */
+@custom-variant dark (@media (prefers-color-scheme: dark));
+
+@theme inline {
+  --font-sans: "Plus Jakarta Sans Variable",
+  system-ui,
+  -apple-system,
+  "Segoe UI",
+  sans-serif;
+  --font-heading: var(--font-sans);
+
+  /* shadcn tokens */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--foreground);
+  --color-popover: var(--card);
+  --color-popover-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--brand-soft);
+  --color-secondary-foreground: var(--brand);
+  --color-muted: var(--brand-soft);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--brand-soft);
+  --color-accent-foreground: var(--brand);
+  --color-destructive: var(--danger);
+  --color-border: var(--border);
+  --color-input: var(--border);
+  --color-ring: var(--warning);
+  --color-chart-1: var(--brand);
+  --color-chart-2: var(--danger);
+  --color-chart-3: var(--warning);
+  --color-chart-4: var(--success);
+  --color-chart-5: var(--info);
+
+  /* Fysi palette */
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-muted: var(--brand-muted);
+  --color-hero: var(--hero);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  color-scheme: light dark;
+  --radius: 12px;
+
+  /* Warm paper ground, deep teal lead, amber for progress/limits, coral for pain. */
+  --background: light-dark(#f6f4ef, #0d1514);
+  --foreground: light-dark(#1a2423, #e9efed);
+  --card: light-dark(#ffffff, #15201f);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --muted-foreground: light-dark(#56625f, #a3b4b0);
+  --border: light-dark(#e6e1d7, #263533);
+  --primary: light-dark(#0f4c4a, #62c7b8);
+  --primary-foreground: light-dark(#ffffff, #06201d);
+
+  --brand: light-dark(#0f4c4a, #62c7b8);
+  --brand-soft: light-dark(#eef7f5, #142b29);
+  --brand-muted: light-dark(#d6ece8, #1d3b38);
+  --hero: light-dark(#0f4c4a, #10403d);
+  --success: light-dark(#2e7d4f, #62d193);
+  --success-soft: light-dark(#e2f2e7, #14301f);
+  --warning: light-dark(#e9a23b, #f0b354);
+  --warning-foreground: light-dark(#8a5806, #f3c06a);
+  --warning-soft: light-dark(#fdf3e1, #33280f);
+  --danger: light-dark(#c8483a, #ff8a78);
+  --danger-soft: light-dark(#f8e1de, #3a1d18);
+  --info: light-dark(#2f5597, #9fbaf0);
+  --info-soft: light-dark(#e3ecf8, #1b2433);
+}
+
+@layer base {
+  * {
+    @apply border-border min-w-0;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans text-[1.0625rem] leading-[1.55] font-medium;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply m-0 leading-[1.15] tracking-[-0.02em] text-balance;
+  }
+
+  h1 {
+    @apply text-[clamp(1.9rem, 4vw, 2.5rem)] font-extrabold;
+  }
+
+  h2 {
+    @apply text-[1.45rem] font-extrabold;
+  }
+
+  h3 {
+    @apply text-[1.15rem] font-bold;
+  }
+
+  h4 {
+    @apply text-[1.05rem] font-bold;
+  }
+
+  :focus-visible {
+    @apply outline-3 outline-offset-2 outline-warning;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@keyframes flash {
+  from {
+    background: var(--success-soft);
+  }
+
+  to {
+    background: var(--card);
+  }
+}
