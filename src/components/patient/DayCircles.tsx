@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { CheckIcon } from "@phosphor-icons/react";
 import type { Patient } from "@/data/types";
 import { DAYS, TODAY, TODAY_KEY, addDays, toKey, weekStart } from "@/lib/dates";
 import { sessionVolume } from "@/lib/stats";
@@ -20,7 +20,7 @@ export function DayCircles({ patient }: { patient: Patient }) {
                 log && (full ? "border-success bg-success text-white" : "border-warning bg-warning text-[#2a1a00]"),
                 !log && key === TODAY_KEY && "border-2 border-brand text-brand",
               )}>
-              {log && <Check className="size-4.5" strokeWidth={3} />}
+              {log && <CheckIcon className="size-4.5" weight="bold" />}
             </i>
             {day}
           </div>

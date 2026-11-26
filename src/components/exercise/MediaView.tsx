@@ -1,4 +1,4 @@
-import { ExternalLink, Play } from "lucide-react";
+import { ArrowSquareOutIcon, PlayIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import type { MediaItem } from "@/data/types";
 import { VideoPlaceholder } from "./ExerciseThumbnail";
@@ -18,7 +18,7 @@ export function MediaView({ item, title }: { item: MediaItem; title: string }) {
           </div>
           <Button asChild size="sm" className="justify-self-start">
             <a href={`https://www.youtube.com/watch?v=${item.id}`} target="_blank" rel="noopener">
-              <ExternalLink className="size-4" />
+              <ArrowSquareOutIcon className="size-4" />
               Öppna videon på YouTube
             </a>
           </Button>
@@ -28,7 +28,7 @@ export function MediaView({ item, title }: { item: MediaItem; title: string }) {
       return (
         <Button asChild size="sm" className="flex-wrap justify-start gap-x-2 gap-y-1 text-left">
           <a href={item.url} target="_blank" rel="noopener">
-            <Play className="size-4 fill-current" /> Öppna videon
+            <PlayIcon weight="fill" className="size-4" /> Öppna videon
             <span className="text-[.9rem] font-medium text-muted-foreground">{item.url.replace(/^https:\/\/(www\.)?/, "").slice(0, 40)}</span>
           </a>
         </Button>
@@ -44,7 +44,7 @@ export function MediaThumb({ item }: { item: MediaItem }) {
       <>
         <video src={item.url} muted playsInline className="size-full object-cover" />
         <span className="pointer-events-none absolute inset-0 grid place-items-center text-white">
-          <Play className="size-7 fill-current drop-shadow" />
+          <PlayIcon weight="fill" className="size-7 drop-shadow" />
         </span>
       </>
     );

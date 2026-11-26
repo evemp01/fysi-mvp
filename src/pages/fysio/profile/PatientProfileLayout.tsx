@@ -1,4 +1,4 @@
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeftIcon } from '@phosphor-icons/react'
 import { Link, Outlet, useLocation, useNavigate, useParams } from 'react-router'
 import { PatientHeaderCard } from '@/components/fysio/PatientHeaderCard'
 import { Button } from '@/components/ui/button'
@@ -19,7 +19,7 @@ export function PatientProfileLayout() {
     <>
       <Button asChild variant="link" size="inline" className="justify-self-start pl-0">
         <Link to="/fysio/patients">
-          <ArrowLeft className="size-4.5" /> Patienter
+          <ArrowLeftIcon className="size-4.5" /> Patienter
         </Link>
       </Button>
       <PatientHeaderCard patient={patient} />

@@ -1,4 +1,4 @@
-import { XIcon } from "lucide-react";
+import { XIcon } from "@phosphor-icons/react";
 import { MediaThumb } from "@/components/exercise/MediaView";
 import { Attachment, AttachmentAction, AttachmentActions, AttachmentGroup, AttachmentMedia } from "@/components/ui/attachment";
 import { Badge } from "@/components/ui/badge";

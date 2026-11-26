@@ -1,4 +1,4 @@
-import { Calendar, Check } from "lucide-react";
+import { CalendarBlankIcon, CheckIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import type { Patient } from "@/data/types";
 import { logsBetween, programWeek, weekPlan, weekRange } from "@/lib/stats";
@@ -32,7 +32,7 @@ export function WeekCircles({ patient, onWeek }: { patient: Patient; onWeek: (we
             <Button key={w} variant="ghost" className={cn(label, "h-auto min-h-0 p-0 hover:bg-transparent [&:hover_i]:scale-106")} aria-label={`Vecka ${w}: ${done} av ${plan} pass. Visa sammanställning.`} onClick={() => onWeek(w)}>
               {full ? (
                 <i className={cn(circle, "border-success bg-success text-white")}>
-                  <Check strokeWidth={3} />
+                  <CheckIcon weight="bold" />
                 </i>
               ) : (
                 <i
@@ -46,7 +46,7 @@ export function WeekCircles({ patient, onWeek }: { patient: Patient; onWeek: (we
         })}
         <div className={label}>
           <i className={circle}>
-            <Calendar />
+            <CalendarBlankIcon />
           </i>
           Besök
         </div>

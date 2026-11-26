@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, Check, Lightbulb, Pencil, Plus, Star, Trash2 } from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon, CheckIcon, LightbulbIcon, PencilSimpleIcon, PlusIcon, StarIcon, TrashIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog";
@@ -58,7 +58,7 @@ export function ExerciseDetailDialog({ exerciseId, onClose, onOpen, onEdit, onAd
             aria-label="Favorit"
             onClick={() => update((d) => void (d.favorites = favorite ? d.favorites.filter((x) => x !== e.id) : [...d.favorites, e.id]))}
             className={cn("size-11 min-h-0 rounded-full border-0 bg-card p-0 shadow-[0_1px_3px_rgba(0,0,0,.18)]", favorite ? "text-warning" : "text-muted-foreground")}>
-            <Star className={cn("size-4.5", favorite && "fill-current")} />
+            <StarIcon weight={favorite ? "fill" : "regular"} className="size-4.5" />
           </Button>
         </div>
         <div className="flex flex-wrap gap-1.5">
@@ -85,7 +85,7 @@ export function ExerciseDetailDialog({ exerciseId, onClose, onOpen, onEdit, onAd
         </div>
         {e.why && (
           <Alert variant="brand">
-            <Lightbulb />
+            <LightbulbIcon />
             <AlertTitle>Varför?</AlertTitle>
             <AlertDescription>{e.why}</AlertDescription>
           </Alert>
@@ -99,12 +99,12 @@ export function ExerciseDetailDialog({ exerciseId, onClose, onOpen, onEdit, onAd
             <span className="text-[.9rem] text-muted-foreground">Varianter</span>
             {easier && (
               <Button variant="chip" size="chip-sm" onClick={() => onOpen(easier.id)}>
-                <ArrowDown className="size-4" /> Lättare: {easier.name}
+                <ArrowDownIcon className="size-4" /> Lättare: {easier.name}
               </Button>
             )}
             {harder && (
               <Button variant="chip" size="chip-sm" onClick={() => onOpen(harder.id)}>
-                <ArrowUp className="size-4" /> Svårare: {harder.name}
+                <ArrowUpIcon className="size-4" /> Svårare: {harder.name}
               </Button>
             )}
           </div>
@@ -122,7 +122,7 @@ export function ExerciseDetailDialog({ exerciseId, onClose, onOpen, onEdit, onAd
               const has = usedBy.includes(p);
               return (
                 <Button key={p.id} variant="chip" size="chip-sm" disabled={has} onClick={() => onAddToPatient(p.id)}>
-                  {has ? <Check className="size-4" /> : <Plus className="size-4" />}
+                  {has ? <CheckIcon className="size-4" /> : <PlusIcon className="size-4" />}
                   {p.firstName}
                 </Button>
               );
@@ -132,11 +132,11 @@ export function ExerciseDetailDialog({ exerciseId, onClose, onOpen, onEdit, onAd
         {e.custom && (
           <div className="flex gap-2.5">
             <Button size="sm" onClick={() => onEdit(e.id)}>
-              <Pencil className="size-4.5" />
+              <PencilSimpleIcon className="size-4.5" />
               Ändra övningen
             </Button>
             <Button size="sm" className="text-danger" onClick={() => setConfirmDelete(true)}>
-              <Trash2 className="size-4.5" />
+              <TrashIcon className="size-4.5" />
               Ta bort
             </Button>
           </div>

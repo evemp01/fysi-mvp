@@ -1,4 +1,4 @@
-import { Copy } from "lucide-react";
+import { CopyIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { SheetDialog } from "@/components/common/Sheet";
@@ -40,7 +40,7 @@ export function JournalDialog({ patient, onClose }: { patient: Patient; onClose:
       </FieldGroup>
       <Textarea readOnly aria-label="Journaltext" className="min-h-65" value={text} />
       <Button variant="default" onClick={copy}>
-        <Copy className="size-4.5" />
+        <CopyIcon className="size-4.5" />
         Kopiera text
       </Button>
     </SheetDialog>

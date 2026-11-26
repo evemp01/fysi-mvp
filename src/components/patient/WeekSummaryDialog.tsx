@@ -1,4 +1,4 @@
-import { Check, Info } from "lucide-react";
+import { CheckIcon, InfoIcon } from "@phosphor-icons/react";
 import { Fragment } from "react";
 import { Kpi, KpiGrid } from "@/components/common/Kpi";
 import { Alert } from "@/components/ui/alert";
@@ -39,7 +39,7 @@ export function WeekSummaryDialog({ patient, week, onClose, onToday }: Props) {
         <Kpi value={withPain.length ? (withPain.reduce((x, l) => x + (l.pain ?? 0), 0) / withPain.length).toFixed(1).replace(".", ",") : "–"} label="smärta i snitt" />
       </KpiGrid>
       <Alert variant={logs.length >= plan ? "success" : "info"}>
-        {logs.length >= plan ? <Check /> : <Info />}
+        {logs.length >= plan ? <CheckIcon /> : <InfoIcon />}
         {summary}
       </Alert>
       {logs.length ? (

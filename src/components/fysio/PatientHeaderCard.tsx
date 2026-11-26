@@ -1,4 +1,4 @@
-import { FileText, MessageCircle, Pencil } from "lucide-react";
+import { ChatCircleIcon, FileTextIcon, PencilSimpleIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { Link } from "react-router";
 import { InitialsAvatar } from "@/components/common/InitialsAvatar";
@@ -30,17 +30,17 @@ export function PatientHeaderCard({ patient }: { patient: Patient }) {
       <div className="col-span-full flex flex-wrap gap-2 md:col-span-1">
         <Button asChild size="sm">
           <Link to="messages">
-            <MessageCircle className="size-4.5" />
+            <ChatCircleIcon className="size-4.5" />
             Meddelande
           </Link>
         </Button>
         <Button size="sm" onClick={() => setJournalOpen(true)}>
-          <FileText className="size-4.5" />
+          <FileTextIcon className="size-4.5" />
           Exportera till journal
         </Button>
         <Button asChild size="sm" variant="default">
           <Link to="program">
-            <Pencil className="size-4.5" />
+            <PencilSimpleIcon className="size-4.5" />
             Justera program
           </Link>
         </Button>

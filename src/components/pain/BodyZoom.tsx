@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/common/Chip";
 import { ZOOM_GROUPS } from "@/data/body";
@@ -29,7 +29,7 @@ export function BodyZoom({ zoom, selected, onToggle, onChangeZoom }: BodyZoomPro
     <div className="grid gap-1.5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <Button variant="link" size="inline" className="pl-0" onClick={() => onChangeZoom(null)}>
-          <ArrowLeft className="size-4.5" /> Hela kroppen
+          <ArrowLeftIcon className="size-4.5" /> Hela kroppen
         </Button>
         {group.fram && group.bak && (
           <div className="flex gap-1">

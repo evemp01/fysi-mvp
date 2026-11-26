@@ -1,4 +1,4 @@
-import { Plus, Search, Star, XIcon } from "lucide-react";
+import { MagnifyingGlassIcon, PlusIcon, StarIcon, XIcon } from "@phosphor-icons/react";
 import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -117,7 +117,7 @@ export function ExerciseLibrary(props: Props) {
         <Empty className="col-span-full">
           <EmptyHeader>
             <EmptyMedia variant="icon">
-              <Star />
+              <StarIcon />
             </EmptyMedia>
             <EmptyTitle>Inga favoriter än</EmptyTitle>
             <EmptyDescription>Tryck på stjärnan på en övning för att spara den här.</EmptyDescription>
@@ -143,7 +143,7 @@ export function ExerciseLibrary(props: Props) {
           <div className="mt-1 flex gap-1.5 overflow-x-auto pb-0.5">
             {TEMPLATES.map((t, i) => (
               <Button key={t.name} variant="chip" size="chip-sm" className="flex-none" onClick={() => props.onTemplate(i)}>
-                <Plus className="size-4" /> {t.name}
+                <PlusIcon className="size-4" /> {t.name}
               </Button>
             ))}
           </div>
@@ -177,7 +177,7 @@ export function ExerciseLibrary(props: Props) {
       )}
       <InputGroup className="min-h-13">
         <InputGroupAddon>
-          <Search />
+          <MagnifyingGlassIcon />
         </InputGroupAddon>
         <InputGroupInput
           type="search"

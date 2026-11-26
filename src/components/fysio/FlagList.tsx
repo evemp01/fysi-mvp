@@ -1,4 +1,4 @@
-import { Flag } from "lucide-react";
+import { FlagIcon } from "@phosphor-icons/react";
 import { Badge } from "@/components/ui/badge";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia } from "@/components/ui/empty";
 import { Item, ItemContent, ItemDescription, ItemGroup, ItemTitle } from "@/components/ui/item";
@@ -17,7 +17,7 @@ export function FlagList({ patient }: { patient: Patient }) {
       <Empty className="p-5">
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <Flag />
+            <FlagIcon />
           </EmptyMedia>
           <EmptyDescription>Inget flaggat. {patient.firstName} har inte markerat att något känts konstigt.</EmptyDescription>
         </EmptyHeader>

@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router";
 import { Toaster } from "@/components/ui/sonner";
-import { Footer } from "./Footer";
 import { Header } from "./Header";
 
 export function RootLayout() {
@@ -17,7 +16,6 @@ export function RootLayout() {
       <main className="min-h-[70vh]">
         <Outlet />
       </main>
-      <Footer />
       <Toaster position="bottom-center" offset={90} />
     </>
   );

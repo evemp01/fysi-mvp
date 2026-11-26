@@ -1,4 +1,4 @@
-import { Check, Info, Pencil, Plus, XIcon } from "lucide-react";
+import { CheckIcon, InfoIcon, PencilSimpleIcon, PlusIcon, XIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Chip } from "@/components/common/Chip";
@@ -98,13 +98,13 @@ export function LogSessionDialog({ patient, logId, fromRun, onClose }: Props) {
       <SheetDialog open onClose={requestClose} title={logId ? "Ändra passet" : "Logga ditt pass"}>
         {!logId && !form.otherDate && alreadyLogged > 0 && (
           <Alert variant="info" className="text-[.9rem]">
-            <Info />
+            <InfoIcon />
             Du har redan loggat {alreadyLogged === 1 ? "ett pass" : `${alreadyLogged} pass`} i dag. Det här sparas som ett nytt pass.
           </Alert>
         )}
         {fromRun && (
           <Alert variant="success" className="text-[.9rem]">
-            <Check />
+            <CheckIcon />
             Ifyllt från passet du just körde. Ändra om något inte stämmer.
           </Alert>
         )}
@@ -186,7 +186,7 @@ export function LogSessionDialog({ patient, logId, fromRun, onClose }: Props) {
             <>
               <p className="text-[.9rem] text-muted-foreground">Bara om något var annorlunda än vanligt. Allt annat syns redan för Erik.</p>
               <Button variant="link" size="inline" className="pl-0" onClick={() => set({ noteOpen: true })}>
-                <Plus className="size-4.5" />
+                <PlusIcon className="size-4.5" />
                 Skriv en kommentar
               </Button>
             </>
@@ -194,7 +194,7 @@ export function LogSessionDialog({ patient, logId, fromRun, onClose }: Props) {
         </Card>
 
         <Button variant="default" size="xl" className="sticky bottom-0 w-full" onClick={save}>
-          <Check className="size-5" strokeWidth={3} /> Spara och skicka till Erik
+          <CheckIcon className="size-5" weight="bold" /> Spara och skicka till Erik
         </Button>
         <p className="text-center text-[.9rem] text-muted-foreground">Erik ser din logg direkt i sin översikt.</p>
       </SheetDialog>
@@ -234,7 +234,7 @@ function LogExercise({ item, exercise, value, note, onChange }: LogExerciseProps
       </div>
       {note && (
         <div className="flex items-start gap-1.5 text-[.9rem] font-semibold text-warning-foreground">
-          <Pencil className="mt-0.75 size-3.5 flex-none" />
+          <PencilSimpleIcon className="mt-0.75 size-3.5 flex-none" />
           <span className="line-clamp-2">Din anteckning: {note}</span>
         </div>
       )}
@@ -257,7 +257,7 @@ function LogExercise({ item, exercise, value, note, onChange }: LogExerciseProps
         </Badge>
       )}
       <Button variant="link" size="inline-sm" className="justify-self-start pl-0" onClick={() => onChange({ sets: [...value.sets, value.sets.at(-1) ?? item.reps] })}>
-        <Plus className="size-4" />
+        <PlusIcon className="size-4" />
         Lägg till set
       </Button>
       {value.open ? (

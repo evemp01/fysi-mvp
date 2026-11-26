@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon, TrashIcon } from "@phosphor-icons/react";
 import { Stepper } from "@/components/common/Stepper";
 import { ExerciseThumbnail } from "@/components/exercise/ExerciseThumbnail";
 import { Badge } from "@/components/ui/badge";
@@ -41,13 +41,13 @@ export function ProgramItemCard({ item, exercise, patientName, isFirst, isLast, 
         </div>
         <div className="flex flex-wrap">
           <Button variant="link" size="inline-sm" disabled={isFirst} onClick={() => onMove(-1)}>
-            <ArrowUp className="size-4" /> Upp
+            <ArrowUpIcon className="size-4" /> Upp
           </Button>
           <Button variant="link" size="inline-sm" disabled={isLast} onClick={() => onMove(1)}>
-            <ArrowDown className="size-4" /> Ned
+            <ArrowDownIcon className="size-4" /> Ned
           </Button>
           <Button variant="link" size="inline-sm" className="text-danger" onClick={onRemove}>
-            <Trash2 className="size-4" /> Ta bort
+            <TrashIcon className="size-4" /> Ta bort
           </Button>
         </div>
       </div>
@@ -71,12 +71,12 @@ export function ProgramItemCard({ item, exercise, patientName, isFirst, isLast, 
             <span className="text-[.9rem] text-muted-foreground">Byt till</span>
             {easier && (
               <Button variant="chip" size="chip-sm" onClick={() => onSwap(easier.id)}>
-                <ArrowDown className="size-4" /> Lättare: {easier.name}
+                <ArrowDownIcon className="size-4" /> Lättare: {easier.name}
               </Button>
             )}
             {harder && (
               <Button variant="chip" size="chip-sm" onClick={() => onSwap(harder.id)}>
-                <ArrowUp className="size-4" /> Svårare: {harder.name}
+                <ArrowUpIcon className="size-4" /> Svårare: {harder.name}
               </Button>
             )}
           </div>

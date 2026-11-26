@@ -1,4 +1,4 @@
-import { Bell } from "lucide-react";
+import { BellIcon } from "@phosphor-icons/react";
 import { Chip } from "@/components/common/Chip";
 import { Alert } from "@/components/ui/alert";
 import { SheetDialog } from "@/components/common/Sheet";
@@ -56,7 +56,7 @@ export function RemindersDialog({ patient, open, onClose }: { patient: Patient; 
         </FieldGroup>
       </Card>
       <Alert variant="info" className="text-[.9rem]">
-        <Bell />
+        <BellIcon />
         {reminderText(patient)}.
       </Alert>
       <p className="text-[.9rem] text-muted-foreground">I testversionen skickas inga riktiga notiser till mobilen.</p>

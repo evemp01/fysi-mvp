@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { PlusIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -43,7 +43,7 @@ export function ExerciseBankPage() {
           <p className="text-muted-foreground">Sök, spara favoriter och skapa egna övningar. Allt här kan användas för alla dina patienter.</p>
         </div>
         <Button variant="default" onClick={() => setEditor({ name: "" })}>
-          <Plus /> Ny övning
+          <PlusIcon /> Ny övning
         </Button>
       </div>
       <Tabs value={tab} onValueChange={(v) => setTab(v as BankTab)}>

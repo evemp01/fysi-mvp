@@ -1,4 +1,4 @@
-import { Bell, Check, ChevronRight, ClipboardList, Phone, Play } from "lucide-react";
+import { BellIcon, CaretRightIcon, CheckIcon, ClipboardTextIcon, PhoneIcon, PlayIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { InitialsAvatar } from "@/components/common/InitialsAvatar";
@@ -31,7 +31,7 @@ export function TodayPage() {
       <Empty>
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <ClipboardList />
+            <ClipboardTextIcon />
           </EmptyMedia>
           <EmptyTitle>Inget program ännu</EmptyTitle>
           <EmptyDescription>Din fysioterapeut har inte skickat några övningar till dig än. De dyker upp här när de är klara.</EmptyDescription>
@@ -52,7 +52,7 @@ export function TodayPage() {
       {lastLog && (
         <Item variant="card">
           <ItemMedia variant="icon" className="rounded-full bg-success text-white">
-            <Check strokeWidth={3} />
+            <CheckIcon weight="bold" />
           </ItemMedia>
           <ItemContent>
             <ItemTitle>{todaysLogs.length === 1 ? "Du har tränat i dag" : `Du har tränat ${todaysLogs.length} pass i dag`}</ItemTitle>
@@ -72,7 +72,7 @@ export function TodayPage() {
       {!lastLog || moreToday ? (
         <>
           <Button variant="default" size="lg" className="w-full" onClick={() => setRunning(true)}>
-            <Play className="fill-current" /> {moreToday && lastLog ? `Starta pass ${todaysLogs.length + 1} av ${perDay}` : "Starta träningspass"}
+            <PlayIcon weight="fill" className="" /> {moreToday && lastLog ? `Starta pass ${todaysLogs.length + 1} av ${perDay}` : "Starta träningspass"}
           </Button>
           <Button variant="link" size="inline" className="-mt-2 justify-self-center" onClick={() => setLog({})}>
             Har du redan tränat? Logga passet
@@ -81,7 +81,7 @@ export function TodayPage() {
       ) : (
         <div className="-mt-1 flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
           <Button size="sm" onClick={() => setRunning(true)}>
-            <Play className="size-4 fill-current" /> Träna ett pass till
+            <PlayIcon weight="fill" className="size-4" /> Träna ett pass till
           </Button>
           <Button variant="link" size="inline-sm" onClick={() => setLog({})}>
             Logga ett pass till
@@ -92,7 +92,7 @@ export function TodayPage() {
       <Item asChild size="sm" className="min-h-10 px-1 py-0.5 hover:bg-transparent">
         <button type="button" onClick={() => setRemindersOpen(true)}>
           <ItemMedia variant="icon" className="size-auto text-muted-foreground">
-            <Bell className="size-4.5" />
+            <BellIcon className="size-4.5" />
           </ItemMedia>
           <ItemContent>
             <ItemDescription>{reminderText(patient)}</ItemDescription>
@@ -112,7 +112,7 @@ export function TodayPage() {
               <ItemDescription className="line-clamp-2 text-foreground">{latestFromErik.text}</ItemDescription>
             </ItemContent>
             <ItemActions>
-              <ChevronRight className="size-5.5 text-muted-foreground" />
+              <CaretRightIcon className="size-5.5 text-muted-foreground" />
             </ItemActions>
           </Link>
         </Item>
@@ -140,7 +140,7 @@ export function TodayPage() {
       {patient.booking && (
         <Item variant="card">
           <ItemMedia variant="icon" className="rounded-full bg-brand-muted text-brand">
-            <Phone />
+            <PhoneIcon />
           </ItemMedia>
           <ItemContent>
             <ItemTitle>Telefonmöte med Erik</ItemTitle>

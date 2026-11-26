@@ -1,4 +1,4 @@
-import { Home, MessageCircle, TrendingUp } from "lucide-react";
+import { ChatCircleIcon, HouseIcon, TrendUpIcon } from "@phosphor-icons/react";
 import { NavLink, Outlet, useLocation, useParams } from "react-router";
 import { Badge } from "@/components/ui/badge";
 import { TODAY, capitalize, formatLong } from "@/lib/dates";
@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils";
 import { usePatient } from "@/state/app-context";
 
 const TABS = [
-  { to: "", label: "Idag", icon: Home },
-  { to: "progress", label: "Framsteg", icon: TrendingUp },
-  { to: "chat", label: "Chatt", icon: MessageCircle },
+  { to: "", label: "Idag", icon: HouseIcon },
+  { to: "progress", label: "Framsteg", icon: TrendUpIcon },
+  { to: "chat", label: "Chatt", icon: ChatCircleIcon },
 ];
 
 /** Phone-sized frame with the patient's bottom navigation. */

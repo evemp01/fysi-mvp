@@ -1,4 +1,4 @@
-import { ClipboardList, TriangleAlert } from 'lucide-react'
+import { ClipboardTextIcon, WarningIcon } from '@phosphor-icons/react'
 import { Link, useParams } from 'react-router'
 import { PainChart } from '@/components/charts/PainChart'
 import { WeekGoalChart } from '@/components/charts/WeekGoalChart'
@@ -23,7 +23,7 @@ export function PatientOverviewTab() {
       <Empty>
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <ClipboardList />
+            <ClipboardTextIcon />
           </EmptyMedia>
           <EmptyTitle>{patient.firstName} har inget program ännu</EmptyTitle>
           <EmptyDescription>Skapa ett program så kan du följa träning och smärta här.</EmptyDescription>
@@ -44,7 +44,7 @@ export function PatientOverviewTab() {
     <>
       {pain && pain.last.pain > patient.painLimit && (
         <Alert variant="danger">
-          <TriangleAlert />
+          <WarningIcon />
           <AlertTitle>Smärtan ligger över gränsen {patient.painLimit}/10</AlertTitle>
           <AlertDescription>Senast {pain.last.pain}/10. Överväg att sänka belastningen eller byta övning.</AlertDescription>
           <Button asChild size="sm" variant="default" className="col-start-2 mt-2 w-fit">

@@ -1,4 +1,4 @@
-import { Play } from "lucide-react";
+import { PlayIcon } from "@phosphor-icons/react";
 import type { Exercise } from "@/data/types";
 import { cn } from "@/lib/utils";
 import { ExerciseFigure } from "./ExerciseFigure";
@@ -17,7 +17,7 @@ export function VideoPlaceholder({ label }: { label: string }) {
   return (
     <div className="grid size-full min-h-15 place-items-center content-center gap-1 bg-hero text-[.8rem] font-bold text-white">
       <span className="grid size-11 place-items-center rounded-full bg-white/20">
-        <Play className="size-5 fill-current" />
+        <PlayIcon weight="fill" className="size-5" />
       </span>
       {label}
     </div>

@@ -1,4 +1,4 @@
-import { Camera, Check, Link2, Upload } from "lucide-react";
+import { CameraIcon, CheckIcon, LinkSimpleIcon, UploadSimpleIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AttachmentGrid } from "@/components/chat/AttachmentGrid";
@@ -162,12 +162,12 @@ export function NewExerciseDialog({ editing, initialName = "", forPatient, onClo
           <div className="flex flex-wrap gap-2">
             {isTouchDevice() && (
               <FileButton primary capture onFiles={addFiles}>
-                <Camera className="size-4.5" />
+                <CameraIcon className="size-4.5" />
                 Fota eller filma
               </FileButton>
             )}
             <FileButton primary={!isTouchDevice()} multiple onFiles={addFiles}>
-              <Upload className="size-4.5" />
+              <UploadSimpleIcon className="size-4.5" />
               {media.length ? "Lägg till fler" : "Ladda upp bilder eller video"}
             </FileButton>
           </div>
@@ -177,7 +177,7 @@ export function NewExerciseDialog({ editing, initialName = "", forPatient, onClo
             </FieldLabel>
             <InputGroup>
               <InputGroupAddon>
-                <Link2 />
+                <LinkSimpleIcon />
               </InputGroupAddon>
               <InputGroupInput id="nx-url" inputMode="url" placeholder="https://youtu.be/…" value={link} onChange={(e) => setLink(e.target.value)} onKeyDown={(e) => e.key === "Enter" && addLink()} />
               <InputGroupAddon align="inline-end">
@@ -225,7 +225,7 @@ export function NewExerciseDialog({ editing, initialName = "", forPatient, onClo
         </Card>
 
         <Button variant="default" size="xl" className="w-full" onClick={save}>
-          <Check className="size-5" strokeWidth={3} /> {editing ? "Spara ändringarna" : forPatient ? "Spara och lägg till i programmet" : "Spara i övningsbanken"}
+          <CheckIcon className="size-5" weight="bold" /> {editing ? "Spara ändringarna" : forPatient ? "Spara och lägg till i programmet" : "Spara i övningsbanken"}
         </Button>
         <p className="text-center text-[.9rem] text-muted-foreground">* måste fyllas i</p>
       </SheetDialog>

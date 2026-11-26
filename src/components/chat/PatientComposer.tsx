@@ -1,4 +1,4 @@
-import { Camera, Paperclip, SendHorizontal } from "lucide-react";
+import { CameraIcon, PaperclipIcon, PaperPlaneRightIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { FileButton } from "@/components/common/FileButton";
@@ -50,12 +50,12 @@ export function PatientComposer({ initialText, startWithPain, onSend, onCancel }
             </Button>
             {isTouchDevice() && (
               <FileButton capture onFiles={addFiles}>
-                <Camera className="size-4.5" />
+                <CameraIcon className="size-4.5" />
                 Filma eller fota
               </FileButton>
             )}
             <FileButton multiple onFiles={addFiles}>
-              <Paperclip className="size-4.5" />
+              <PaperclipIcon className="size-4.5" />
               Bifoga video eller bild
             </FileButton>
           </InputGroupAddon>
@@ -72,7 +72,7 @@ export function PatientComposer({ initialText, startWithPain, onSend, onCancel }
       )}
       <div className="flex gap-2.5">
         <Button variant="default" onClick={send}>
-          <SendHorizontal className="size-4.5" />
+          <PaperPlaneRightIcon className="size-4.5" />
           Skicka
         </Button>
         <Button onClick={onCancel}>Avbryt</Button>

@@ -1,4 +1,4 @@
-import { Check, MessageCircle, Phone } from "lucide-react";
+import { ChatCircleIcon, CheckIcon, PhoneIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import { toast } from "sonner";
@@ -53,7 +53,7 @@ export function ChatPage() {
 
       {patient.booking && (
         <Alert variant="success">
-          <Phone />
+          <PhoneIcon />
           <AlertTitle>Telefonmöte bokat</AlertTitle>
           <AlertDescription>{patient.booking}. Erik ringer upp dig.</AlertDescription>
         </Alert>
@@ -67,7 +67,7 @@ export function ChatPage() {
           waitingMessage(patient) && (
             <Marker className="justify-end">
               <MarkerIcon>
-                <Check strokeWidth={3} />
+                <CheckIcon weight="bold" />
               </MarkerIcon>
               <MarkerContent>Skickat. Erik svarar vanligtvis inom 2 arbetsdagar.</MarkerContent>
             </Marker>
@@ -104,7 +104,7 @@ export function ChatPage() {
             </Button>
           </div>
           <Button variant="default" className="w-full" onClick={() => startDraft({ text: "" })}>
-            <MessageCircle /> Skriv till Erik
+            <ChatCircleIcon /> Skriv till Erik
           </Button>
         </>
       )}

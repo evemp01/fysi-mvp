@@ -1,4 +1,4 @@
-import { Check, Plus, Star } from "lucide-react";
+import { CheckIcon, PlusIcon, StarIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { LEVELS } from "@/data/exercises";
 import type { Exercise } from "@/data/types";
@@ -49,11 +49,11 @@ export function LibraryTile({ exercise, why, selected, usedIn, favorite, actionL
         aria-label={`Favorit: ${exercise.name}`}
         onClick={onFavorite}
         className={cn("absolute top-1.5 left-1.5 size-9 min-h-0 rounded-full border-0 bg-card p-0 shadow-[0_1px_3px_rgba(0,0,0,.18)] hover:bg-card", favorite ? "text-warning" : "text-muted-foreground")}>
-        <Star className={cn("size-4.5", favorite && "fill-current")} />
+        <StarIcon weight={favorite ? "fill" : "regular"} className="size-4.5" />
       </Button>
       {selected && (
         <span className="absolute top-2 right-2 grid size-6.5 place-items-center rounded-full bg-brand text-white">
-          <Check className="size-3.75" strokeWidth={3} />
+          <CheckIcon className="size-3.75" weight="bold" />
         </span>
       )}
     </div>
@@ -64,7 +64,7 @@ export function NewExerciseTile({ query, onClick }: { query: string; onClick: ()
   return (
     <Button variant="ghost" onClick={onClick} className="grid h-auto min-h-37.5 content-center justify-items-center gap-1.5 rounded-[14px] border-[1.5px] border-dashed border-brand bg-card p-2 text-center whitespace-normal text-brand">
       <span className="grid size-11 place-items-center rounded-full bg-brand-muted">
-        <Plus className="size-6" strokeWidth={3} />
+        <PlusIcon className="size-6" weight="bold" />
       </span>
       <strong className="text-[.9rem]">{query ? `Skapa ”${query}”` : "Skapa egen övning"}</strong>
       <span className="text-[.8rem] font-medium text-muted-foreground">{query ? "som egen övning" : "Om den inte finns här"}</span>

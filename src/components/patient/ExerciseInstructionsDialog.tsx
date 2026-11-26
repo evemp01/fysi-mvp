@@ -1,4 +1,4 @@
-import { Lightbulb, MessageCircle } from "lucide-react";
+import { ChatCircleIcon, LightbulbIcon } from "@phosphor-icons/react";
 import { InitialsAvatar } from "@/components/common/InitialsAvatar";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { SheetDialog } from "@/components/common/Sheet";
@@ -44,7 +44,7 @@ export function ExerciseInstructionsDialog({ patient, exerciseId, onClose, onAsk
           </div>
           {exercise.why && (
             <Alert variant="brand">
-              <Lightbulb />
+              <LightbulbIcon />
               <AlertTitle>Varför den här övningen?</AlertTitle>
               <AlertDescription>{exercise.why}</AlertDescription>
             </Alert>
@@ -68,7 +68,7 @@ export function ExerciseInstructionsDialog({ patient, exerciseId, onClose, onAsk
           <PatientNotes patient={patient} exerciseId={exercise.id} />
           <div className="grid grid-cols-[1fr_1.4fr] gap-2">
             <Button onClick={() => onAsk(exercise.name)}>
-              <MessageCircle className="size-4.5" />
+              <ChatCircleIcon className="size-4.5" />
               Fråga
             </Button>
             <Button variant="default" onClick={onClose}>

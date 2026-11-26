@@ -1,4 +1,4 @@
-import { Pencil, Plus } from "lucide-react";
+import { PencilSimpleIcon, PlusIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,7 @@ export function PatientNotes({ patient, exerciseId }: { patient: Patient; exerci
     <Card className="p-4">
       <CardHeader>
         <CardTitle className="flex items-center gap-1.5">
-          <Pencil className="size-4.5" />
+          <PencilSimpleIcon className="size-4.5" />
           Mina anteckningar
         </CardTitle>
         <CardDescription>Saker du vill komma ihåg. Bara du ser dem. Vill du fråga Erik något, tryck på Fråga.</CardDescription>
@@ -63,7 +63,7 @@ export function PatientNotes({ patient, exerciseId }: { patient: Patient; exerci
           <InputGroupTextarea aria-label="Ny anteckning" className="min-h-17.5" placeholder="T.ex. Lägg en kudde på stolen, då blir det lagom djupt" value={text} onChange={(e) => setText(e.target.value)} />
           <InputGroupAddon align="block-end">
             <InputGroupButton size="sm" variant="outline" onClick={add}>
-              <Plus className="size-4" />
+              <PlusIcon className="size-4" />
               Spara anteckning
             </InputGroupButton>
           </InputGroupAddon>

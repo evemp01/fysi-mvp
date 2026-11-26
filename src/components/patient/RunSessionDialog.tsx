@@ -1,4 +1,4 @@
-import { Check, ChevronRight, Minus, Pause, Play, Plus, RotateCcw } from "lucide-react";
+import { ArrowCounterClockwiseIcon, CaretRightIcon, CheckIcon, MinusIcon, PauseIcon, PlayIcon, PlusIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import { NumberInput } from "@/components/common/NumberInput";
@@ -108,7 +108,7 @@ export function RunSessionDialog({ patient, onClose, onLog }: Props) {
           <>
             <div className="grid justify-items-center gap-2 py-5 text-center">
               <span className="grid size-19 place-items-center rounded-full bg-success text-white">
-                <Check className="size-10" strokeWidth={3} />
+                <CheckIcon className="size-10" weight="bold" />
               </span>
               <h2>Bra jobbat, {patient.firstName}!</h2>
               <p className="text-muted-foreground">Passet är klart. Det du gjort är redan ifyllt i loggen, du behöver bara kontrollera.</p>
@@ -143,7 +143,7 @@ export function RunSessionDialog({ patient, onClose, onLog }: Props) {
                 <div className="flex justify-center gap-2" aria-hidden="true">
                   {Array.from({ length: item.sets }, (_, k) => (
                     <i key={k} className={cn("grid size-7.5 place-items-center rounded-full border-2 bg-card", k < set - 1 && "border-success bg-success text-white", k === set - 1 && "border-brand shadow-[0_0_0_3px_var(--brand-muted)]")}>
-                      {k < set - 1 && <Check className="size-4" strokeWidth={3} />}
+                      {k < set - 1 && <CheckIcon className="size-4" weight="bold" />}
                     </i>
                   ))}
                 </div>
@@ -157,15 +157,15 @@ export function RunSessionDialog({ patient, onClose, onLog }: Props) {
                         <Button variant={running ? "outline" : "default"} className="min-w-32.5" onClick={() => setTicking(!running)}>
                           {running ? (
                             <>
-                              <Pause className="size-4 fill-current" /> Pausa
+                              <PauseIcon weight="fill" className="size-4" /> Pausa
                             </>
                           ) : started ? (
                             <>
-                              <Play className="size-4 fill-current" /> Fortsätt
+                              <PlayIcon weight="fill" className="size-4" /> Fortsätt
                             </>
                           ) : (
                             <>
-                              <Play className="size-4 fill-current" /> Starta timer
+                              <PlayIcon weight="fill" className="size-4" /> Starta timer
                             </>
                           )}
                         </Button>
@@ -177,7 +177,7 @@ export function RunSessionDialog({ patient, onClose, onLog }: Props) {
                             setTicking(false);
                             setSecondsLeft(item.reps);
                           }}>
-                          <RotateCcw className="size-4" /> Starta om
+                          <ArrowCounterClockwiseIcon className="size-4" /> Starta om
                         </Button>
                       )}
                     </div>
@@ -195,10 +195,10 @@ export function RunSessionDialog({ patient, onClose, onLog }: Props) {
                     </span>
                     <ButtonGroup>
                       <Button aria-label="Färre repetitioner" onClick={() => setReps(Math.max(0, reps - 1))}>
-                        <Minus className="size-4.5" /> 1
+                        <MinusIcon className="size-4.5" /> 1
                       </Button>
                       <Button aria-label="Fler repetitioner" onClick={() => setReps(reps + 1)}>
-                        <Plus className="size-4.5" /> 1
+                        <PlusIcon className="size-4.5" /> 1
                       </Button>
                     </ButtonGroup>
                     <span className="text-[.9rem] text-muted-foreground">Gjorde du fler eller färre? Tryck på siffran och skriv, eller använd − och +.</span>
@@ -206,13 +206,13 @@ export function RunSessionDialog({ patient, onClose, onLog }: Props) {
                 )}
 
                 <Button variant="default" size="xl" className="w-full" onClick={completeSet}>
-                  <Check className="size-5" strokeWidth={3} />
+                  <CheckIcon className="size-5" weight="bold" />
                   {set < item.sets ? `Set ${set} klart` : index < items.length - 1 ? "Klar, nästa övning" : "Klar, avsluta passet"}
                 </Button>
                 {set < item.sets && (
                   <Button className="w-full" onClick={completeExercise}>
                     Hela övningen klar, gå till {index < items.length - 1 ? "nästa övning" : "slutet"}
-                    <ChevronRight className="size-4.5" />
+                    <CaretRightIcon className="size-4.5" />
                   </Button>
                 )}
               </div>

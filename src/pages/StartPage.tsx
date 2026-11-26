@@ -1,4 +1,4 @@
-import { MessageSquareText } from "lucide-react";
+import { ChatTextIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { Link } from "react-router";
 import { ExerciseFigure } from "@/components/exercise/ExerciseFigure";
@@ -22,7 +22,7 @@ export function StartPage() {
       <div className="mt-5.5 grid grid-cols-[repeat(auto-fit,minmax(min(100%,300px),1fr))] gap-4.5">
         <RoleCard hero to="/patient" title="Jag är patient" text="Se dina övningar, logga dina pass och skriv till din fysioterapeut." art={<ExerciseFigure pose="squat" animated inverted />} />
         <RoleCard to="/fysio" title="Jag är fysioterapeut" text="Skapa träningsprogram på några sekunder och följ dina patienters träning och smärta." art={<ExerciseFigure pose="wallPush" animated />} />
-        <RoleCard to="/feedback" title="Ge feedback" text="Berätta vad som var enkelt, svårt eller saknas efter testet." art={<MessageSquareText className="size-24 opacity-70" strokeWidth={1.5} />} />
+        <RoleCard to="/feedback" title="Ge feedback" text="Berätta vad som var enkelt, svårt eller saknas efter testet." art={<ChatTextIcon className="size-24 opacity-70" weight="light" />} />
       </div>
     </div>
   );

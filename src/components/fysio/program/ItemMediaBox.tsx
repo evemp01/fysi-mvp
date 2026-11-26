@@ -1,4 +1,4 @@
-import { Camera, Link2, Upload } from "lucide-react";
+import { CameraIcon, LinkSimpleIcon, UploadSimpleIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AttachmentGrid } from "@/components/chat/AttachmentGrid";
@@ -35,17 +35,17 @@ export function ItemMediaBox({ media, patientName, onChange }: { media: MediaIte
       <div className="flex flex-wrap gap-1.5">
         {isTouchDevice() && (
           <FileButton primary capture onFiles={addFiles}>
-            <Camera className="size-4.5" />
+            <CameraIcon className="size-4.5" />
             Filma
           </FileButton>
         )}
         <FileButton multiple onFiles={addFiles}>
-          <Upload className="size-4.5" />
+          <UploadSimpleIcon className="size-4.5" />
           Ladda upp
         </FileButton>
         <InputGroup className="min-h-10.5 w-auto min-w-52 flex-1">
           <InputGroupAddon>
-            <Link2 />
+            <LinkSimpleIcon />
           </InputGroupAddon>
           <InputGroupInput inputMode="url" aria-label="YouTube-länk" placeholder="eller klistra in YouTube-länk" value={link} onChange={(e) => setLink(e.target.value)} onKeyDown={(e) => e.key === "Enter" && addLink()} />
           <InputGroupAddon align="inline-end">

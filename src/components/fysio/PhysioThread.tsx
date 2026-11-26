@@ -1,4 +1,4 @@
-import { Activity, Paperclip, Phone, SendHorizontal } from "lucide-react";
+import { PaperclipIcon, PaperPlaneRightIcon, PhoneIcon, PulseIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { toast } from "sonner";
@@ -66,7 +66,7 @@ export function PhysioThread({ patient, showProfileLink }: { patient: Patient; s
       </div>
       {patient.program.items.length > 0 && (
         <Alert variant="brand" className="text-[.9rem]">
-          <Activity />
+          <PulseIcon />
           <AlertDescription>
             Senaste 14 dagarna:{" "}
             <strong>
@@ -93,7 +93,7 @@ export function PhysioThread({ patient, showProfileLink }: { patient: Patient; s
         <InputGroupTextarea aria-label={`Svara ${patient.firstName}`} placeholder={`Skriv ett svar till ${patient.firstName}`} value={text} onChange={(e) => setText(e.target.value)} />
         <InputGroupAddon align="block-end" className="flex-wrap">
           <FileButton multiple onFiles={(files) => setMedia((m) => [...m, ...filesToMedia(files).items])}>
-            <Paperclip className="size-4.5" />
+            <PaperclipIcon className="size-4.5" />
             {isTouchDevice() ? "Filma eller bifoga" : "Bifoga video eller bild"}
           </FileButton>
           <Button
@@ -107,7 +107,7 @@ export function PhysioThread({ patient, showProfileLink }: { patient: Patient; s
                 toast.success("Svar skickat.");
               }
             }}>
-            <SendHorizontal className="size-4.5" />
+            <PaperPlaneRightIcon className="size-4.5" />
             Skicka svar
           </Button>
         </InputGroupAddon>
@@ -119,7 +119,7 @@ export function PhysioThread({ patient, showProfileLink }: { patient: Patient; s
             send("Jag ringer upp dig så pratar vi om det.");
             toast.success(`Svar skickat. Kom ihåg att ringa ${patient.firstName}.`);
           }}>
-          <Phone className="size-4.5" />
+          <PhoneIcon className="size-4.5" />
           Ring upp i stället
         </Button>
       </div>

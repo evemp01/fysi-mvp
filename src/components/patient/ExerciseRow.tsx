@@ -1,4 +1,4 @@
-import { Check, ChevronRight, Pencil } from "lucide-react";
+import { CaretRightIcon, CheckIcon, PencilSimpleIcon } from "@phosphor-icons/react";
 import { ExerciseThumbnail } from "@/components/exercise/ExerciseThumbnail";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
 import type { Exercise, ProgramItem } from "@/data/types";
@@ -36,14 +36,14 @@ export function ExerciseRow({ exercise, item, doneToday, lastNote, onOpen }: Exe
           </ItemDescription>
           {lastNote && (
             <span className="mt-1 flex items-start gap-1.5 text-[.9rem] font-semibold text-warning-foreground">
-              <Pencil className="mt-[calc((1lh-0.875rem)/2)] size-3.5 flex-none" />
+              <PencilSimpleIcon className="mt-[calc((1lh-0.875rem)/2)] size-3.5 flex-none" />
               <span className="line-clamp-2">{lastNote}</span>
             </span>
           )}
         </ItemContent>
         <ItemActions>
           <span aria-label={doneToday ? "Gjord i dag" : "Visa"} className={cn("grid size-8.5 place-items-center rounded-full border-[1.5px] text-muted-foreground", doneToday && "border-success bg-success text-white")}>
-            {doneToday ? <Check className="size-4.5" strokeWidth={3} /> : <ChevronRight className="size-4.5" />}
+            {doneToday ? <CheckIcon className="size-4.5" weight="bold" /> : <CaretRightIcon className="size-4.5" />}
           </span>
         </ItemActions>
       </button>

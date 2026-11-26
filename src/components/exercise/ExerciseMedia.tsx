@@ -1,5 +1,5 @@
 import { Disclosure } from "@/components/common/Disclosure";
-import { Video } from "lucide-react";
+import { VideoCameraIcon } from "@phosphor-icons/react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import type { Exercise, ProgramItem } from "@/data/types";
 import { DemoPlayer } from "./DemoPlayer";
@@ -15,9 +15,9 @@ export function ExerciseMedia({ exercise, item, compact }: { exercise: Exercise;
     return (
       <>
         <Alert variant="brand" className="px-3 py-2 text-[.9rem]">
-          <Video />
+          <VideoCameraIcon />
           <AlertDescription>
-            <strong>Video från Erik</strong>, gjord för dig
+            <strong>VideoCameraIcon från Erik</strong>, gjord för dig
           </AlertDescription>
         </Alert>
         <MediaGallery items={item.media} title={exercise.name} />

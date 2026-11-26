@@ -1,4 +1,4 @@
-import { MessageCircle } from "lucide-react";
+import { ChatCircleIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia } from "@/components/ui/empty";
 import { MessageGroup } from "@/components/ui/message";
@@ -19,7 +19,7 @@ export function MessageThread({ messages, me, otherName, footer }: MessageThread
       <Empty className="p-5">
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <MessageCircle />
+            <ChatCircleIcon />
           </EmptyMedia>
           <EmptyDescription>Inga meddelanden ännu.</EmptyDescription>
         </EmptyHeader>

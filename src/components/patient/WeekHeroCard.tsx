@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { CheckIcon } from "@phosphor-icons/react";
 import { Progress } from "@/components/ui/progress";
 import type { Patient } from "@/data/types";
 import { TODAY_KEY, formatShort } from "@/lib/dates";
@@ -16,7 +16,7 @@ function Dots({ total, done, carryFrom }: { total: number; done: number; carryFr
             i < done && "border-white bg-white text-hero",
             carryFrom != null && i >= carryFrom && i >= done && "border-dashed",
           )}>
-          {i < done ? <Check className="size-4.5" strokeWidth={3} /> : i + 1}
+          {i < done ? <CheckIcon className="size-4.5" weight="bold" /> : i + 1}
         </i>
       ))}
     </div>

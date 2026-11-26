@@ -111,7 +111,7 @@
   }
 
   h1 {
-    @apply text-[clamp(1.9rem, 4vw, 2.5rem)] font-extrabold;
+    @apply text-[clamp(1.9rem,4vw,2.5rem)] font-extrabold;
   }
 
   h2 {

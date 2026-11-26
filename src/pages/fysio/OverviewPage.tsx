@@ -1,4 +1,4 @@
-import { Activity, AlertTriangle, MessageCircle, Users } from "lucide-react";
+import { ChatCircleIcon, PulseIcon, UsersIcon, WarningIcon } from "@phosphor-icons/react";
 import { Link } from "react-router";
 import { Kpi, KpiGrid } from "@/components/common/Kpi";
 import { AttentionList } from "@/components/fysio/AttentionList";
@@ -27,15 +27,15 @@ export function OverviewPage() {
         </div>
         <Button asChild variant="default">
           <Link to="patients">
-            <Users className="size-4.5" /> Mina patienter
+            <UsersIcon className="size-4.5" /> Mina patienter
           </Link>
         </Button>
       </div>
       <KpiGrid>
-        <Kpi icon={<Users />} value={patients.length} label="Aktiva patienter" />
-        <Kpi icon={<Activity />} value={`${avgAdherence} %`} label="Snittföljsamhet, 14 dagar" />
-        <Kpi icon={<AlertTriangle />} iconClassName="bg-warning-soft text-warning-foreground" value={attention.length} label="Kräver uppmärksamhet" />
-        <Kpi icon={<MessageCircle />} value={patients.reduce((s, p) => s + p.unread, 0)} label="Olästa meddelanden" />
+        <Kpi icon={UsersIcon} value={patients.length} label="Aktiva patienter" />
+        <Kpi icon={PulseIcon} value={`${avgAdherence} %`} label="Snittföljsamhet, 14 dagar" />
+        <Kpi icon={WarningIcon} iconClassName="bg-warning-soft text-warning-foreground" value={attention.length} label="Kräver uppmärksamhet" />
+        <Kpi icon={ChatCircleIcon} value={patients.reduce((s, p) => s + p.unread, 0)} label="Olästa meddelanden" />
       </KpiGrid>
       <div className="grid grid-cols-1 gap-4.5 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         <Card className="content-start">

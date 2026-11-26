@@ -1,4 +1,4 @@
-import { CircleCheck } from "lucide-react";
+import { CheckCircleIcon } from "@phosphor-icons/react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia } from "@/components/ui/empty";
@@ -17,7 +17,7 @@ export function AttentionList({ items }: { items: AttentionItem[] }) {
       <Empty className="p-5">
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <CircleCheck />
+            <CheckCircleIcon />
           </EmptyMedia>
           <EmptyDescription>Inget just nu.</EmptyDescription>
         </EmptyHeader>

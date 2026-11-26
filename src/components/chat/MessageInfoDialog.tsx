@@ -1,4 +1,4 @@
-import { Info, TriangleAlert } from "lucide-react";
+import { InfoIcon, WarningIcon } from "@phosphor-icons/react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { SheetDialog } from "@/components/common/Sheet";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ export function MessageInfoDialog({ onClose, onContinue, onBook }: { onClose: ()
   return (
     <SheetDialog open onClose={onClose} title="Innan du skriver">
       <Alert variant="warning" className="text-[1.08rem]">
-        <Info />
+        <InfoIcon />
         <AlertTitle>Meddelanden är till för viktiga frågor</AlertTitle>
         <AlertDescription>Om din träning, till exempel om en övning gör ont eller om du är osäker på hur den görs.</AlertDescription>
       </Alert>
@@ -17,7 +17,7 @@ export function MessageInfoDialog({ onClose, onContinue, onBook }: { onClose: ()
       </p>
       <p>Har du många frågor? Ett telefonmöte går ofta snabbare.</p>
       <Alert variant="danger">
-        <TriangleAlert />
+        <WarningIcon />
         <AlertTitle>Akut?</AlertTitle>
         <AlertDescription>Ring 1177 för sjukvårdsrådgivning eller 112 vid nödläge. Vänta inte på svar här.</AlertDescription>
       </Alert>

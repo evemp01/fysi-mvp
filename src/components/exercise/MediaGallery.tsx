@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { MediaItem } from "@/data/types";
@@ -25,13 +25,13 @@ export function MediaGallery({ items, title }: { items: MediaItem[]; title: stri
       </div>
       <div className="flex items-center justify-between gap-3">
         <Button size="sm" onClick={() => go(-1)}>
-          <ChevronLeft className="size-4.5" /> Föregående
+          <CaretLeftIcon className="size-4.5" /> Föregående
         </Button>
         <span className="text-[.9rem] text-muted-foreground">
           {index + 1} av {items.length}
         </span>
         <Button size="sm" onClick={() => go(1)}>
-          Nästa <ChevronRight className="size-4.5" />
+          Nästa <CaretRightIcon className="size-4.5" />
         </Button>
       </div>
     </div>

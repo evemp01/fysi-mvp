@@ -1,4 +1,4 @@
-import { Pause, Play } from "lucide-react";
+import { PauseIcon, PlayIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { Chip } from "@/components/common/Chip";
 import { Button } from "@/components/ui/button";
@@ -17,11 +17,11 @@ export function DemoPlayer({ pose }: { pose: string }) {
         <Button size="sm" variant="default" onClick={() => setPaused(!paused)}>
           {paused ? (
             <>
-              <Play className="size-4 fill-current" /> Spela
+              <PlayIcon weight="fill" className="size-4" /> Spela
             </>
           ) : (
             <>
-              <Pause className="size-4 fill-current" /> Pausa
+              <PauseIcon weight="fill" className="size-4" /> Pausa
             </>
           )}
         </Button>

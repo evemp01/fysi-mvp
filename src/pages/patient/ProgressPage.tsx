@@ -1,4 +1,4 @@
-import { Activity, Check, Info, TrendingUp } from "lucide-react";
+import { CheckIcon, InfoIcon, PulseIcon, TrendUpIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { ChartLegendRow } from "@/components/charts/ChartLegendRow";
@@ -25,7 +25,7 @@ export function ProgressPage() {
       <Empty>
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <TrendingUp />
+            <TrendUpIcon />
           </EmptyMedia>
           <EmptyDescription>Här ser du din träning och smärta när du har kommit igång.</EmptyDescription>
         </EmptyHeader>
@@ -74,8 +74,8 @@ export function ProgressPage() {
       </Card>
 
       <KpiGrid twoColumns>
-        <Kpi compact icon={<Activity />} value={`${adherence(patient, 28).pct ?? "–"} %`} label="Följsamhet, 4 veckor" />
-        <Kpi compact icon={<Check />} value={patient.logs.length} label="Loggade pass" />
+        <Kpi compact icon={PulseIcon} value={`${adherence(patient, 28).pct ?? "–"} %`} label="Följsamhet, 4 veckor" />
+        <Kpi compact icon={CheckIcon} value={patient.logs.length} label="Loggade pass" />
       </KpiGrid>
 
       <Card>
@@ -94,7 +94,7 @@ export function ProgressPage() {
         />
         {painMessage && (
           <Alert variant="info" className="mt-2 text-[.9rem]">
-            <Info />
+            <InfoIcon />
             {painMessage}
           </Alert>
         )}

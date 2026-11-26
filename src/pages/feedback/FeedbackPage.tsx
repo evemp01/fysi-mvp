@@ -1,4 +1,4 @@
-import { SendHorizontal } from "lucide-react";
+import { PaperPlaneRightIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Chip } from "@/components/common/Chip";
@@ -77,7 +77,7 @@ export function FeedbackPage() {
               {text("missing", "Vad saknas?")}
               {text("unsure", "Var blev du osäker eller fastnade?")}
               <Button type="submit" variant="default" size="xl">
-                <SendHorizontal className="size-5" />
+                <PaperPlaneRightIcon className="size-5" />
                 Skicka feedback
               </Button>
             </FieldGroup>

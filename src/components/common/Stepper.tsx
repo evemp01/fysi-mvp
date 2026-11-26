@@ -1,4 +1,4 @@
-import { Minus, Plus } from "lucide-react";
+import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { NumberInput } from "./NumberInput";
@@ -18,11 +18,11 @@ export function Stepper({ value, onChange, label, min = 1, max = 300, step = 1 }
   return (
     <ButtonGroup aria-label={label}>
       <Button size="icon" className="size-11 rounded-xl" aria-label={`Minska ${label.toLowerCase()}`} disabled={value <= min} onClick={() => set(value - step)}>
-        <Minus />
+        <MinusIcon />
       </Button>
       <NumberInput value={value} onChange={set} label={label} min={min} max={max} className="h-11 rounded-none border-[1.5px] border-border bg-card" />
       <Button size="icon" className="size-11 rounded-xl" aria-label={`Öka ${label.toLowerCase()}`} disabled={value >= max} onClick={() => set(value + step)}>
-        <Plus />
+        <PlusIcon />
       </Button>
     </ButtonGroup>
   );

@@ -1,4 +1,4 @@
-import { Home, LayoutGrid, MessageCircle, Users } from "lucide-react";
+import { ChatCircleIcon, HouseIcon, SquaresFourIcon, UsersIcon } from "@phosphor-icons/react";
 import { NavLink, Outlet } from "react-router";
 import { InitialsAvatar } from "@/components/common/InitialsAvatar";
 import { Badge } from "@/components/ui/badge";
@@ -11,10 +11,10 @@ export function FysioLayout() {
   const { state } = useApp();
   const unread = state.order.reduce((s, id) => s + state.patients[id].unread, 0);
   const links = [
-    { to: "/fysio", label: "Översikt", icon: Home, end: true },
-    { to: "/fysio/patients", label: "Patienter", icon: Users },
-    { to: "/fysio/bank", label: "Övningsbank", icon: LayoutGrid },
-    { to: "/fysio/messages", label: "Meddelanden", icon: MessageCircle, count: unread },
+    { to: "/fysio", label: "Översikt", icon: HouseIcon, end: true },
+    { to: "/fysio/patients", label: "Patienter", icon: UsersIcon },
+    { to: "/fysio/bank", label: "Övningsbank", icon: SquaresFourIcon },
+    { to: "/fysio/messages", label: "Meddelanden", icon: ChatCircleIcon, count: unread },
   ];
   return (
     <div className="grid min-h-[calc(100svh-64px)] grid-cols-1 min-[901px]:grid-cols-[230px_minmax(0,1fr)]">

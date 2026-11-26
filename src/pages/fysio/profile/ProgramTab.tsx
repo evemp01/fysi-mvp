@@ -1,4 +1,4 @@
-import { ListPlus } from 'lucide-react'
+import { ListPlusIcon } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { useBlocker, useLocation, useParams } from 'react-router'
 import { toast } from 'sonner'
@@ -136,7 +136,7 @@ export function ProgramTab() {
           <Empty>
             <EmptyHeader>
               <EmptyMedia variant="icon">
-                <ListPlus />
+                <ListPlusIcon />
               </EmptyMedia>
               <EmptyTitle>Passet är tomt</EmptyTitle>
               <EmptyDescription>Välj övningar i biblioteket eller börja från en mall.</EmptyDescription>
