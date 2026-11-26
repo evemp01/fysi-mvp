@@ -3,8 +3,12 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/plus-jakarta-sans";
 
-/* Dark mode follows the OS. Colors use light-dark(), so one definition covers both. */
-@custom-variant dark (@media (prefers-color-scheme: dark));
+/*
+  Theme is chosen in Inställningar (light, dark or follow the device) via next-themes,
+  which puts .dark on <html> and sets color-scheme. Colors use light-dark(), so one
+  definition covers both.
+*/
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
   --font-sans: "Plus Jakarta Sans Variable",
@@ -38,6 +42,14 @@
   --color-chart-3: var(--warning);
   --color-chart-4: var(--success);
   --color-chart-5: var(--info);
+  --color-sidebar: var(--card);
+  --color-sidebar-foreground: var(--foreground);
+  --color-sidebar-primary: var(--primary);
+  --color-sidebar-primary-foreground: var(--primary-foreground);
+  --color-sidebar-accent: var(--brand-soft);
+  --color-sidebar-accent-foreground: var(--brand);
+  --color-sidebar-border: var(--border);
+  --color-sidebar-ring: var(--warning);
 
   /* Fysi palette */
   --color-brand: var(--brand);
@@ -67,30 +79,36 @@
   color-scheme: light dark;
   --radius: 12px;
 
-  /* Warm paper ground, deep teal lead, amber for progress/limits, coral for pain. */
-  --background: light-dark(#f6f4ef, #0d1514);
-  --foreground: light-dark(#1a2423, #e9efed);
-  --card: light-dark(#ffffff, #15201f);
+  /*
+    Warm paper ground, deep teal lead, amber for progress/limits, coral for pain.
+    Dark mode is the same palette at night: the paper's warm hue darkened (not a cold
+    green-black), the same deep teal hero card, and teal-filled buttons with white text
+    as in light mode. Only text and icons in brand colour (--brand) get a lighter teal so
+    they stay readable. Rule: fills use --primary, teal text uses --brand.
+  */
+  --background: light-dark(#f6f4ef, #15130f);
+  --foreground: light-dark(#1a2423, #f1ede4);
+  --card: light-dark(#ffffff, #1f1c17);
   --popover: var(--card);
   --popover-foreground: var(--foreground);
-  --muted-foreground: light-dark(#56625f, #a3b4b0);
-  --border: light-dark(#e6e1d7, #263533);
-  --primary: light-dark(#0f4c4a, #62c7b8);
-  --primary-foreground: light-dark(#ffffff, #06201d);
+  --muted-foreground: light-dark(#56625f, #a9a194);
+  --border: light-dark(#e6e1d7, #34302a);
+  --primary: light-dark(#0f4c4a, #1f6f69);
+  --primary-foreground: #ffffff;
 
-  --brand: light-dark(#0f4c4a, #62c7b8);
-  --brand-soft: light-dark(#eef7f5, #142b29);
-  --brand-muted: light-dark(#d6ece8, #1d3b38);
-  --hero: light-dark(#0f4c4a, #10403d);
-  --success: light-dark(#2e7d4f, #62d193);
-  --success-soft: light-dark(#e2f2e7, #14301f);
-  --warning: light-dark(#e9a23b, #f0b354);
-  --warning-foreground: light-dark(#8a5806, #f3c06a);
-  --warning-soft: light-dark(#fdf3e1, #33280f);
-  --danger: light-dark(#c8483a, #ff8a78);
-  --danger-soft: light-dark(#f8e1de, #3a1d18);
-  --info: light-dark(#2f5597, #9fbaf0);
-  --info-soft: light-dark(#e3ecf8, #1b2433);
+  --brand: light-dark(#0f4c4a, #7cc2b6);
+  --brand-soft: light-dark(#eef7f5, #1c2724);
+  --brand-muted: light-dark(#d6ece8, #234139);
+  --hero: #0f4c4a;
+  --success: light-dark(#2e7d4f, #3d9a64);
+  --success-soft: light-dark(#e2f2e7, #1c2a20);
+  --warning: #e9a23b;
+  --warning-foreground: light-dark(#8a5806, #f0bc6c);
+  --warning-soft: light-dark(#fdf3e1, #322819);
+  --danger: light-dark(#c8483a, #dc6555);
+  --danger-soft: light-dark(#f8e1de, #3a211b);
+  --info: light-dark(#2f5597, #93b1e6);
+  --info-soft: light-dark(#e3ecf8, #1d2431);
 }
 
 @layer base {

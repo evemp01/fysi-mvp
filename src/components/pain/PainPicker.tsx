@@ -69,7 +69,7 @@ export function PainPicker({ area, type, onChange }: PainPickerProps) {
         <span className="text-[.9rem] text-muted-foreground">Valt:</span>
         {area.length ? (
           area.map((a) => (
-            <Button key={a} variant="ghost" size="chip-sm" className="min-h-8.5 rounded-full border-0 bg-danger-soft px-2.5 text-[.82rem] text-[light-dark(#9e3226,#ff9d8d)] hover:bg-danger-soft/80" aria-label={`Ta bort ${a}`} onClick={() => toggleArea(a)}>
+            <Button key={a} variant="ghost" size="chip-sm" className="min-h-8.5 rounded-full border-0 bg-danger-soft px-2.5 text-[.82rem] text-[light-dark(#9e3226,#f2a596)] hover:bg-danger-soft/80" aria-label={`Ta bort ${a}`} onClick={() => toggleArea(a)}>
               {a}
               <XIcon className="size-3.5" />
             </Button>

@@ -1,52 +1,60 @@
 import { ChatCircleIcon, HouseIcon, SquaresFourIcon, UsersIcon } from "@phosphor-icons/react";
-import { NavLink, Outlet } from "react-router";
-import { InitialsAvatar } from "@/components/common/InitialsAvatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
+import { NavLink, Outlet, matchPath, useLocation } from "react-router";
+import { FysioHeader } from "@/components/layout/FysioHeader";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarRail, useSidebar } from "@/components/ui/sidebar";
 import { useApp } from "@/state/app-context";
+import { SidebarProfile } from "@/components/fysio/SidebarProfile";
 
-/** Physio shell: sidebar (top bar under 900px) and content. */
+/**
+ * Physio shell: shadcn sidebar and content. On desktop the sidebar collapses to an
+ * icon rail (never fully hidden); on mobile it is a sheet.
+ * Like GitHub, the content is centred on the whole viewport and only moves right
+ * when the sidebar would otherwise cover it.
+ */
 export function FysioLayout() {
   const { state } = useApp();
+  const { pathname } = useLocation();
+  const { isMobile, setOpenMobile } = useSidebar();
   const unread = state.order.reduce((s, id) => s + state.patients[id].unread, 0);
   const links = [
     { to: "/fysio", label: "Översikt", icon: HouseIcon, end: true },
-    { to: "/fysio/patients", label: "Patienter", icon: UsersIcon },
-    { to: "/fysio/bank", label: "Övningsbank", icon: SquaresFourIcon },
-    { to: "/fysio/messages", label: "Meddelanden", icon: ChatCircleIcon, count: unread },
+    { to: "/fysio/patients", label: "Patienter", icon: UsersIcon, end: false },
+    { to: "/fysio/bank", label: "Övningsbank", icon: SquaresFourIcon, end: false },
+    { to: "/fysio/messages", label: "Meddelanden", icon: ChatCircleIcon, end: false, count: unread },
   ];
+
   return (
-    <div className="grid min-h-[calc(100svh-64px)] grid-cols-1 min-[901px]:grid-cols-[230px_minmax(0,1fr)]">
-      <nav aria-label="Fysioterapeutmeny" className="flex gap-1 overflow-x-auto border-b bg-card px-3 py-2 min-[901px]:grid min-[901px]:content-start min-[901px]:border-r min-[901px]:border-b-0 min-[901px]:py-4.5">
-        {links.map(({ to, label, icon: Icon, end, count }) => (
-          <Button key={to} asChild variant="ghost" className="min-h-11.5 flex-none justify-start gap-2.5 border-0 px-3 aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground">
-            <NavLink to={to} end={end}>
-              <Icon className="size-5" />
-              {label}
-              {!!count && (
-                <Badge dot={false} className="ml-auto bg-brand-muted">
-                  {count}
-                </Badge>
-              )}
-            </NavLink>
-          </Button>
-        ))}
-        <Item size="sm" className="mt-4.5 hidden bg-brand-soft min-[901px]:flex">
-          <ItemMedia>
-            <InitialsAvatar className="size-9">EL</InitialsAvatar>
-          </ItemMedia>
-          <ItemContent>
-            <ItemTitle className="text-[.9rem]">Erik Lund</ItemTitle>
-            <ItemDescription className="text-[.85rem]">
-              Leg. fysioterapeut
-              <br />
-              Vårdcentralen Exempel
-            </ItemDescription>
-          </ItemContent>
-        </Item>
-      </nav>
-      <section className="grid w-full max-w-310 content-start gap-4.5 px-[max(2.5vw,16px)] pt-6 pb-10">
+    <div className="relative">
+      <FysioHeader />
+      <Sidebar collapsible="icon" className="top-(--header-height) h-[calc(100svh-var(--header-height))]">
+        <SidebarContent>
+          <SidebarGroup className="px-3 py-4">
+            <SidebarGroupContent>
+              <nav aria-label="Fysioterapeutmeny">
+                <SidebarMenu className="gap-1">
+                  {links.map(({ to, label, icon: Icon, end, count }) => (
+                    <SidebarMenuItem key={to}>
+                      <SidebarMenuButton asChild size="nav" isActive={!!matchPath({ path: to, end }, pathname)} tooltip={count ? `${label} (${count} ${count === 1 ? "oläst" : "olästa"})` : label}>
+                        <NavLink to={to} end={end} onClick={() => isMobile && setOpenMobile(false)}>
+                          <Icon />
+                          <span>{label}</span>
+                          {!!count && <span aria-hidden className="absolute top-2 right-2 hidden size-2.5 rounded-full bg-brand ring-2 ring-sidebar group-data-[collapsible=icon]:block" />}
+                        </NavLink>
+                      </SidebarMenuButton>
+                      {!!count && <SidebarMenuBadge className="right-2.5 rounded-full bg-brand-muted text-brand">{count}</SidebarMenuBadge>}
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </nav>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarFooter className="p-3">
+          <SidebarProfile />
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
+      <section className="grid content-start gap-4.5 pt-6 pb-10 transition-[margin] duration-200 ease-linear [--content-width:70rem] [--gutter:max(2.5vw,16px)] [--sidebar-offset:0px] md:[--sidebar-offset:var(--sidebar-width-icon)] mr-[max(var(--gutter),calc((100%-var(--content-width))/2))] ml-[max(calc(var(--sidebar-offset)+var(--gutter)),calc((100%-var(--content-width))/2))] md:peer-data-[state=expanded]:[--sidebar-offset:var(--sidebar-width)]">
         <Outlet />
       </section>
     </div>

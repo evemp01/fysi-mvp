@@ -11,7 +11,7 @@ const toggleVariants = cva(
         default: "bg-transparent hover:bg-muted data-[state=on]:bg-muted",
         outline: "border border-input bg-transparent hover:bg-muted data-[state=on]:bg-muted",
         chip: "rounded-full border-[1.5px] border-border bg-card text-foreground data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground",
-        seg: "flex-1 rounded-[10px] border-0 bg-transparent text-muted-foreground data-[state=on]:bg-card data-[state=on]:text-primary data-[state=on]:shadow-[0_1px_3px_rgba(0,0,0,.12)]",
+        seg: "flex-1 rounded-[10px] border-0 bg-transparent text-muted-foreground data-[state=on]:bg-card data-[state=on]:text-brand data-[state=on]:shadow-[0_1px_3px_rgba(0,0,0,.12)]",
       },
       size: {
         default: "min-h-[44px] px-3.5 py-2 text-base",

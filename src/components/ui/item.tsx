@@ -70,7 +70,7 @@ function ItemDescription({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
       data-slot="item-description"
-      className={cn("text-left text-[.9rem] leading-normal font-normal text-muted-foreground group-data-[size=xs]/item:text-[.82rem] [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary", className)}
+      className={cn("text-left text-[.9rem] leading-normal font-normal text-muted-foreground group-data-[size=xs]/item:text-[.82rem] [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-brand", className)}
       {...props}
     />
   );

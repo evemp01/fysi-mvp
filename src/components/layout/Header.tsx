@@ -1,6 +1,7 @@
 import { GearSixIcon, PulseIcon } from "@phosphor-icons/react";
 import { Link, NavLink, useMatch } from "react-router";
 import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { PatientSwitcher } from "./PatientSwitcher";
 
 const ROLES = [
@@ -11,8 +12,10 @@ const ROLES = [
 
 export function Header() {
   const patientRoute = useMatch("/patient/:patientId/*");
+  const fysioRoute = useMatch("/fysio/*");
   return (
-    <header className="sticky top-0 z-20 flex flex-nowrap items-center gap-1.5 border-b bg-card px-2.5 py-1.5 sm:gap-x-4 sm:px-[max(3vw,16px)] sm:py-2">
+    <header className="sticky top-0 z-20 flex flex-nowrap items-center gap-1.5 h-(--header-height) border-b bg-card px-2.5 sm:gap-x-4 sm:px-[max(3vw,16px)]">
+      {fysioRoute && <SidebarTrigger className="size-10 border-0 sm:size-11" aria-label="Visa eller dölj meny" />}
       <Link to="/" className="flex items-center gap-2 text-[1.4rem] font-extrabold tracking-[-0.03em] text-brand">
         <span className="grid size-8 place-items-center rounded-[9px] bg-hero">
           <PulseIcon className="size-5 text-white" weight="bold" />

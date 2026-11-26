@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useLayoutEffect, useMemo, useState, type ReactNode } from "react";
 import { createSeed } from "@/data/seed";
 import { AppContext, TEXT_SIZES, type AppState } from "./app-context";
 
@@ -15,7 +15,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState(initialState);
   const [textSize, setTextSize] = useState(0);
 
-  useEffect(() => {
+  // Layout effect: the new size is in place before the next paint (the settings dialog waits for it).
+  useLayoutEffect(() => {
     document.documentElement.style.fontSize = TEXT_SIZES[textSize].value;
   }, [textSize]);
 

@@ -1,13 +1,10 @@
 import { ChatCircleIcon, PulseIcon, UsersIcon, WarningIcon } from "@phosphor-icons/react";
-import { Link } from "react-router";
 import { Kpi, KpiGrid } from "@/components/common/Kpi";
 import { AttentionList } from "@/components/fysio/AttentionList";
 import { PatientTable } from "@/components/fysio/PatientTable";
 import { UpcomingVisits } from "@/components/fysio/UpcomingVisits";
-import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAttentionItems } from "@/hooks/useAttentionItems";
-import { TODAY, capitalize, formatLong } from "@/lib/dates";
 import { adherence } from "@/lib/stats";
 import { useApp } from "@/state/app-context";
 
@@ -20,17 +17,8 @@ export function OverviewPage() {
 
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1>God morgon, Erik</h1>
-          <p className="text-muted-foreground">{capitalize(formatLong(TODAY))}</p>
-        </div>
-        <Button asChild variant="default">
-          <Link to="patients">
-            <UsersIcon className="size-4.5" /> Mina patienter
-          </Link>
-        </Button>
-      </div>
+      {/* The greeting and the "Mina patienter" shortcut live in FysioHeader. */}
+      <h1 className="sr-only">Översikt</h1>
       <KpiGrid>
         <Kpi icon={UsersIcon} value={patients.length} label="Aktiva patienter" />
         <Kpi icon={PulseIcon} value={`${avgAdherence} %`} label="Snittföljsamhet, 14 dagar" />

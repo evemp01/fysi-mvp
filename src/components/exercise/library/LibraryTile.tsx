@@ -52,7 +52,7 @@ export function LibraryTile({ exercise, why, selected, usedIn, favorite, actionL
         <StarIcon weight={favorite ? "fill" : "regular"} className="size-4.5" />
       </Button>
       {selected && (
-        <span className="absolute top-2 right-2 grid size-6.5 place-items-center rounded-full bg-brand text-white">
+        <span className="absolute top-2 right-2 grid size-6.5 place-items-center rounded-full bg-primary text-primary-foreground">
           <CheckIcon className="size-3.75" weight="bold" />
         </span>
       )}
