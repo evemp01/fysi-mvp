@@ -25,6 +25,12 @@ Clickable MVP for user tests: a home-exercise platform for physiotherapy (patien
 - If the look must differ, add a variant or size to the component in `src/components/ui/` (as done for `Button`, `Toggle`, `Badge`, `Card`, `Switch`, `Alert`, `Item`, `Bubble`, `Field`, `InputGroup`) rather than bypassing it. Adding with the CLI: answer "no" to overwriting existing files so the customisations stay.
 - Plain tags are fine for layout (`div`, `section`, `nav`, headings, text) and for SVG figures/charts.
 
+## Product rules (rehab safety)
+
+- Never push patients to make up missed sessions: each week starts from 0, nothing carries over to the next week (overload risk).
+- Extra sessions may be logged, but 2+ over the plan (per week, or per day for daily programs) shows a rest warning (`extraSessions` in `lib/stats.ts`).
+- Adherence is counted per program week (`weekAdherence`): finished weeks only, extra sessions capped at the plan, the current week shown separately. The first week is prorated if the program starts mid-week. Don't reintroduce rolling 14-day adherence.
+
 ## Project layout
 
 Frontend-only prototype: all data is mock data in memory, a reload resets it. No backend, no persistence.
@@ -38,7 +44,7 @@ Frontend-only prototype: all data is mock data in memory, a reload resets it. No
 - `src/lib/` – pure helpers: dates, stats (adherence, pain trend…), search, body-map geometry, media.
 - `src/hooks/` – custom hooks.
 - Charts use shadcn `chart` (recharts).
-- Styling: Tailwind classes only. Theme tokens (palette, radius, font) live in `src/index.css`; use them as `bg-brand-soft`, `text-warning-foreground`, `bg-danger-soft` etc. No separate CSS files.
+- Styling: Tailwind classes only. Theme tokens (palette, radius, font) live in `src/index.css`; use them as `bg-brand-soft`, `text-warning-foreground`, `bg-danger-soft` etc. No separate CSS files. Green fills (buttons, bars, rings) use `--primary`, which is the same in light and dark mode; green text and icons use `--brand`, which is lighter in dark mode so it stays readable. `--sky` marks the current week in charts.
 - `legacy/index.html` – the original single-file version, kept for reference only.
 
 ## Commands
