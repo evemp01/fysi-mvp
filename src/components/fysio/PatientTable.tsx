@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { agoText } from "@/lib/dates";
 import { initials } from "@/lib/patient";
-import { adherence, daysSinceLastSession, frequencyText, painInfo, patientStatus, programWeek } from "@/lib/stats";
+import { daysSinceLastSession, frequencyText, painInfo, patientStatus, programWeek, weekAdherence } from "@/lib/stats";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/state/app-context";
 
@@ -25,7 +25,7 @@ export function PatientTable() {
       <Table className="text-[.95rem]">
         <TableHeader className="max-sm:hidden">
           <TableRow className="bg-background hover:bg-background">
-            {["Patient", "Program", "Pass, 14 dagar", "Smärta", "Senaste pass", "Status"].map((h) => (
+            {["Patient", "Program", "Pass, avslutade veckor", "Smärta", "Senaste pass", "Status"].map((h) => (
               <TableHead key={h} className="px-2 text-[.82rem] font-bold text-muted-foreground">
                 {h}
               </TableHead>
@@ -35,7 +35,7 @@ export function PatientTable() {
         <TableBody>
           {state.order.map((id) => {
             const p = state.patients[id];
-            const a = adherence(p),
+            const a = weekAdherence(p),
               pain = painInfo(p),
               [status, tone] = patientStatus(p);
             const open = () => navigate(`/fysio/patients/${id}`);
@@ -62,9 +62,9 @@ export function PatientTable() {
                     <span className="text-muted-foreground">–</span>
                   )}
                 </TableCell>
-                <TableCell data-label="Pass, 14 dagar" className={cell}>
+                <TableCell data-label="Pass, avslutade veckor" className={cell}>
                   {a.pct == null ? (
-                    <span className="text-muted-foreground">–</span>
+                    <span className="text-[.9rem] text-muted-foreground">{p.program.items.length ? "Vecka 1 pågår" : "–"}</span>
                   ) : (
                     <span className="flex items-center gap-2">
                       <Progress value={a.pct} className="h-2 w-22.5 bg-border" indicatorClassName={cn(a.pct < 60 ? "bg-danger" : a.pct < 85 ? "bg-warning" : "bg-brand")} />

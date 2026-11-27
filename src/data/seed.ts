@@ -1,4 +1,4 @@
-import { TODAY, addDays, toKey } from "@/lib/dates";
+import { TODAY, addDays, toKey, weekStart } from "@/lib/dates";
 import { EXERCISES } from "./exercises";
 import type { Effort, Patient, Program } from "./types";
 
@@ -56,6 +56,8 @@ export interface AppData {
 export function createSeed(): AppData {
   let s = 11;
   const random = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  // Olof started on the Monday three weeks before this one, so week 1 is a full week and he's in week 4.
+  const olofStart = addDays(weekStart(TODAY), -21);
 
   const olof = patient({
     id: "olof",
@@ -64,7 +66,7 @@ export function createSeed(): AppData {
     age: 71,
     diagnosis: "Knäartros, höger knä",
     nextVisit: toKey(addDays(TODAY, 8)),
-    since: toKey(addDays(TODAY, -24)),
+    since: toKey(olofStart),
     weeks: 8,
     program: program(4, [
       ["knaboj", 3, 10, "Använd köksstolen. Gå bara så djupt som känns okej."],
@@ -72,7 +74,7 @@ export function createSeed(): AppData {
       ["balans", 3, 30, "Stå vid diskbänken så du kan ta stöd."],
     ]),
     messages: [
-      { from: "physio", text: "Hej Olof! Ditt program ligger nu i appen. Hör av dig om något känns konstigt.", time: at(-24) },
+      { from: "physio", text: "Hej Olof! Ditt program ligger nu i appen. Hör av dig om något känns konstigt.", time: olofStart.getTime() },
       { from: "patient", text: "Det knakar lite i knät när jag gör knäböjen. Är det farligt?", time: at(-10, -1.3e7) },
       { from: "physio", text: "Knakande utan smärta är vanligt och ofarligt. Fortsätt som vanligt, och minska djupet om det gör ont.", time: at(-9, -0.9e7) },
     ],
@@ -127,6 +129,14 @@ export function createSeed(): AppData {
   addLogs(olof, 24, 0.47, 6.3, 2.8, "Höger knä, insida", "Molande", random);
   addLogs(anna, 17, 0.36, 3, 5.6, "Vänster axel, framsida", "Huggande", random);
   addLogs(karin, 30, 0.42, 5, 2, "Höger hälsena", "Stelt", random);
+
+  // Week 1: all 4 sessions (Mon, Wed, Fri, Sun), built from his earliest logs so pain still starts high.
+  const week1End = toKey(addDays(olofStart, 6));
+  const week1 = [0, 2, 4, 6].map((d, i) => {
+    const date = toKey(addDays(olofStart, d));
+    return { ...structuredClone(olof.logs[i]), id: `${date}-a`, date };
+  });
+  olof.logs = [...week1, ...olof.logs.filter((l) => l.date > week1End)];
 
   const ol = olof.logs,
     al = anna.logs;

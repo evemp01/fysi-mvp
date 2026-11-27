@@ -21,7 +21,9 @@ type Props =
       mode: "program";
       /** Exercise ids already in the program being edited. */
       selected: string[];
-      onToggle: (id: string) => void;
+      /** Exercise open in the editor. */
+      active?: string;
+      onPick: (id: string) => void;
       onTemplate: (index: number) => void;
       onCreate: (name: string) => void;
     }
@@ -59,9 +61,10 @@ export function ExerciseLibrary(props: Props) {
         exercise={e}
         why={why}
         selected={props.selected.includes(e.id)}
+        active={props.active === e.id}
         favorite={state.favorites.includes(e.id)}
-        actionLabel={props.selected.includes(e.id) ? "Ta bort" : "Lägg till"}
-        onClick={() => props.onToggle(e.id)}
+        actionLabel={props.selected.includes(e.id) ? "Ändra" : "Välj"}
+        onClick={() => props.onPick(e.id)}
         onFavorite={() => toggleFavorite(e)}
       />
     );
@@ -70,8 +73,7 @@ export function ExerciseLibrary(props: Props) {
     const first = hits[0]?.exercise;
     if (!first) return;
     if (props.mode === "bank") return props.onOpen(first.id);
-    if (props.selected.includes(first.id)) return toast.info(`${first.name} finns redan i programmet.`);
-    props.onToggle(first.id);
+    props.onPick(first.id);
     setQuery("");
   };
 
@@ -198,7 +200,7 @@ export function ExerciseLibrary(props: Props) {
         )}
       </InputGroup>
       <p className="-mt-1 text-[.9rem] text-muted-foreground">
-        Förstår synonymer, latin och stavfel, t.ex. ”quadriceps”, ”hälsena” eller ”impingment”. <Kbd>Enter</Kbd> {bank ? "öppnar första träffen." : "lägger till första träffen."}
+        Förstår synonymer, latin och stavfel, t.ex. ”quadriceps”, ”hälsena” eller ”impingment”. <Kbd>Enter</Kbd> {bank ? "öppnar första träffen." : "väljer första träffen."}
       </p>
       <LibraryFilters filters={filters} onChange={setFilters} />
       <div className={cn("grid gap-2.5 overflow-auto p-0.5", bank ? "grid-cols-[repeat(auto-fill,minmax(170px,1fr))]" : "max-h-155 grid-cols-[repeat(auto-fill,minmax(130px,1fr))]")}>{content}</div>

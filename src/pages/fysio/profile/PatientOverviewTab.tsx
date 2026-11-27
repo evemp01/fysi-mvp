@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardAction, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
-import { adherence, painInfo } from '@/lib/stats'
+import { painInfo, weekAdherence } from '@/lib/stats'
 import { usePatient } from '@/state/app-context'
 
 export function PatientOverviewTab() {
@@ -36,9 +36,9 @@ export function PatientOverviewTab() {
       </Empty>
     )
 
-  const a = adherence(patient)
+  const a = weekAdherence(patient)
   const pain = painInfo(patient)
-  const pct = a.pct ?? 0
+  const pct = a.pct
 
   return (
     <>
@@ -58,13 +58,25 @@ export function PatientOverviewTab() {
           <CardHeader className="mb-0">
             <CardTitle>Följsamhet</CardTitle>
             <CardDescription>Pass per vecka mot målet {patient.program.perWeek}</CardDescription>
-            <CardAction>
-              <Badge variant={pct < 60 ? 'danger' : pct < 85 ? 'warning' : 'success'}>{pct < 60 ? 'Låg' : pct < 85 ? 'Sjunkande' : 'Bra'}</Badge>
-            </CardAction>
+            {pct != null && (
+              <CardAction>
+                <Badge variant={pct < 60 ? 'danger' : pct < 85 ? 'warning' : 'success'}>{pct < 60 ? 'Låg' : pct < 85 ? 'Sjunkande' : 'Bra'}</Badge>
+              </CardAction>
+            )}
           </CardHeader>
           <div className="mt-1.5 flex items-center gap-2">
-            <strong className="text-[2rem]">{a.pct} %</strong>
-            <span className="text-[.9rem] text-muted-foreground">{a.done} av {a.plan} pass, 14 dagar<br />Snitt {a.volume ?? '–'} % av ordinerad mängd</span>
+            <strong className="text-[2rem]">{pct ?? '–'} %</strong>
+            <span className="text-[.9rem] text-muted-foreground">
+              {a.finishedWeeks ? `${a.done} av ${a.plan} pass, ${a.finishedWeeks === 1 ? 'vecka 1' : `vecka 1–${a.finishedWeeks}`}` : 'Ingen vecka avslutad än'}
+              <br />
+              Vecka {a.current.week} pågår: {a.current.done} av {a.current.plan} pass
+              {a.volume != null && (
+                <>
+                  <br />
+                  Snitt {a.volume} % av ordinerad mängd
+                </>
+              )}
+            </span>
           </div>
           <WeekGoalChart patient={patient} />
         </Card>

@@ -27,6 +27,13 @@ export const logsOn = (p: Patient, key: string) => p.logs.filter((l) => l.date =
 export const logsBetween = (p: Patient, from: Date, to: Date) => p.logs.filter((l) => l.date >= toKey(from) && l.date <= toKey(to))
 export const sessionsThisWeek = (p: Patient) => logsBetween(p, weekStart(TODAY), addDays(weekStart(TODAY), 6)).length
 
+/** Sessions logged beyond the plan, in the day (daily programs) or week containing `dateKey`. */
+export function extraSessions(p: Patient, dateKey: string) {
+  if (isDaily(p.program)) return Math.max(0, logsOn(p, dateKey).length - (p.program.perDay || 1))
+  const from = weekStart(fromKey(dateKey))
+  return Math.max(0, logsBetween(p, from, addDays(from, 6)).length - p.program.perWeek)
+}
+
 export const programWeek = (p: Patient) =>
   p.since ? Math.min(p.weeks, Math.floor(daysBetween(weekStart(fromKey(p.since)), TODAY) / 7) + 1) : 0
 
@@ -44,15 +51,6 @@ export const weekRange = (p: Patient, w: number) => {
   return { from, to: addDays(from, 6) }
 }
 
-/** Sessions missed last week that carry over (max 2). */
-export function carriedOver(p: Patient) {
-  if (!p.since || isDaily(p.program)) return 0
-  const lastWeek = addDays(weekStart(TODAY), -7)
-  if (lastWeek < weekStart(fromKey(p.since))) return 0
-  const done = logsBetween(p, lastWeek, addDays(lastWeek, 6)).length
-  return Math.min(2, Math.max(0, p.program.perWeek - done))
-}
-
 export function adherence(p: Patient, days = 14) {
   let from = addDays(TODAY, -(days - 1))
   if (p.since && fromKey(p.since) > from) from = fromKey(p.since)
@@ -65,6 +63,33 @@ export function adherence(p: Patient, days = 14) {
     volume: logs.length ? Math.round((logs.reduce((s, l) => s + sessionVolume(p, l), 0) / logs.length) * 100) : null,
     from,
     logs,
+  }
+}
+
+/**
+ * Adherence per program week, matching the week chart: finished weeks count (extra sessions
+ * are capped at the plan), the current week is reported separately since it isn't over yet.
+ */
+export function weekAdherence(p: Patient) {
+  const current = programWeek(p)
+  let done = 0
+  let plan = 0
+  const logs: SessionLog[] = []
+  for (let w = 1; w < current; w++) {
+    const { from, to } = weekRange(p, w)
+    const inWeek = logsBetween(p, from, to)
+    done += Math.min(inWeek.length, weekPlan(p, w))
+    plan += weekPlan(p, w)
+    logs.push(...inWeek)
+  }
+  const now = current ? logsBetween(p, weekRange(p, current).from, weekRange(p, current).to).length : 0
+  return {
+    done,
+    plan,
+    finishedWeeks: Math.max(0, current - 1),
+    pct: plan && p.program.items.length ? Math.round((done / plan) * 100) : null,
+    volume: logs.length ? Math.round((logs.reduce((s, l) => s + sessionVolume(p, l), 0) / logs.length) * 100) : null,
+    current: { week: current, done: now, plan: current ? weekPlan(p, current) : 0 },
   }
 }
 
@@ -93,7 +118,7 @@ export function patientStatus(p: Patient): [string, Tone] {
   const pi = painInfo(p)
   if (pi && pi.last.pain > p.painLimit) return ['Över smärtgräns', 'danger']
   if (pi && pi.trend > 0.5) return ['Smärta ökar', 'warning']
-  const a = adherence(p)
+  const a = weekAdherence(p)
   if (a.pct != null && a.pct < 60) return ['Låg följsamhet', 'warning']
   return ['På spår', 'success']
 }
@@ -144,7 +169,7 @@ export function reminderText(p: Patient, r: Reminder = p.reminder) {
 }
 
 export function journalText(p: Patient, getExercise: (id: string) => Exercise | undefined, opts: { notes: boolean; flags: boolean }) {
-  const a = adherence(p), pi = painInfo(p)
+  const a = adherence(p), w = weekAdherence(p), pi = painInfo(p)
   const count = (list: string[]) => list.reduce<Record<string, number>>((acc, x) => ((acc[x] = (acc[x] ?? 0) + 1), acc), {})
   const areas = count(a.logs.flatMap((l) => l.area))
   const types = count(a.logs.flatMap((l) => l.type))
@@ -153,7 +178,7 @@ export function journalText(p: Patient, getExercise: (id: string) => Exercise | 
     `Hemträning, sammanfattning ${TODAY_KEY}`,
     `Patient: ${p.name}, ${p.age} år. ${p.diagnosis}.`,
     `Program vecka ${programWeek(p)} av ${p.weeks} (${frequencyText(p.program)}, smärtgräns ${p.painLimit}/10): ${p.program.items.map((it) => `${getExercise(it.exerciseId)?.name} ${doseText(it, getExercise(it.exerciseId))}`).join('; ')}.`,
-    `Genomförda pass senaste 14 dagar: ${a.done} av ${a.plan} planerade${a.volume != null ? `, i snitt ${a.volume} % av ordinerad mängd per pass` : ''}.`,
+    `Genomförda pass, avslutade veckor: ${w.finishedWeeks ? `${w.done} av ${w.plan} planerade (${w.pct} %)${w.volume != null ? `, i snitt ${w.volume} % av ordinerad mängd per pass` : ''}` : 'ingen vecka avslutad än'}. Vecka ${w.current.week} pågår: ${w.current.done} av ${w.current.plan} pass.`,
     `Upplevd ansträngning: ${Object.entries(efforts).map(([k, v]) => `${k.toLowerCase()} ${v}`).join(', ') || '–'}.`,
     `Smärta (VAS): ${pi ? `start ${pi.first.pain}/10, senast ${pi.last.pain}/10, trend ${pi.trend > 0.5 ? 'ökande' : pi.trend < -0.5 ? 'minskande' : 'stabil'}` : 'ej loggad'}.`,
     `Smärtlokalisation: ${Object.keys(areas).join(', ') || '–'}. Karaktär: ${Object.keys(types).join(', ') || '–'}.`,

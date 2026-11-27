@@ -1,16 +1,18 @@
-import { ListPlusIcon } from '@phosphor-icons/react'
+import { CursorClickIcon, ListPlusIcon } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { useBlocker, useLocation, useParams } from 'react-router'
 import { toast } from 'sonner'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { ExerciseLibrary } from '@/components/exercise/library/ExerciseLibrary'
 import { NewExerciseDialog } from '@/components/exercise/NewExerciseDialog'
-import { ProgramItemCard } from '@/components/fysio/program/ProgramItemCard'
+import { ProgramItemEditor } from '@/components/fysio/program/ProgramItemEditor'
+import { ProgramItemRow } from '@/components/fysio/program/ProgramItemRow'
 import { ProgramSettings } from '@/components/fysio/program/ProgramSettings'
 import type { ProgramDraft } from '@/components/fysio/program/types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
+import { ItemGroup } from '@/components/ui/item'
 import { TEMPLATES } from '@/data/templates'
 import type { Exercise, Patient, ProgramItem } from '@/data/types'
 import { TODAY_KEY } from '@/lib/dates'
@@ -19,6 +21,12 @@ import { useApp, useExercises, usePatient } from '@/state/app-context'
 
 const toDraft = (p: Patient): ProgramDraft => ({ ...structuredClone(p.program), weeks: p.weeks, painLimit: p.painLimit })
 const newItem = (e: Exercise): ProgramItem => ({ exerciseId: e.id, sets: 3, reps: e.unit === 'sek' ? 30 : 10, note: '' })
+
+/** Exercise being set up in the middle column. `from` is its id in the program, or null if it's not added yet. */
+interface Editing {
+  from: string | null
+  item: ProgramItem
+}
 
 export function ProgramTab() {
   const patient = usePatient(useParams().patientId)
@@ -34,25 +42,63 @@ export function ProgramTab() {
     if (e && !d.items.some((it) => it.exerciseId === e.id)) d.items.push(newItem(e))
     return d
   })
-  const [editingText, setEditingText] = useState<string | null>(null)
+  const [editing, setEditing] = useState<Editing | null>(() => {
+    const e = addFromBank && getExercise(addFromBank)
+    return e ? { from: e.id, item: draft.items.find((it) => it.exerciseId === e.id) ?? newItem(e) } : null
+  })
   const [creating, setCreating] = useState<string | null>(null)
   const dirty = JSON.stringify(draft) !== saved
   const blocker = useBlocker(({ currentLocation, nextLocation }) => dirty && currentLocation.pathname !== nextLocation.pathname)
 
   const change = (changes: Partial<ProgramDraft>) => setDraft((d) => ({ ...d, ...changes }))
   const setItems = (fn: (items: ProgramItem[]) => ProgramItem[]) => setDraft((d) => ({ ...d, items: fn(d.items) }))
+  const editItem = (changes: Partial<ProgramItem>) => setEditing((ed) => ed && { ...ed, item: { ...ed.item, ...changes } })
 
-  const add = (e: Exercise) => {
-    setItems((items) => [...items, newItem(e)])
-    update((d) => void (d.recent = [e.id, ...d.recent.filter((x) => x !== e.id)].slice(0, 8)))
-    toast.success(`${e.name} tillagd`)
-  }
-  const toggle = (id: string) => {
+  /** Opens an exercise in the editor: its current setup if it's in the program, otherwise a default dose. */
+  const pick = (id: string) => {
     const e = getExercise(id)
     if (!e) return
-    if (draft.items.some((it) => it.exerciseId === id)) setItems((items) => items.filter((it) => it.exerciseId !== id))
-    else add(e)
+    const existing = draft.items.find((it) => it.exerciseId === id)
+    setEditing({ from: existing ? id : null, item: existing ? structuredClone(existing) : newItem(e) })
   }
+
+  const submit = () => {
+    if (!editing) return
+    const { from, item } = editing
+    const name = getExercise(item.exerciseId)?.name ?? 'Övningen'
+    const inProgram = from != null && draft.items.some((it) => it.exerciseId === from)
+    if (inProgram) {
+      setItems((items) => items.map((it) => (it.exerciseId === from ? item : it)))
+      toast.success(`${name} är uppdaterad.`)
+    } else {
+      setItems((items) => [...items, item])
+      update((d) => void (d.recent = [item.exerciseId, ...d.recent.filter((x) => x !== item.exerciseId)].slice(0, 8)))
+      toast.success(`${name} är tillagd i programmet.`)
+    }
+    setEditing(null)
+  }
+
+  const remove = (id: string) => {
+    setItems((items) => items.filter((it) => it.exerciseId !== id))
+    if (editing?.from === id) setEditing(null)
+  }
+
+  const move = (index: number, dir: -1 | 1) =>
+    setItems((items) => {
+      const next = [...items]
+      ;[next[index], next[index + dir]] = [next[index + dir], next[index]]
+      return next
+    })
+
+  const swap = (exerciseId: string) => {
+    const next = getExercise(exerciseId)
+    if (!editing || !next) return
+    if (draft.items.some((x) => x.exerciseId === exerciseId && x.exerciseId !== editing.from)) return toast.info(`${next.name} finns redan i programmet.`)
+    const sameUnit = getExercise(editing.item.exerciseId)?.unit === next.unit
+    editItem({ exerciseId, steps: undefined, tip: undefined, reps: sameUnit ? editing.item.reps : next.unit === 'sek' ? 30 : 10 })
+    toast.success(`Bytt till ${next.name}.`)
+  }
+
   const applyTemplate = (index: number) => {
     const t = TEMPLATES[index]
     const missing = t.items.filter((it) => !draft.items.some((x) => x.exerciseId === it.exerciseId))
@@ -62,20 +108,6 @@ export function ProgramTab() {
       items: [...d.items, ...missing.map((it) => ({ ...it, note: '' }))],
     }))
     toast(missing.length ? `Mallen ${t.name.toLowerCase()} är tillagd. Justera vid behov.` : 'Övningarna finns redan i programmet.')
-  }
-  const swap = (index: number, exerciseId: string) => {
-    const next = getExercise(exerciseId)
-    if (!next) return
-    if (draft.items.some((x) => x.exerciseId === exerciseId)) return toast.info(`${next.name} finns redan i programmet.`)
-    setItems((items) =>
-      items.map((it, i) => {
-        if (i !== index) return it
-        const sameUnit = getExercise(it.exerciseId)?.unit === next.unit
-        return { ...it, exerciseId, steps: undefined, tip: undefined, reps: sameUnit ? it.reps : next.unit === 'sek' ? 30 : 10 }
-      }),
-    )
-    setEditingText(null)
-    toast.success(`Bytt till ${next.name}.`)
   }
 
   const save = () => {
@@ -94,11 +126,42 @@ export function ProgramTab() {
     toast.success(`Programmet är skickat till ${patient.firstName}.`)
   }
 
+  const editingExercise = editing && getExercise(editing.item.exerciseId)
+
   return (
-    <div className="grid grid-cols-1 gap-[18px] md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
-      <ExerciseLibrary mode="program" selected={draft.items.map((it) => it.exerciseId)} onToggle={toggle} onTemplate={applyTemplate} onCreate={setCreating} />
+    <div className="grid grid-cols-1 gap-[18px] lg:grid-cols-2 xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1fr)]">
+      <ExerciseLibrary mode="program" selected={draft.items.map((it) => it.exerciseId)} active={editing?.item.exerciseId} onPick={pick} onTemplate={applyTemplate} onCreate={setCreating} />
 
       <div className="grid content-start gap-3">
+        <h2>Ställ in övningen</h2>
+        {editing && editingExercise ? (
+          <ProgramItemEditor
+            key={editing.from ?? `new-${editing.item.exerciseId}`}
+            item={editing.item}
+            exercise={editingExercise}
+            patientName={patient.firstName}
+            isNew={editing.from == null}
+            getExercise={getExercise}
+            onChange={editItem}
+            onSwap={swap}
+            onSubmit={submit}
+            onCancel={() => setEditing(null)}
+            onRemove={() => editing.from && remove(editing.from)}
+          />
+        ) : (
+          <Empty className="border">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <CursorClickIcon />
+              </EmptyMedia>
+              <EmptyTitle>Välj en övning</EmptyTitle>
+              <EmptyDescription>Välj en övning i biblioteket för att ställa in set, repetitioner och instruktioner. Tryck på pennan i programmet för att ändra en övning som redan finns där.</EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        )}
+      </div>
+
+      <div className="grid content-start gap-3 lg:col-span-2 xl:col-span-1">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2>Program för {patient.firstName}</h2>
           {dirty ? <Badge variant="warning">Osparade ändringar</Badge> : <Badge variant="success">Sparat</Badge>}
@@ -106,32 +169,25 @@ export function ProgramTab() {
         <ProgramSettings draft={draft} onChange={change} />
         <p className="text-[.9rem] text-muted-foreground">Ett pass = alla övningar nedan · {draft.items.length} övningar</p>
         {draft.items.length ? (
-          draft.items.map((item, i) => {
-            const exercise = getExercise(item.exerciseId)
-            return exercise ? (
-              <ProgramItemCard
-                key={item.exerciseId}
-                item={item}
-                exercise={exercise}
-                patientName={patient.firstName}
-                isFirst={i === 0}
-                isLast={i === draft.items.length - 1}
-                editingText={editingText === item.exerciseId}
-                getExercise={getExercise}
-                onChange={(c) => setItems((items) => items.map((it, k) => (k === i ? { ...it, ...c } : it)))}
-                onMove={(dir) =>
-                  setItems((items) => {
-                    const next = [...items]
-                    ;[next[i], next[i + dir]] = [next[i + dir], next[i]]
-                    return next
-                  })
-                }
-                onRemove={() => setItems((items) => items.filter((_, k) => k !== i))}
-                onSwap={(id) => swap(i, id)}
-                onToggleEditText={() => setEditingText(editingText === item.exerciseId ? null : item.exerciseId)}
-              />
-            ) : null
-          })
+          <ItemGroup className="gap-2">
+            {draft.items.map((item, i) => {
+              const exercise = getExercise(item.exerciseId)
+              return exercise ? (
+                <ProgramItemRow
+                  key={item.exerciseId}
+                  index={i}
+                  item={item}
+                  exercise={exercise}
+                  active={editing?.from === item.exerciseId}
+                  isFirst={i === 0}
+                  isLast={i === draft.items.length - 1}
+                  onEdit={() => pick(item.exerciseId)}
+                  onMove={(dir) => move(i, dir)}
+                  onRemove={() => remove(item.exerciseId)}
+                />
+              ) : null
+            })}
+          </ItemGroup>
         ) : (
           <Empty>
             <EmptyHeader>
@@ -145,7 +201,7 @@ export function ProgramTab() {
         )}
         <div className="sticky bottom-0 z-10 flex flex-wrap items-center gap-2.5 border-t bg-background py-3">
           <Button variant="default" disabled={!dirty || !draft.items.length} onClick={save}>Spara och skicka till {patient.firstName}</Button>
-          {dirty && <Button onClick={() => setDraft(JSON.parse(saved))}>Ångra ändringar</Button>}
+          {dirty && <Button onClick={() => { setDraft(JSON.parse(saved)); setEditing(null) }}>Ångra ändringar</Button>}
         </div>
       </div>
 
@@ -156,8 +212,8 @@ export function ProgramTab() {
           onClose={() => setCreating(null)}
           onSaved={(e) => {
             setCreating(null)
-            setItems((items) => [...items, newItem(e)])
-            toast.success(`${e.name} är skapad och tillagd i programmet.`)
+            setEditing({ from: null, item: newItem(e) })
+            toast.success(`${e.name} är skapad. Ställ in dosen och lägg till den i programmet.`)
           }}
         />
       )}

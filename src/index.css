@@ -65,6 +65,7 @@
   --color-danger-soft: var(--danger-soft);
   --color-info: var(--info);
   --color-info-soft: var(--info-soft);
+  --color-sky: var(--sky);
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -109,6 +110,8 @@
   --danger-soft: light-dark(#f8e1de, #3a211b);
   --info: light-dark(#2f5597, #93b1e6);
   --info-soft: light-dark(#e3ecf8, #1d2431);
+  /* Week in progress in charts. */
+  --sky: light-dark(#8ecbf0, #6fb6e3);
 }
 
 @layer base {

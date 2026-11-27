@@ -5,15 +5,16 @@ import { PatientTable } from "@/components/fysio/PatientTable";
 import { UpcomingVisits } from "@/components/fysio/UpcomingVisits";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAttentionItems } from "@/hooks/useAttentionItems";
-import { adherence } from "@/lib/stats";
+import { weekAdherence } from "@/lib/stats";
 import { useApp } from "@/state/app-context";
 
 export function OverviewPage() {
   const { state } = useApp();
   const attention = useAttentionItems();
   const patients = state.order.map((id) => state.patients[id]);
-  const active = patients.filter((p) => p.program.items.length);
-  const avgAdherence = active.length ? Math.round(active.reduce((s, p) => s + (adherence(p).pct ?? 0), 0) / active.length) : 0;
+  // Only patients with at least one finished week have a percentage.
+  const pcts = patients.map((p) => weekAdherence(p).pct).filter((x): x is number => x != null);
+  const avgAdherence = pcts.length ? Math.round(pcts.reduce((s, x) => s + x, 0) / pcts.length) : null;
 
   return (
     <>
@@ -21,7 +22,7 @@ export function OverviewPage() {
       <h1 className="sr-only">Översikt</h1>
       <KpiGrid>
         <Kpi icon={UsersIcon} value={patients.length} label="Aktiva patienter" />
-        <Kpi icon={PulseIcon} value={`${avgAdherence} %`} label="Snittföljsamhet, 14 dagar" />
+        <Kpi icon={PulseIcon} value={`${avgAdherence ?? "–"} %`} label="Snittföljsamhet, avslutade veckor" />
         <Kpi icon={WarningIcon} iconClassName="bg-warning-soft text-warning-foreground" value={attention.length} label="Kräver uppmärksamhet" />
         <Kpi icon={ChatCircleIcon} value={patients.reduce((s, p) => s + p.unread, 0)} label="Olästa meddelanden" />
       </KpiGrid>

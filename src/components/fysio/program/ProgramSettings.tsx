@@ -6,7 +6,7 @@ import type { Frequency } from "@/data/types";
 import type { ProgramDraft } from "./types";
 
 const Box = ({ label, children, hint }: { label: string; children: ReactNode; hint: string }) => (
-  <Field className="gap-1.5 rounded-[14px] bg-brand-soft p-3 *:w-auto">
+  <Field className="items-start gap-1.5 rounded-[14px] bg-brand-soft p-3 *:w-auto">
     <FieldTitle className="text-[.9rem]">{label}</FieldTitle>
     {children}
     <FieldDescription>{hint}</FieldDescription>

@@ -4,6 +4,7 @@ import { FysioHeader } from "@/components/layout/FysioHeader";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarRail, useSidebar } from "@/components/ui/sidebar";
 import { useApp } from "@/state/app-context";
 import { SidebarProfile } from "@/components/fysio/SidebarProfile";
+import { cn } from "@/lib/utils";
 
 /**
  * Physio shell: shadcn sidebar and content. On desktop the sidebar collapses to an
@@ -16,6 +17,8 @@ export function FysioLayout() {
   const { pathname } = useLocation();
   const { isMobile, setOpenMobile } = useSidebar();
   const unread = state.order.reduce((s, id) => s + state.patients[id].unread, 0);
+  // The program builder has three columns and uses the full screen width.
+  const wide = !!matchPath("/fysio/patients/:patientId/program", pathname);
   const links = [
     { to: "/fysio", label: "Översikt", icon: HouseIcon, end: true },
     { to: "/fysio/patients", label: "Patienter", icon: UsersIcon, end: false },
@@ -54,7 +57,11 @@ export function FysioLayout() {
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
-      <section className="grid content-start gap-4.5 pt-6 pb-10 transition-[margin] duration-200 ease-linear [--content-width:70rem] [--gutter:max(2.5vw,16px)] [--sidebar-offset:0px] md:[--sidebar-offset:var(--sidebar-width-icon)] mr-[max(var(--gutter),calc((100%-var(--content-width))/2))] ml-[max(calc(var(--sidebar-offset)+var(--gutter)),calc((100%-var(--content-width))/2))] md:peer-data-[state=expanded]:[--sidebar-offset:var(--sidebar-width)]">
+      <section
+        className={cn(
+          "grid content-start gap-4.5 pt-6 pb-10 transition-[margin] duration-200 ease-linear [--content-width:70rem] [--gutter:max(2.5vw,16px)] [--sidebar-offset:0px] md:[--sidebar-offset:var(--sidebar-width-icon)] mr-[max(var(--gutter),calc((100%-var(--content-width))/2))] ml-[max(calc(var(--sidebar-offset)+var(--gutter)),calc((100%-var(--content-width))/2))] md:peer-data-[state=expanded]:[--sidebar-offset:var(--sidebar-width)]",
+          wide && "[--content-width:120rem]",
+        )}>
         <Outlet />
       </section>
     </div>

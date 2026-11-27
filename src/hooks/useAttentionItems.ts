@@ -1,5 +1,5 @@
 import { ChatCircleIcon, FlagIcon, type Icon, PencilSimpleIcon, PulseIcon, WarningIcon } from "@phosphor-icons/react";
-import { adherence, flags, painInfo, replyBy, replyByText, waitingMessage } from "@/lib/stats";
+import { flags, weekAdherence, painInfo, replyBy, replyByText, waitingMessage } from "@/lib/stats";
 import { useApp, useExercises } from "@/state/app-context";
 
 export type AttentionTone = "danger" | "warning" | "info";
@@ -48,8 +48,8 @@ export function useAttentionItems(): AttentionItem[] {
         detail: [...new Set(flagged.map((f) => `${getExercise(f.exerciseId ?? "")?.name}: ${f.flag}`))].slice(0, 2).join(", "),
       });
     if (!p.program.items.length) out.push({ tone: "info", icon: PencilSimpleIcon, title: `Skapa program åt ${p.firstName}`, detail: p.diagnosis, action: "Skapa", to: `${base}/program` });
-    const a = adherence(p);
-    if (a.pct != null && a.pct < 60) out.push({ tone: "warning", icon: PulseIcon, title: `${p.firstName} har gjort ${a.done} av ${a.plan} pass`, detail: "Senaste 14 dagarna", action: "Skriv", to: `${base}/messages` });
+    const a = weekAdherence(p);
+    if (a.pct != null && a.pct < 60) out.push({ tone: "warning", icon: PulseIcon, title: `${p.firstName} har gjort ${a.done} av ${a.plan} pass`, detail: a.finishedWeeks === 1 ? "Vecka 1" : `Vecka 1–${a.finishedWeeks}`, action: "Skriv", to: `${base}/messages` });
   }
   return out;
 }

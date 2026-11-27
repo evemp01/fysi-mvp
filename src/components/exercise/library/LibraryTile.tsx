@@ -11,6 +11,8 @@ interface LibraryTileProps {
   why?: string;
   /** In the program being edited (program mode). */
   selected?: boolean;
+  /** Open in the program editor. */
+  active?: boolean;
   /** Number of programs it's used in (bank mode). */
   usedIn?: number;
   favorite: boolean;
@@ -19,9 +21,9 @@ interface LibraryTileProps {
   onFavorite: () => void;
 }
 
-export function LibraryTile({ exercise, why, selected, usedIn, favorite, actionLabel, onClick, onFavorite }: LibraryTileProps) {
+export function LibraryTile({ exercise, why, selected, active, usedIn, favorite, actionLabel, onClick, onFavorite }: LibraryTileProps) {
   return (
-    <div className={cn("relative grid gap-1.5 rounded-[14px] border-[1.5px] bg-card p-2", selected && "border-brand bg-brand-soft")}>
+    <div className={cn("relative grid gap-1.5 rounded-[14px] border-[1.5px] bg-card p-2", selected && "border-brand bg-brand-soft", active && "border-warning ring-2 ring-warning/40")}>
       <Button
         variant="ghost"
         aria-pressed={selected}

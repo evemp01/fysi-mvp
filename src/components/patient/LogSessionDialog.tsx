@@ -19,7 +19,7 @@ import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import type { Effort, Exercise, Flag, Patient, ProgramItem } from "@/data/types";
 import { TODAY, TODAY_KEY, addDays, capitalize, formatLong, fromKey, toKey } from "@/lib/dates";
-import { doseText, logsOn, painInfo, sessionsThisWeek } from "@/lib/stats";
+import { doseText, extraSessions, logsOn, painInfo, sessionsThisWeek } from "@/lib/stats";
 import { cn } from "@/lib/utils";
 import { useApp, useExercises } from "@/state/app-context";
 import type { SessionResult } from "./RunSessionDialog";
@@ -88,6 +88,9 @@ export function LogSessionDialog({ patient, logId, fromRun, onClose }: Props) {
     const done = sessionsThisWeek({ ...patient, logs });
     const per = patient.program.perWeek;
     toast.success(done >= per ? `Pass sparat! Veckans mål på ${per} pass är nått.` : `Pass sparat! ${done} av ${per} pass den här veckan.`);
+    if (!logId && extraSessions({ ...patient, logs }, log.date) >= 2) {
+      toast.warning("Tänk på att låta din kropp vila, Fysioterapeuten har gjort ett program för din individuella utveckling.", { duration: 10000 });
+    }
     onClose();
   };
 

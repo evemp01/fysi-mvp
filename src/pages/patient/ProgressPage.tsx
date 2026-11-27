@@ -12,7 +12,7 @@ import { ExerciseProgressList } from "@/components/progress/ExerciseProgressList
 import { Card, CardAction, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia } from "@/components/ui/empty";
 import { formatShort, fromKey } from "@/lib/dates";
-import { adherence, painInfo, programEnd, programWeek, sessionsThisWeek } from "@/lib/stats";
+import { painInfo, programEnd, programWeek, sessionsThisWeek, weekAdherence } from "@/lib/stats";
 import { usePatient } from "@/state/app-context";
 
 export function ProgressPage() {
@@ -74,7 +74,7 @@ export function ProgressPage() {
       </Card>
 
       <KpiGrid twoColumns>
-        <Kpi compact icon={PulseIcon} value={`${adherence(patient, 28).pct ?? "–"} %`} label="Följsamhet, 4 veckor" />
+        <Kpi compact icon={PulseIcon} value={`${weekAdherence(patient).pct ?? "–"} %`} label="Följsamhet, avslutade veckor" />
         <Kpi compact icon={CheckIcon} value={patient.logs.length} label="Loggade pass" />
       </KpiGrid>
 

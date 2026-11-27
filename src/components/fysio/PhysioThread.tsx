@@ -11,7 +11,7 @@ import { InputGroup, InputGroupAddon, InputGroupTextarea } from "@/components/ui
 import type { MediaItem, Patient } from "@/data/types";
 import { formatTime } from "@/lib/dates";
 import { filesToMedia, isTouchDevice } from "@/lib/media";
-import { adherence, painInfo, replyBy, replyByText, waitingMessage } from "@/lib/stats";
+import { painInfo, weekAdherence, replyBy, replyByText, waitingMessage } from "@/lib/stats";
 import { useApp } from "@/state/app-context";
 
 const QUICK_REPLIES = [
@@ -25,7 +25,7 @@ export function PhysioThread({ patient, showProfileLink }: { patient: Patient; s
   const { update } = useApp();
   const [text, setText] = useState("");
   const [media, setMedia] = useState<MediaItem[]>([]);
-  const a = adherence(patient),
+  const a = weekAdherence(patient),
     pain = painInfo(patient),
     waiting = waitingMessage(patient);
   const late = waiting && replyBy(waiting.time) < new Date();
@@ -68,10 +68,12 @@ export function PhysioThread({ patient, showProfileLink }: { patient: Patient; s
         <Alert variant="brand" className="text-[.9rem]">
           <PulseIcon />
           <AlertDescription>
-            Senaste 14 dagarna:{" "}
-            <strong>
-              {a.done} av {a.plan} pass
-            </strong>
+            {a.finishedWeeks > 0 && (
+              <>
+                Avslutade veckor: <strong>{a.done} av {a.plan} pass</strong>,{" "}
+              </>
+            )}
+            {a.finishedWeeks > 0 ? "vecka" : "Vecka"} {a.current.week} pågår: <strong>{a.current.done} av {a.current.plan} pass</strong>
             {pain && (
               <>
                 , smärta senast <strong>{pain.last.pain}/10</strong> (gräns {patient.painLimit})
