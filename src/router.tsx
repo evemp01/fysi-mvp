@@ -1,6 +1,5 @@
 import { Navigate, createHashRouter } from "react-router";
 import { RootLayout } from "@/components/layout/RootLayout";
-import { FeedbackPage } from "@/pages/feedback/FeedbackPage";
 import { ExerciseBankPage } from "@/pages/fysio/ExerciseBankPage";
 import { FysioLayout } from "@/pages/fysio/FysioLayout";
 import { InboxPage } from "@/pages/fysio/InboxPage";
@@ -51,7 +50,6 @@ export const router = createHashRouter([
           { path: "messages", element: <InboxPage /> },
         ],
       },
-      { path: "feedback", element: <FeedbackPage /> },
       { path: "settings", element: <SettingsPage /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],

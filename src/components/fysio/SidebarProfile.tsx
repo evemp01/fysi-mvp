@@ -4,7 +4,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/c
 import { useHoverOpen } from "@/hooks/use-hover-open";
 import { DotsThreeVerticalIcon, SlidersIcon } from "@phosphor-icons/react";
 import { useState } from "react";
-import { SettingsDialog } from "./SettingsDialog";
+import { SettingsDialog } from "@/components/common/SettingsDialog";
 
 export function SidebarProfile() {
   const { isMobile } = useSidebar();

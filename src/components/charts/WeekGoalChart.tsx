@@ -4,7 +4,7 @@ import type { Patient } from "@/data/types";
 import { ChartLegendRow } from "./ChartLegendRow";
 import { logsBetween, programWeek, weekPlan, weekRange } from "@/lib/stats";
 
-const config = { sessions: { label: "Pass", color: "var(--brand)" } } satisfies ChartConfig;
+const config = { sessions: { label: "Pass", color: "var(--primary)" } } satisfies ChartConfig;
 const CURRENT = "var(--sky)";
 
 interface Row {
@@ -55,7 +55,7 @@ export function WeekGoalChart({ patient }: { patient: Patient }) {
       </ChartContainer>
       <ChartLegendRow
         items={[
-          ["var(--brand)", "Mål nått"],
+          ["var(--primary)", "Mål nått"],
           ["var(--warning)", "Färre pass än planerat"],
           [CURRENT, "Pågående vecka"],
         ]}

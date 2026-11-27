@@ -178,7 +178,9 @@ export function journalText(p: Patient, getExercise: (id: string) => Exercise | 
     `Hemträning, sammanfattning ${TODAY_KEY}`,
     `Patient: ${p.name}, ${p.age} år. ${p.diagnosis}.`,
     `Program vecka ${programWeek(p)} av ${p.weeks} (${frequencyText(p.program)}, smärtgräns ${p.painLimit}/10): ${p.program.items.map((it) => `${getExercise(it.exerciseId)?.name} ${doseText(it, getExercise(it.exerciseId))}`).join('; ')}.`,
-    `Genomförda pass, avslutade veckor: ${w.finishedWeeks ? `${w.done} av ${w.plan} planerade (${w.pct} %)${w.volume != null ? `, i snitt ${w.volume} % av ordinerad mängd per pass` : ''}` : 'ingen vecka avslutad än'}. Vecka ${w.current.week} pågår: ${w.current.done} av ${w.current.plan} pass.`,
+    (w.finishedWeeks
+      ? `Genomförda pass vecka ${w.finishedWeeks === 1 ? '1' : `1–${w.finishedWeeks}`}: ${w.done} av ${w.plan} planerade (${w.pct} %).${w.volume != null ? ` När patienten tränade gjordes i snitt ${w.volume} % av ordinerade set och repetitioner.` : ''}`
+      : 'Ingen programvecka avslutad än.') + ` Vecka ${w.current.week} pågår: ${w.current.done} av ${w.current.plan} pass hittills.`,
     `Upplevd ansträngning: ${Object.entries(efforts).map(([k, v]) => `${k.toLowerCase()} ${v}`).join(', ') || '–'}.`,
     `Smärta (VAS): ${pi ? `start ${pi.first.pain}/10, senast ${pi.last.pain}/10, trend ${pi.trend > 0.5 ? 'ökande' : pi.trend < -0.5 ? 'minskande' : 'stabil'}` : 'ej loggad'}.`,
     `Smärtlokalisation: ${Object.keys(areas).join(', ') || '–'}. Karaktär: ${Object.keys(types).join(', ') || '–'}.`,

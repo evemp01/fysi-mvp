@@ -1,6 +1,6 @@
 # Fysi MVP
 
-Clickable MVP for user tests: a home-exercise platform for physiotherapy (patient app, physio view, feedback form). Swedish UI. All data is fake mock data in memory.
+Clickable MVP for user tests: a home-exercise platform for physiotherapy (patient app, physio view). Test feedback is collected in an external Google Form (`src/data/links.ts`), opened in a new tab. Swedish UI. All data is fake mock data in memory.
 
 ## Stack
 
@@ -29,12 +29,12 @@ Clickable MVP for user tests: a home-exercise platform for physiotherapy (patien
 
 Frontend-only prototype: all data is mock data in memory, a reload resets it. No backend, no persistence.
 
-- `src/router.tsx` – React Router (hash router, works on GitHub Pages). Routes: `/`, `/patient/:patientId/(progress|chat)`, `/fysio` (overview, patients, `patients/:patientId/(program|messages)`, bank, messages), `/feedback`, `/settings` (text size).
+- `src/router.tsx` – React Router (hash router, works on GitHub Pages). Routes: `/`, `/patient/:patientId/(progress|chat)`, `/fysio` (overview, patients, `patients/:patientId/(program|messages)`, bank, messages), `/settings` (text size).
 - The header holds the role switch, the test-patient picker (only on patient routes) and the settings link.
-- `src/pages/` – one file per route, grouped by section (`patient/`, `fysio/`, `fysio/profile/`, `feedback/`). Pages compose components; keep logic out of them where possible.
-- `src/components/` – feature components (`patient/`, `fysio/`, `chat/`, `exercise/`, `pain/`, `charts/`, `progress/`, `feedback/`, `layout/`) and small shared ones in `common/`. `ui/` is shadcn only.
+- `src/pages/` – one file per route, grouped by section (`patient/`, `fysio/`, `fysio/profile/`). Pages compose components; keep logic out of them where possible.
+- `src/components/` – feature components (`patient/`, `fysio/`, `chat/`, `exercise/`, `pain/`, `charts/`, `progress/`, `layout/`) and small shared ones in `common/`. `ui/` is shadcn only.
 - `src/state/` – `AppProvider` (React context + `useState`) and hooks `useApp`, `usePatient`, `useExercises`. Text size (`textSize`, `TEXT_SIZES`) lives here too, outside the demo data so "reset" keeps it. Change data with `update((draft) => { ... })`; keep toasts and other side effects outside the callback. UI-only state (forms, open dialogs, drafts) stays local in components.
-- `src/data/` – types, mock seed, exercise library, poses, body-map regions, templates, feedback tasks.
+- `src/data/` – types, mock seed, exercise library, poses, body-map regions, templates, external links.
 - `src/lib/` – pure helpers: dates, stats (adherence, pain trend…), search, body-map geometry, media.
 - `src/hooks/` – custom hooks.
 - Charts use shadcn `chart` (recharts).

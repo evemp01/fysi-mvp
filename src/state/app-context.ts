@@ -1,14 +1,13 @@
 import { createContext, useContext, useMemo } from "react";
 import { EXERCISES } from "@/data/exercises";
 import type { AppData } from "@/data/seed";
-import type { Exercise, FeedbackEntry } from "@/data/types";
+import type { Exercise } from "@/data/types";
 
 /** Everything the prototype shows. Lives in memory; a reload resets it. */
 export interface AppState extends AppData {
   customExercises: Exercise[];
   favorites: string[];
   recent: string[];
-  feedback: FeedbackEntry[];
   /** Patient has read "Innan du skriver" once this session. */
   messageInfoSeen: boolean;
 }

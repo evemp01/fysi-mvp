@@ -7,7 +7,6 @@ const initialState = (): AppState => ({
   customExercises: [],
   favorites: ["knaboj", "bro", "armlyft"],
   recent: ["tahavning", "balans", "nacke"],
-  feedback: [],
   messageInfoSeen: false,
 });
 
@@ -29,7 +28,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const reset = useCallback(() => {
-    setState((prev) => ({ ...initialState(), customExercises: prev.customExercises, feedback: prev.feedback }));
+    setState((prev) => ({ ...initialState(), customExercises: prev.customExercises }));
   }, []);
 
   const value = useMemo(() => ({ state, update, reset, textSize, setTextSize }), [state, update, reset, textSize]);

@@ -87,7 +87,7 @@ export function ProgressPage() {
         <WeeklyProgressChart patient={patient} />
         <ChartLegendRow
           items={[
-            ["var(--brand)", "Pass"],
+            ["var(--primary)", "Pass"],
             ["var(--danger)", "Smärta, snitt"],
             ["var(--warning)", `Din smärtgräns ${patient.painLimit}`],
           ]}

@@ -1,6 +1,6 @@
 import { ChatCircleIcon, DesktopIcon, MoonIcon, SunIcon } from "@phosphor-icons/react";
 import { useTheme } from "next-themes";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,19 +24,50 @@ type ThemeChoice = (typeof THEMES)[number]["value"];
 const isThemeChoice = (v: string): v is ThemeChoice => THEMES.some((t) => t.value === v);
 const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 
+/** Sample of the physio view for the preview. */
+function PhysioPreview() {
+  return (
+    <>
+      <div className="leading-tight">
+        <p className="text-[1.15rem] font-extrabold">God morgon, Erik</p>
+        <p className="text-[.85rem] text-muted-foreground">{capitalize(formatLong(TODAY))}</p>
+      </div>
+      <Item variant="card" size="sm">
+        <ItemMedia variant="icon" className="bg-warning-soft text-warning-foreground">
+          <ChatCircleIcon />
+        </ItemMedia>
+        <ItemContent>
+          <ItemTitle>Anna väntar på svar</ItemTitle>
+          <ItemDescription>Svara senast i morgon kl 16.</ItemDescription>
+        </ItemContent>
+        <ItemActions>
+          <Button size="sm">Svara</Button>
+        </ItemActions>
+      </Item>
+      <div className="flex flex-wrap gap-2">
+        <Badge variant="success">På spår</Badge>
+        <Badge variant="danger">Över smärtgräns</Badge>
+        <Badge variant="info">På plats</Badge>
+      </div>
+    </>
+  );
+}
+
 interface SettingsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** What the preview shows. Defaults to a sample of the physio view. */
+  preview?: ReactNode;
 }
 
 /** Text size and theme. Changes show in a preview first and only apply on "Spara". */
-export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
+export function SettingsDialog({ open, onOpenChange, preview }: SettingsDialogProps) {
   const [saving, setSaving] = useState(false);
   return (
     <Dialog open={open} onOpenChange={(next) => !saving && onOpenChange(next)}>
       <DialogContent showCloseButton={!saving} className="max-h-[92svh] overflow-y-auto sm:max-w-xl">
         {/* Content unmounts when the dialog closes, so the drafts start from the saved values on every open. */}
-        <SettingsForm saving={saving} setSaving={setSaving} onDone={() => onOpenChange(false)} />
+        <SettingsForm saving={saving} setSaving={setSaving} preview={preview} onDone={() => onOpenChange(false)} />
       </DialogContent>
     </Dialog>
   );
@@ -45,10 +76,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 interface SettingsFormProps {
   saving: boolean;
   setSaving: (saving: boolean) => void;
+  preview?: ReactNode;
   onDone: () => void;
 }
 
-function SettingsForm({ saving, setSaving, onDone }: SettingsFormProps) {
+function SettingsForm({ saving, setSaving, preview = <PhysioPreview />, onDone }: SettingsFormProps) {
   const { textSize, setTextSize } = useApp();
   const { theme = "system", systemTheme, setTheme } = useTheme();
   const [size, setSize] = useState(textSize);
@@ -121,27 +153,7 @@ function SettingsForm({ saving, setSaving, onDone }: SettingsFormProps) {
         {/* color-scheme drives the light-dark() palette; the class covers shadcn's dark: variants. */}
         <div className={cn("overflow-hidden rounded-[14px] border", previewScheme === "dark" && "dark")} style={{ colorScheme: previewScheme }}>
           <div inert className="grid gap-3 bg-background p-3.5 text-foreground" style={{ zoom }}>
-            <div className="leading-tight">
-              <p className="text-[1.15rem] font-extrabold">God morgon, Erik</p>
-              <p className="text-[.85rem] text-muted-foreground">{capitalize(formatLong(TODAY))}</p>
-            </div>
-            <Item variant="card" size="sm">
-              <ItemMedia variant="icon" className="bg-warning-soft text-warning-foreground">
-                <ChatCircleIcon />
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle>Anna väntar på svar</ItemTitle>
-                <ItemDescription>Svara senast i morgon kl 16.</ItemDescription>
-              </ItemContent>
-              <ItemActions>
-                <Button size="sm">Svara</Button>
-              </ItemActions>
-            </Item>
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="success">På spår</Badge>
-              <Badge variant="danger">Över smärtgräns</Badge>
-              <Badge variant="info">På plats</Badge>
-            </div>
+            {preview}
           </div>
         </div>
       </FieldSet>

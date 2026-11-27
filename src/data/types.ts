@@ -121,14 +121,3 @@ export interface Patient {
   patientNotes: Record<string, Note[]>;
   reminder: Reminder;
 }
-
-export interface FeedbackEntry {
-  id: string;
-  time: number;
-  role: string;
-  age: string;
-  tasks: Record<string, { result?: string; ease?: number }>;
-  good: string;
-  missing: string;
-  unsure: string;
-}

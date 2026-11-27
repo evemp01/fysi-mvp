@@ -1,14 +1,15 @@
-import { GearSixIcon, PulseIcon } from "@phosphor-icons/react";
+import { ArrowSquareOutIcon, GearSixIcon, PulseIcon } from "@phosphor-icons/react";
 import { Link, NavLink, useMatch } from "react-router";
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { FEEDBACK_URL } from "@/data/links";
 import { PatientSwitcher } from "./PatientSwitcher";
 
 const ROLES = [
   { to: "/patient", long: "Patientapp", short: "Patient" },
   { to: "/fysio", long: "Fysioterapeut", short: "Fysio" },
-  { to: "/feedback", long: "Ge feedback", short: "Feedback" },
 ];
+const tab = "min-h-10 rounded-[10px] border-0 px-1.75 text-[.88rem] aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground sm:min-h-11 sm:px-3.5 sm:text-base";
 
 export function Header() {
   const patientRoute = useMatch("/patient/:patientId/*");
@@ -24,13 +25,20 @@ export function Header() {
       </Link>
       <nav aria-label="Välj vy" className="flex flex-nowrap gap-1 rounded-[14px] bg-background p-0.75 sm:p-1">
         {ROLES.map((r) => (
-          <Button key={r.to} asChild variant="ghost" size="sm" className="min-h-10 rounded-[10px] border-0 px-1.75 text-[.88rem] aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground sm:min-h-11 sm:px-3.5 sm:text-base">
+          <Button key={r.to} asChild variant="ghost" size="sm" className={tab}>
             <NavLink to={r.to}>
               <span className="hidden sm:inline">{r.long}</span>
               <span className="sm:hidden">{r.short}</span>
             </NavLink>
           </Button>
         ))}
+        <Button asChild variant="ghost" size="sm" className={tab}>
+          <a href={FEEDBACK_URL} target="_blank" rel="noopener noreferrer" aria-label="Ge feedback (öppnas i en ny flik)">
+            <span className="hidden sm:inline">Ge feedback</span>
+            <span className="sm:hidden">Feedback</span>
+            <ArrowSquareOutIcon className="size-4" />
+          </a>
+        </Button>
       </nav>
       <div className="ml-auto flex items-center gap-1.5">
         {patientRoute?.params.patientId && <PatientSwitcher patientId={patientRoute.params.patientId} />}

@@ -36,8 +36,8 @@ export function WeekCircles({ patient, onWeek }: { patient: Patient; onWeek: (we
                 </i>
               ) : (
                 <i
-                  className={cn(circle, "border-0 after:absolute after:inset-1.25 after:rounded-full after:bg-card", w === current && "shadow-[0_0_0_2px_var(--brand)]")}
-                  style={{ background: `conic-gradient(var(--brand) ${pct}%, var(--brand-muted) 0)` }}
+                  className={cn(circle, "border-0 after:absolute after:inset-1.25 after:rounded-full after:bg-card", w === current && "shadow-[0_0_0_2px_var(--primary)]")}
+                  style={{ background: `conic-gradient(var(--primary) ${pct}%, var(--brand-muted) 0)` }}
                 />
               )}
               <span>v{w}</span>

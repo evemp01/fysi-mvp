@@ -4,7 +4,7 @@ import type { Patient } from "@/data/types";
 import { weekSeries } from "@/lib/stats";
 
 const config = {
-  sessions: { label: "Pass", color: "var(--brand)" },
+  sessions: { label: "Pass", color: "var(--primary)" },
   pain: { label: "Smärta, snitt", color: "var(--danger)" },
 } satisfies ChartConfig;
 

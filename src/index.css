@@ -94,13 +94,13 @@
   --popover-foreground: var(--foreground);
   --muted-foreground: light-dark(#56625f, #a9a194);
   --border: light-dark(#e6e1d7, #34302a);
-  --primary: light-dark(#0f4c4a, #1f6f69);
+  --primary: #1d7468;
   --primary-foreground: #ffffff;
 
-  --brand: light-dark(#0f4c4a, #7cc2b6);
+  --brand: light-dark(#1d7468, #7cc2b6);
   --brand-soft: light-dark(#eef7f5, #1c2724);
   --brand-muted: light-dark(#d6ece8, #234139);
-  --hero: #0f4c4a;
+  --hero: #1d7468;
   --success: light-dark(#2e7d4f, #3d9a64);
   --success-soft: light-dark(#e2f2e7, #1c2a20);
   --warning: #e9a23b;
