@@ -32,7 +32,7 @@ export function AttentionList({ items }: { items: AttentionItem[] }) {
           </ItemMedia>
           <ItemContent>
             <ItemTitle>{title}</ItemTitle>
-            <ItemDescription>
+            <ItemDescription className="line-clamp-1">
               {alert && <strong className="text-danger">{alert}</strong>}
               {detail}
             </ItemDescription>
